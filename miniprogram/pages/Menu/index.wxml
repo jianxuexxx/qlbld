@@ -1,0 +1,80 @@
+<wxs module="util" src="../util.wxs" />
+
+<view class="container white" wx:if="{{allMenus.length === 0}}">
+  <image class="background" src="Images/None.png" mode="aspectFit" />
+  <view class="title">暂无菜单</view>
+  <view class="subtitle">好像还没有任何菜单...</view>
+</view>
+
+<swiper wx:if="{{allMenus.length > 0}}" indicator-dots="true" autoplay="true" interval="2000" duration="500"
+style="height: 200px; width: 100%; background: white; ">
+    <swiper-item><image src="Images/MenuCover01.jpg" mode='widthFix' class="swiper-image" /></swiper-item>
+    <swiper-item><image src="Images/MenuCover02.jpg" mode='widthFix' class="swiper-image" /></swiper-item>
+    <swiper-item><image src="Images/MenuCover03.jpg" mode='widthFix' class="swiper-image" /></swiper-item>
+</swiper>
+
+<view class="container" wx:if="{{allMenus.length > 0}}">
+  <view class="form-group">
+    <view class="search-bar">
+      <icon class="search-icon" type="search" size="24"></icon>
+      <input class="search-input" placeholder="搜索菜单" bindinput="onSearch" value="{{search}}" />
+    </view>
+  </view>
+
+  <!-- 左右分栏布局 -->
+  <view class="menu-layout">
+    <!-- 左侧分类栏 -->
+    <scroll-view class="category-scroll" scroll-y="true" style="height: {{scrollHeight}}px;">
+      <view class="category-item {{currentCategoryIndex === index ? 'active' : ''}}"
+            wx:for="{{categories}}"
+            wx:key="index"
+            bindtap="switchCategory"
+            data-index="{{index}}">
+        {{item.name}}
+      </view>
+    </scroll-view>
+
+    <!-- 右侧菜单栏 -->
+    <scroll-view class="menu-scroll" scroll-y="true" style="height: {{scrollHeight}}px;">
+      <view class="form-group_label">
+        {{currentCategoryName}} <mp-badge content="{{currentCategoryMenus.length}}" style="margin-left: 5px;" />
+      </view>
+
+      <view class="form-group" wx:if="{{currentCategoryMenus.length > 0}}"
+      style="z-index: 0; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.05), 0 6px 20px 0 rgba(0, 0, 0, 0.05);">
+        <view class="form-cell" wx:for="{{currentCategoryMenus}}" wx:key="index">
+          <mp-slideview buttons="{{slideButtons}}" data-index='{{index}}' icon="{{true}}" bindbuttontap="slideButtonTap">
+            <view class="slide" data-index="{{index}}" bindtap="toDetailPage">
+              <view class="menu-info">
+                <view class="menu-info_title">{{util.filterStr(item.title, 10)}}</view>
+                <view class="menu-info_category">🏷️ {{util.filterStr(item.desc, 10)}}</view>
+                <view class="menu-info_award">💰 {{util.filterStr(item.credit, 10)}} 价格</view>
+              </view>
+              <view class="menu-info_author">
+                <image style="position: absolute; width: 100%; bottom: 0;" wx:if="{{item._openid === _openidA}}" mode="widthFix" src="Images/MenuA.png"/>
+                <image style="position: absolute; width: 100%; bottom: 0;" wx:if="{{item._openid === _openidB}}" mode="widthFix" src="Images/MenuB.png"/>
+              </view>
+              <image wx:if="{{item.star}}" class="star" src="Images/Star.png" />
+            </view>
+          </mp-slideview>
+        </view>
+      </view>
+
+      <view class="form-group" wx:if="{{currentCategoryMenus.length === 0}}"
+      style="z-index: 0; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.05), 0 6px 20px 0 rgba(0, 0, 0, 0.05);">
+        <view class="empty-category">
+          <text>此分类下暂无菜单</text>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+</view>
+
+<movable-area style="pointer-events: none; position: fixed; width: 100%; height: 100%;">
+  <movable-view style="pointer-events: auto; width: 20%; height: 20%;" x="{{screenWidth}}" y="{{screenHeight}}" direction="all">
+    <button class="btn-normal" hover-class="btn-hover" size="mini" bindtap="toAddPage"
+    style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+      <image style = "margin-top: 10px; height: 100%; width: 100%;" mode="widthFix" src="Images/Plus.png"/>菜单
+    </button>
+  </movable-view>
+</movable-area>

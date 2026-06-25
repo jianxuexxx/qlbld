@@ -1,0 +1,28 @@
+<view class="container">
+  <form bindsubmit="submitForm">
+    <view class="form-group">
+      <view class="form-group_label">菜品名称</view>
+      <input class="form-control" name="title" placeholder="请输入菜品名称" value="{{formData.title}}" bindinput="onInput" data-field="title" />
+    </view>
+
+    <view class="form-group">
+      <view class="form-group_label">分类</view>
+      <input class="form-control" name="category" placeholder="请输入分类名称" value="{{formData.category}}" bindinput="onInput" data-field="category" />
+    </view>
+
+    <view class="form-group">
+      <view class="form-group_label">菜品描述</view>
+      <textarea class="form-control textarea" name="desc" placeholder="请输入菜品描述" value="{{formData.desc}}" bindinput="onInput" data-field="desc" />
+    </view>
+
+    <view class="form-group">
+      <view class="form-group_label">积分奖励</view>
+      <view class="slider-container">
+        <slider name="credit" min="1" max="{{maxCredit}}" value="{{formData.credit}}" show-value bindchange="onSliderChange" />
+        <view class="slider-value">{{formData.credit}} 积分</view>
+      </view>
+    </view>
+
+    <button class="btn-submit" form-type="submit">添加菜品</button>
+  </form>
+</view>

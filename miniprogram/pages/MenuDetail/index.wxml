@@ -1,0 +1,79 @@
+<view class="container">
+  <view class="detail-card">
+    <view class="detail-title">{{menuDetail.title}}</view>
+
+    <view class="detail-section">
+      <view class="detail-label">菜品描述</view>
+      <view class="detail-content">{{menuDetail.desc}}</view>
+    </view>
+
+    <view class="detail-section">
+      <view class="detail-label">分类</view>
+      <view class="detail-content">{{menuDetail.category}}</view>
+    </view>
+
+    <view class="detail-section">
+      <view class="detail-label">积分奖励</view>
+      <view class="detail-content">💰 {{menuDetail.credit}} 积分</view>
+    </view>
+
+    <view class="detail-section">
+      <view class="detail-label">创建日期</view>
+      <view class="detail-content">📅 {{menuDetail.date}}</view>
+    </view>
+
+    <view class="detail-section">
+      <view class="detail-label">状态</view>
+      <view class="detail-content">
+        <text class="status-tag {{menuDetail.available ? 'status-available' : 'status-unavailable'}}">
+          {{getStatusText()}}
+        </text>
+      </view>
+    </view>
+
+    <view class="detail-section" wx:if="{{menuDetail._openid === _openidA || menuDetail._openid === _openidB}}">
+      <view class="detail-label">创建者</view>
+      <view class="detail-content">
+        {{menuDetail._openid === _openidA ? userA : userB}}
+      </view>
+    </view>
+  </view>
+
+  <!-- 操作按钮区域 -->
+  <view class="action-buttons">
+    <!-- 如果当前用户不是创建者，且菜品未被点，则显示点菜按钮 -->
+    <button wx:if="{{currentOpenid !== menuDetail._openid && !menuDetail.ordered}}"
+            class="btn-primary"
+            bindtap="orderMenu">
+      🍽️ 点菜
+    </button>
+
+    <!-- 如果当前用户是创建者，且菜品已被点但未被接受，则显示接单按钮 -->
+    <button wx:if="{{currentOpenid === menuDetail._openid && menuDetail.ordered && !menuDetail.accepted}}"
+            class="btn-secondary"
+            bindtap="acceptOrder">
+      ✅ 接单
+    </button>
+
+    <!-- 如果当前用户是点菜者，且菜品已被接受但未完成，则显示完成按钮 -->
+    <button wx:if="{{currentOpenid !== menuDetail._openid && menuDetail.accepted && menuDetail.ordered && !menuDetail.available}}"
+            class="btn-success"
+            bindtap="completeOrder">
+      🎉 完成
+    </button>
+
+    <!-- 如果当前用户是创建者，可以编辑 -->
+    <button wx:if="{{currentOpenid === menuDetail._openid}}"
+            class="btn-edit"
+            bindtap="editMenu">
+      ✏️ 编辑
+    </button>
+
+    <!-- 如果当前用户是创建者，可以删除 -->
+    <button wx:if="{{currentOpenid === menuDetail._openid}}"
+            class="btn-danger"
+            bindtap="deleteMenu">
+      🗑️ 删除
+    </button>
+  </view>
+</view>

@@ -1,0 +1,162 @@
+.container {
+  padding: 20px;
+}
+
+.background {
+  width: 100%;
+  height: 200px;
+}
+
+.title {
+  font-size: 24px;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.subtitle {
+  font-size: 16px;
+  text-align: center;
+  color: gray;
+  margin-top: 10px;
+}
+
+.swiper-image {
+  width: 100%;
+  height: 200px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group_label {
+  font-weight: bold;
+  font-size: 18px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  background-color: white;
+  border-radius: 20px;
+  padding: 5px 15px;
+  margin-bottom: 10px;
+}
+
+.search-icon {
+  margin-right: 10px;
+}
+
+.search-input {
+  flex: 1;
+  font-size: 16px;
+}
+
+.slide {
+  display: flex;
+  align-items: center;
+  padding: 5px;
+  background-color: white;
+  position: relative;
+}
+
+.menu-info {
+  flex: 1;
+}
+
+.menu-info_title {
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.menu-info_award {
+  font-size: 14px;
+  color: #ff6b6b;
+}
+
+.menu-info_category {
+  font-size: 12px;
+  color: #666;
+}
+
+.menu-info_date {
+  font-size: 12px;
+  color: #999;
+}
+
+.menu-info_author {
+  width: 50px;
+  height: 50px;
+  margin-left: 10px;
+}
+
+.star {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 20px;
+  height: 20px;
+}
+
+.btn-normal {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: #ff99aa;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+}
+
+.btn-hover {
+  background-color: #ff7c90;
+}
+
+/* 菜单左右分栏布局 */
+.menu-layout {
+  display: flex;
+  gap: 2px;
+}
+
+.category-scroll {
+  width: 30%;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  padding: 5px 0;
+}
+
+.menu-scroll {
+  width: 100%;
+}
+
+.category-item {
+  padding: 12px 15px;
+  text-align: center;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.category-item.active {
+  background-color: #fff;
+  color: #ff99aa;
+  font-weight: bold;
+  border-left: 3px solid #ff99aa;
+}
+
+.empty-category {
+  text-align: center;
+  padding: 20px;
+  color: #999;
+}
+
+.white {
+  background-color: white;
+}
