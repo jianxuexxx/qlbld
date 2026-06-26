@@ -49,7 +49,7 @@
         "disableSWC": true
     },
     "compileType": "miniprogram",
-    "libVersion": "2.14.1",
+    "libVersion": "3.16.1",
     "appid": "wx857ae3c77dfa9030",
     "projectname": "DailyMissions",
     "miniprogramRoot": "miniprogram/",

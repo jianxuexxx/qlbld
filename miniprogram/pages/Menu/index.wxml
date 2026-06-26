@@ -18,6 +18,8 @@ style="height: 200px; width: 100%; background: white; ">
     <view class="search-bar">
       <icon class="search-icon" type="search" size="24"></icon>
       <input class="search-input" placeholder="搜索菜单" bindinput="onSearch" value="{{search}}" />
+      <!-- 弱化的菜品管理入口 -->
+      <view class="manage-entry" hover-class="manage-entry-hover" bindtap="toAddPage">🍳 菜品管理</view>
     </view>
   </view>
 
@@ -42,7 +44,8 @@ style="height: 200px; width: 100%; background: white; ">
 
       <view class="form-group" wx:if="{{currentCategoryMenus.length > 0}}"
       style="z-index: 0; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.05), 0 6px 20px 0 rgba(0, 0, 0, 0.05);">
-        <view class="form-cell" wx:for="{{currentCategoryMenus}}" wx:key="index">
+        <!-- 普通模式：保留原 mp-slideview 左滑菜单 -->
+        <view class="form-cell" wx:for="{{currentCategoryMenus}}" wx:key="index" wx:if="{{!selectMode}}">
           <mp-slideview buttons="{{slideButtons}}" data-index='{{index}}' icon="{{true}}" bindbuttontap="slideButtonTap">
             <view class="slide" data-index="{{index}}" bindtap="toDetailPage">
               <view class="menu-info">
@@ -58,6 +61,28 @@ style="height: 200px; width: 100%; background: white; ">
             </view>
           </mp-slideview>
         </view>
+
+        <!-- 多选模式：左侧勾选框 + 整行可点切换 -->
+        <view class="form-cell select-cell" wx:for="{{currentCategoryMenus}}" wx:key="index" wx:if="{{selectMode}}"
+              bindtap="onMenuItemTap" data-index="{{index}}">
+          <view class="select-cell_row">
+            <view class="select-checkbox {{item._selected ? 'select-checkbox-checked' : ''}}">
+              <text wx:if="{{item._selected}}">✓</text>
+            </view>
+            <view class="slide">
+              <view class="menu-info">
+                <view class="menu-info_title">{{util.filterStr(item.title, 10)}}</view>
+                <view class="menu-info_category">🏷️ {{util.filterStr(item.desc, 10)}}</view>
+                <view class="menu-info_award">💰 {{item.credit}} 价格</view>
+              </view>
+              <view class="menu-info_author">
+                <image style="position: absolute; width: 100%; bottom: 0;" wx:if="{{item._openid === _openidA}}" mode="widthFix" src="Images/MenuA.png"/>
+                <image style="position: absolute; width: 100%; bottom: 0;" wx:if="{{item._openid === _openidB}}" mode="widthFix" src="Images/MenuB.png"/>
+              </view>
+              <image wx:if="{{item.star}}" class="star" src="Images/Star.png" />
+            </view>
+          </view>
+        </view>
       </view>
 
       <view class="form-group" wx:if="{{currentCategoryMenus.length === 0}}"
@@ -70,11 +95,23 @@ style="height: 200px; width: 100%; background: white; ">
   </view>
 </view>
 
-<movable-area style="pointer-events: none; position: fixed; width: 100%; height: 100%;">
+<!-- 普通模式下显示悬浮的"点菜"按钮（取代原"菜单"按钮） -->
+<movable-area wx:if="{{!selectMode}}" style="pointer-events: none; position: fixed; width: 100%; height: 100%;">
   <movable-view style="pointer-events: auto; width: 20%; height: 20%;" x="{{screenWidth}}" y="{{screenHeight}}" direction="all">
-    <button class="btn-normal" hover-class="btn-hover" size="mini" bindtap="toAddPage"
+    <button class="btn-normal" hover-class="btn-hover" size="mini" bindtap="enterSelectMode"
     style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
-      <image style = "margin-top: 10px; height: 100%; width: 100%;" mode="widthFix" src="Images/Plus.png"/>菜单
+      <image style = "margin-top: 10px; height: 100%; width: 100%;" mode="widthFix" src="Images/Plus.png"/>点菜
     </button>
   </movable-view>
 </movable-area>
+
+<!-- 多选模式底部操作条 -->
+<view class="select-action-bar" wx:if="{{selectMode}}">
+  <view class="select-summary">
+    已选 <text class="select-count">{{selectedCount}}</text> 道菜　合计 <text class="select-total">{{totalCredit}}</text> 积分
+  </view>
+  <view class="select-buttons">
+    <button class="btn-cancel" size="mini" bindtap="cancelSelect">取消</button>
+    <button class="btn-confirm" size="mini" bindtap="submitOrder" disabled="{{selectedCount === 0}}">确认下单</button>
+  </view>
+</view>

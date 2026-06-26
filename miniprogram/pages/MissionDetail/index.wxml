@@ -1,8 +1,78 @@
 <wxs module="util" src="../util.wxs" />
 
-<view class="container white" style="animation-name: animation-blur; animation-duration: 0.8s;">
+<!-- 订单型任务视图 -->
+<view wx:if="{{isOrder}}" class="container white" style="animation-name: animation-blur; animation-duration: 0.8s;">
+  <image src="../../images/Item.gif" mode='widthFix' />
+  <view class="form-group"
+  style="z-index: 0; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.05), 0 6px 20px 0 rgba(0, 0, 0, 0.05); ">
+    <view class="form-cell">
+      <view class="mission-info_title">🍽️ 订单标题</view>
+      <view class="mission-info_desc">{{mission.title}}</view>
+    </view>
+
+    <view class="form-cell" wx:if="{{orderStatus === 'completed'}}">
+      <view class="status-completed">✅ 已完成</view>
+    </view>
+    <view class="form-cell" wx:else>
+      <view class="status-pending">⏳ 待厨师完成</view>
+    </view>
+
+    <view class="form-cell">
+      <view class="mission-info_title">👤 下单者</view>
+      <view class="mission-info_desc">{{mission.ordererName || from}}</view>
+    </view>
+
+    <view class="form-cell">
+      <view class="mission-info_title">🍳 厨师团队</view>
+      <view class="mission-info_desc">{{cookerNamesText}}</view>
+    </view>
+
+    <view class="form-cell">
+      <view class="mission-info_title">💡 订单说明</view>
+      <view class="mission-info_desc">此订单由{{mission.ordererName || from}}下单，由{{cookerNamesText}}完成，由{{to}}监督确认。</view>
+    </view>
+
+    <view class="form-cell">
+      <view class="mission-info_title">💰 奖励总额：{{mission.credit}} 积分</view>
+      <progress percent="{{creditPercent}}" border-radius="5" font-size="8" duration="10" color="lightsalmon" active stroke-width="7">
+        <view class="mission-info_credit">{{maxCredit}} 积分</view>
+      </progress>
+    </view>
+
+    <view class="form-cell">
+      <view class="mission-info_title">📅 下单日期</view>
+      <view class="mission-info_desc">{{dateStr}} | {{util.cutStr(timeStr, 8)}}</view>
+    </view>
+
+    <view class="form-cell">
+      <view class="mission-info_title">📝 菜品列表（共 {{mission.dishes.length}} 道）</view>
+      <view class="dish-list">
+        <view class="dish-item" wx:for="{{mission.dishes}}" wx:key="index" wx:for-item="dish">
+          <view class="dish-row">
+            <text class="dish-title">🍴 {{dish.title}}</text>
+            <text class="dish-credit">💰 {{dish.credit}}</text>
+          </view>
+          <view class="dish-meta" wx:if="{{dish.category}}">
+            <text class="dish-category">🏷️ {{dish.category}}</text>
+          </view>
+          <view class="dish-desc" wx:if="{{dish.desc}}">
+            <text>{{dish.desc}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 完成订单按钮：仅下单者可见、未完成时显示 -->
+    <view class="form-cell" wx:if="{{mission._openid === currentOpenid && orderStatus !== 'completed'}}">
+      <button class="finish-btn" bindtap="finishOrder">✅ 完成订单</button>
+    </view>
+  </view>
+</view>
+
+<!-- 普通任务视图 -->
+<view wx:else class="container white" style="animation-name: animation-blur; animation-duration: 0.8s;">
   <image src="../../images/Mission.gif" mode='widthFix' />
-  <view class="form-group" 
+  <view class="form-group"
   style="z-index: 0; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.05), 0 6px 20px 0 rgba(0, 0, 0, 0.05); ">
     <view class="form-cell">
       <view class="mission-info_title">📌 任务名称</view>
@@ -14,7 +84,7 @@
     </view>
     <view class="form-cell">
       <view class="mission-info_title">💰 奖励力度：{{mission.credit}} 积分</view>
-      <progress percent="{{creditPercent}}" border-radius="5" font-size="8" duration="10" color="lightsalmon" active stroke-width="7"> 
+      <progress percent="{{creditPercent}}" border-radius="5" font-size="8" duration="10" color="lightsalmon" active stroke-width="7">
         <view class="mission-info_credit">{{maxCredit}} 积分</view>
       </progress>
     </view>
