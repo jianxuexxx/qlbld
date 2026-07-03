@@ -1,111 +1,126 @@
-.container {
-  padding: 20px;
-  background-color: #f5f5f5;
+/* ===== MenuDetail 页面样式（统一规范） ===== */
+.detail-page {
+  padding: 24rpx 24rpx 160rpx;
+  background: var(--color-bg-page);
   min-height: 100vh;
+  box-sizing: border-box;
 }
 
+/* 详情卡片 */
 .detail-card {
-  background-color: white;
-  border-radius: 8px;
-  padding: 20px;
-  margin-bottom: 20px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  background: var(--color-bg-card);
+  border-radius: var(--radius-lg);
+  padding: 8rpx 24rpx;
+  margin-bottom: 24rpx;
+  box-shadow: var(--shadow-card);
+  box-sizing: border-box;
 }
 
 .detail-title {
-  font-size: 24px;
-  font-weight: bold;
-  margin-bottom: 20px;
+  font-size: var(--font-xl);
+  font-weight: 700;
+  margin: 32rpx 0 24rpx;
   text-align: center;
-  color: #333;
+  color: var(--color-text-primary);
+  line-height: 1.3;
 }
 
 .detail-section {
-  margin-bottom: 15px;
-  padding-bottom: 15px;
-  border-bottom: 1px solid #eee;
+  margin-bottom: 8rpx;
+  padding: 24rpx 0;
+  border-bottom: 1rpx solid var(--color-divider);
+}
+.detail-section:last-child {
+  border-bottom: none;
 }
 
 .detail-label {
-  font-weight: bold;
-  color: #666;
-  margin-bottom: 5px;
+  font-size: var(--font-sm);
+  color: var(--color-text-tertiary);
+  margin-bottom: 12rpx;
+  font-weight: 500;
+  letter-spacing: 0.5rpx;
 }
 
 .detail-content {
-  color: #333;
-  line-height: 1.5;
+  color: var(--color-text-primary);
+  font-size: var(--font-base);
+  line-height: 1.6;
+  word-break: break-all;
 }
 
+/* 状态徽章 */
 .status-tag {
-  display: inline-block;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 12px;
-  font-weight: bold;
+  display: inline-flex;
+  align-items: center;
+  height: 36rpx;
+  padding: 0 16rpx;
+  border-radius: 18rpx;
+  font-size: var(--font-xs);
+  font-weight: 600;
+  line-height: 1;
 }
-
 .status-available {
-  background-color: #e8f5e8;
-  color: #4caf50;
+  background: var(--color-success-light);
+  color: var(--color-success-dark);
 }
-
 .status-unavailable {
-  background-color: #ffebee;
-  color: #f44336;
+  background: #FFE3E3;
+  color: var(--color-danger);
 }
 
+/* 操作按钮区 */
 .action-buttons {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 16rpx;
+  margin-top: 32rpx;
 }
+
+.action-buttons button {
+  width: 100%;
+  height: 88rpx;
+  line-height: 88rpx;
+  text-align: center;
+  border-radius: var(--radius-pill);
+  font-size: var(--font-base);
+  font-weight: 600;
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+.action-buttons button::after { border: none; }
 
 .btn-primary {
-  background-color: #4caf50;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  padding: 15px;
-  font-size: 16px;
+  background: linear-gradient(135deg, #FF99AA 0%, #FF7A8E 100%);
+  color: #fff;
+  box-shadow: var(--shadow-primary);
 }
-
 .btn-secondary {
-  background-color: #2196f3;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  padding: 15px;
-  font-size: 16px;
+  background: transparent;
+  color: var(--color-primary);
+  border: 2rpx solid var(--color-primary);
 }
-
 .btn-success {
-  background-color: #ff9800;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  padding: 15px;
-  font-size: 16px;
+  background: linear-gradient(135deg, #07C160 0%, #06AD56 100%);
+  color: #fff;
+  box-shadow: var(--shadow-success);
 }
-
 .btn-edit {
-  background-color: #9e9e9e;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  padding: 15px;
-  font-size: 16px;
+  background: var(--color-bg-input);
+  color: var(--color-text-secondary);
 }
-
 .btn-danger {
-  background-color: #f44336;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  padding: 15px;
-  font-size: 16px;
+  background: transparent;
+  color: var(--color-danger);
+  border: 2rpx solid var(--color-danger);
 }
 
-.btn-primary:hover, .btn-secondary:hover, .btn-success:hover, .btn-edit:hover, .btn-danger:hover {
-  opacity: 0.8;
+.btn-primary:active,
+.btn-secondary:active,
+.btn-success:active,
+.btn-edit:active,
+.btn-danger:active {
+  transform: scale(0.98);
+  opacity: 0.92;
 }

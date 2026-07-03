@@ -1,15 +1,35 @@
+/* ===== MarketDetail 商品详情（统一规范） ===== */
+
 .item-info_title {
-  margin-bottom: 10px;
-  font-size: medium;
+  margin-bottom: 16rpx;
+  font-size: var(--font-md);
+  color: var(--color-text-primary);
+  font-weight: 600;
 }
 
 .item-info_desc {
-  font-size: small;
-  color: darkgray;
+  font-size: var(--font-base);
+  color: var(--color-text-body);
+  line-height: 1.6;
+  word-break: break-all;
 }
 
 .item-info_credit {
-  font-size: small;
-  color: darkgray;
-  margin-left: 10px;
+  font-size: var(--font-base);
+  color: var(--color-primary);
+  margin-left: 16rpx;
+  font-weight: 600;
+}
+
+/* 进度条容器 */
+.detail-progress-wrap {
+  margin-top: 8rpx;
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+}
+.detail-progress-text {
+  font-size: var(--font-xs);
+  color: var(--color-text-tertiary);
+  flex-shrink: 0;
 }
