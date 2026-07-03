@@ -12,6 +12,10 @@ Page({
     currentCategoryName: '全部',
     currentCategoryMenus: [],
 
+    // === 滚动定位 ===
+    scrollIntoViewCategoryId: '',  // 左侧分类栏定位目标
+    scrollIntoViewMenuId: '',      // 右侧菜品栏定位目标
+
     _openidA: getApp().globalData._openidA,
     _openidB: getApp().globalData._openidB,
     userA: getApp().globalData.userA,
@@ -38,9 +42,10 @@ Page({
       this.setData({ currentOpenid: res.result });
     }).catch(() => {});
 
+    // 先加载分类（保证 filterMenus 不会因 categories 为空而报错）
     await this.loadCategories();
+    // 再加载菜单
     await this.loadMenus();
-    this.filterMenus();
     this.getScreenSize();
   },
 
@@ -50,8 +55,7 @@ Page({
       success: (res) => {
         this.setData({
           screenWidth: res.windowWidth,
-          screenHeight: res.windowHeight,
-          scrollHeight: res.windowHeight - 300
+          screenHeight: res.windowHeight
         })
       }
     })
@@ -59,18 +63,47 @@ Page({
 
   // 加载分类数据
   async loadCategories() {
-    const defaultCategories = await wx.cloud.callFunction({ name: 'getCategoryList', data: { list: 'CategoryList' } }).then(data => {
-      return data.result.data;
-    });
-    this.setData({ categories: defaultCategories });
+    try {
+      const res = await wx.cloud.callFunction({ name: 'getCategoryList', data: { list: 'CategoryList' } });
+      const defaultCategories = (res && res.result && res.result.data) || [];
+      // 为每个分类附加 count 字段（菜品数）
+      const allMenus = this.data.allMenus || [];
+      const enriched = defaultCategories.map(c => {
+        if (c._id === 'all') {
+          return { ...c, count: allMenus.length };
+        }
+        const count = allMenus.filter(m => m.category === c.name).length;
+        return { ...c, count };
+      });
+      this.setData({ categories: enriched });
+    } catch (err) {
+      console.error('加载分类失败', err);
+      this.setData({ categories: [] });
+    }
   },
 
   // 加载菜单数据
   async loadMenus() {
-    await wx.cloud.callFunction({ name: 'getMenuList', data: { list: 'MenuList' } }).then(data => {
-      this.setData({ allMenus: data.result.data });
+    try {
+      const res = await wx.cloud.callFunction({ name: 'getMenuList', data: { list: 'MenuList' } });
+      const menuData = (res && res.result && res.result.data) || [];
+      this.setData({ allMenus: menuData });
       this.filterMenus();
-    })
+      // 重新计算分类计数
+      if (this.data.categories.length > 0) {
+        const enriched = this.data.categories.map(c => {
+          if (c._id === 'all') {
+            return { ...c, count: menuData.length };
+          }
+          const count = menuData.filter(m => m.category === c.name).length;
+          return { ...c, count };
+        });
+        this.setData({ categories: enriched });
+      }
+    } catch (err) {
+      console.error('加载菜单失败', err);
+      this.setData({ allMenus: [], currentCategoryMenus: [] });
+    }
   },
 
   // 转到菜单详情
@@ -86,43 +119,117 @@ Page({
     wx.navigateTo({ url: '../MenuAdd/index' });
   },
 
-  // 设置搜索
+  // 设置搜索（保留左侧激活分类，搜索时仅在原分类下过滤 + 右侧定位）
   onSearch(event) {
-    this.setData({ search: event.detail.value });
+    const value = event.detail.value || '';
+    this.setData({ search: value });
     this.filterMenus();
+
+    // 关键：搜索无结果时，scrollIntoViewMenuId 保持稳定（不要在搜索无结果时清空/重置，
+    // 避免与 scroll-view 内部高度剧变冲突导致视觉抖动）
+    if (value && this.data.allMenus.length > 0 && this.data.categories.length > 0) {
+      // 在当前分类下查找第一个命中项
+      const lower = value.toLowerCase();
+      const firstMatch = (this.data.currentCategoryMenus || []).find(m =>
+        (m.title || '').toLowerCase().includes(lower)
+      );
+
+      if (firstMatch) {
+        // 当前分类有命中，定位到第一道匹配菜
+        this.setData({ scrollIntoViewMenuId: '' });
+        wx.nextTick(() => {
+          this.setData({
+            scrollIntoViewMenuId: 'menu-item-' + firstMatch._id
+          });
+        });
+      }
+      // 无命中时不动 scrollIntoViewMenuId，避免视觉错乱
+    }
   },
 
-  // 切换分类
+  // 清空搜索框
+  clearSearch() {
+    this.setData({ search: '' });
+    this.filterMenus();
+    // 重置右侧滚动条到顶部（清空再设置，确保 scroll-with-animation=false 下也能定位）
+    this.setData({ scrollIntoViewMenuId: '' });
+    wx.nextTick(() => {
+      this.setData({ scrollIntoViewMenuId: 'menu-section-title' });
+    });
+  },
+
+  // 切换分类（保留搜索词，跨分类查找）
   switchCategory(event) {
     const index = event.currentTarget.dataset.index;
     const category = this.data.categories[index];
 
+    // 第一步：先切换激活态（不触发滚动）
     this.setData({
       currentCategoryIndex: index,
       currentCategoryName: category.name
     });
     this.filterMenus();
+
+    // 第二步：等激活态稳定后再设置滚动定位
+    wx.nextTick(() => {
+      this.setData({
+        scrollIntoViewCategoryId: 'category-item-' + index
+      });
+      // 如果有搜索词，尝试在当前分类下定位到第一个命中项
+      if (this.data.search) {
+        const lower = this.data.search.toLowerCase();
+        const firstMatch = (this.data.currentCategoryMenus || []).find(m =>
+          (m.title || '').toLowerCase().includes(lower)
+        );
+        if (firstMatch) {
+          this.setData({ scrollIntoViewMenuId: '' });
+          wx.nextTick(() => {
+            this.setData({ scrollIntoViewMenuId: 'menu-item-' + firstMatch._id });
+          });
+        }
+        // 无命中时不重置 scrollIntoViewMenuId
+      } else {
+        // 无搜索词时重置到顶部
+        this.setData({ scrollIntoViewMenuId: '' });
+        wx.nextTick(() => {
+          this.setData({ scrollIntoViewMenuId: 'menu-section-title' });
+        });
+      }
+    });
   },
 
   // 根据分类和搜索条件过滤菜单
   filterMenus() {
-    let menuList = [];
-    const currentCategory = this.data.categories[this.data.currentCategoryIndex];
+    const { categories, currentCategoryIndex, allMenus, search, cart } = this.data;
 
-    if (currentCategory._id === 'all') {
-      menuList = this.data.allMenus;
-    } else {
-      menuList = this.data.allMenus.filter(item => item.category === currentCategory.name);
+    // 防御：分类或菜单未加载时直接清空
+    if (!categories || categories.length === 0) {
+      this.setData({ currentCategoryMenus: [] });
+      return;
+    }
+    if (!allMenus || allMenus.length === 0) {
+      this.setData({ currentCategoryMenus: [] });
+      return;
     }
 
-    if (this.data.search !== "") {
-      menuList = menuList.filter(item => item.title.toLowerCase().includes(this.data.search.toLowerCase()));
+    const currentCategory = categories[currentCategoryIndex] || categories[0];
+
+    let menuList;
+    if (currentCategory && currentCategory._id === 'all') {
+      menuList = allMenus.slice();
+    } else {
+      menuList = allMenus.filter(item => item.category === (currentCategory ? currentCategory.name : ''));
+    }
+
+    if (search) {
+      const lower = search.toLowerCase();
+      menuList = menuList.filter(item => (item.title || '').toLowerCase().includes(lower));
     }
 
     // 给每个菜品附加 _inCart 标志位
     menuList = menuList.map(item => ({
       ...item,
-      _inCart: !!this.data.cart[item._id]
+      _inCart: !!cart[item._id]
     }));
 
     this.setData({ currentCategoryMenus: menuList });
@@ -211,6 +318,72 @@ Page({
     if (this.data.cartExpanded) {
       this.setData({ cartExpanded: false });
     }
+  },
+
+  clearCart() {
+    wx.showModal({
+      title: '清空购物车',
+      content: '确定要清空已选的菜品吗？',
+      confirmColor: '#FF99AA',
+      success: (res) => {
+        if (res.confirm) {
+          this.setData({ cart: {}, cartList: [], cartCount: 0, cartTotalCredit: 0 });
+          this.refreshCart();
+        }
+      }
+    });
+  },
+
+  // 长按菜品卡片：弹出编辑/删除菜单
+  onCardLongPress(event) {
+    const menuIndex = event.currentTarget.dataset.index;
+    const menu = this.data.currentCategoryMenus[menuIndex];
+    if (!menu) return;
+
+    // 仅创建者可编辑/删除
+    if (menu._openid !== this.data.currentOpenid) {
+      wx.showToast({ title: '只能编辑自己的菜品', icon: 'none' });
+      return;
+    }
+
+    wx.showActionSheet({
+      itemList: [menu.star ? '取消星标' : '设为星标', '删除菜品'],
+      success: (res) => {
+        if (res.tapIndex === 0) {
+          wx.cloud.callFunction({
+            name: 'editMenuStar',
+            data: { _id: menu._id, list: 'MenuList', value: !menu.star }
+          });
+          menu.star = !menu.star;
+          this.setData({ currentCategoryMenus: this.data.currentCategoryMenus });
+        } else if (res.tapIndex === 1) {
+          wx.showModal({
+            title: '删除菜品',
+            content: `确定要删除「${menu.title}」吗？`,
+            confirmColor: '#FF3B30',
+            success: (r) => {
+              if (r.confirm) {
+                wx.cloud.callFunction({
+                  name: 'deleteMenu',
+                  data: { _id: menu._id, list: 'MenuList' }
+                });
+                const updatedMenus = this.data.allMenus.filter(item => item._id !== menu._id);
+                // 如果删除的菜在购物车里也一起移除
+                if (this.data.cart[menu._id]) {
+                  const cart = { ...this.data.cart };
+                  delete cart[menu._id];
+                  this.setData({ cart, allMenus: updatedMenus });
+                  this.refreshCart();
+                } else {
+                  this.setData({ allMenus: updatedMenus });
+                  this.filterMenus();
+                }
+              }
+            }
+          });
+        }
+      }
+    });
   },
 
   refreshCart() {
