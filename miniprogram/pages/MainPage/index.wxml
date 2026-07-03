@@ -1,13 +1,21 @@
 <view style="width:100%; background: none;">
 
-  <swiper indicator-dots="true" autoplay="true" interval="2000" duration="500" style="background: white; height: 200px; width: 100%;">
-      <swiper-item><image src="Images/HomeCover01.jpg" mode='widthFix' class="swiper-image" /></swiper-item>
-      <swiper-item><image src="Images/HomeCover02.jpg" mode='widthFix' class="swiper-image" /></swiper-item>
-      <swiper-item><image src="Images/HomeCover03.jpg" mode='widthFix' class="swiper-image" /></swiper-item>
-  </swiper>
+  <!-- 史迪奇主题欢迎横幅 -->
+  <view class="stitch-banner">
+    <view class="stitch-banner-stars">
+      <text class="stitch-star stitch-star-1">✦</text>
+      <text class="stitch-star stitch-star-2">✦</text>
+      <text class="stitch-star stitch-star-3">✦</text>
+      <text class="stitch-star stitch-star-4">✧</text>
+    </view>
+    <view class="stitch-banner-emoji">👽</view>
+    <view class="stitch-banner-title">Aloha ~ 史迪奇便利店</view>
+    <view class="stitch-banner-sub">小蓝怪和他的家人们，准备好一起冒险啦 🚀</view>
+    <view class="stitch-banner-tag">OHANA · 家人即一切</view>
+  </view>
 
 <view class="form-group_label">💰 积分榜</view>
-    <view class="form-group" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.05), 0 6px 20px 0 rgba(0, 0, 0, 0.05);">
+    <view class="form-group" style="box-shadow: 0 4px 8px 0 rgba(33,150,243,0.06), 0 6px 20px 0 rgba(33,150,243,0.08);">
     <view class="form-cell">
         <view class="slide">
         <view class="title">{{userA}}的积分：{{creditA}}</view>
@@ -21,7 +29,7 @@
 </view>
 
 <view class="form-group_label">🐻 欢迎回来</view>
-  <view class="form-group" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.05), 0 6px 20px 0 rgba(0, 0, 0, 0.05);">
+  <view class="form-group" style="box-shadow: 0 4px 8px 0 rgba(33,150,243,0.06), 0 6px 20px 0 rgba(33,150,243,0.08);">
     <view class="form-cell">
       <view class="slide">
         <view class="title">欢迎！蓝卡比和红卡比！</view>
@@ -33,6 +41,6 @@
       </view>
     </view>
   </view>
-  <view bindtap="requestSubscribeMessage">接收服务通知</view>
-  
+  <view bindtap="requestSubscribeMessage" class="subscribe-btn">🔔 接收服务通知</view>
+
 </view>

@@ -5,20 +5,24 @@ Page({
         allItems: [],
         unusedItems: [],
         usedItems: [],
-    
+
+        currentOpenid: '',  // 当前用户 openid（用于物品使用权限校验）
         _openidA : getApp().globalData._openidA,
         _openidB : getApp().globalData._openidB,
-    
+
         slideButtons: [
             {extClass: 'useBtn', text: '使用', src: "Images/icon_use.svg"},
             {extClass: 'starBtn', text: '星标', src: "Images/icon_star.svg"},
             {extClass: 'removeBtn', text: '删除', src: 'Images/icon_del.svg'}
         ],
     },
-    
+
     //页面加载时运行
     async onShow(){
         await wx.cloud.callFunction({name: 'getOpenId'}).then(async res => {
+            this.setData({ currentOpenid: res.result });
+            // 新规则：加载"双方共有的物品"（ownerOpenid = 我 OR ownerOpenid = 对方 且 我也可用）
+            // 简化：加载 _openid = 任意一方（保持原逻辑），由前端 useItem 时再做权限校验
             await wx.cloud.callFunction({name: 'getElementByOpenId', data: {
                 list: getApp().globalData.collectionStorageList,
                 _openid: res.result
@@ -142,12 +146,23 @@ Page({
       })
     },
   
-    //购买物品
+    //使用物品（新规则：仅持有者可用）
     async useItem(element) {
         //根据序号获得物品
         const itemIndex = element.currentTarget.dataset.index
         const item = this.data.unusedItems[itemIndex]
-    
+
+        // 新规则：只有持有者（ownerOpenid === currentOpenid）才能使用
+        // 兼容历史数据：旧物品无 ownerOpenid 字段时，允许任意一方使用
+        if (item.ownerOpenid && item.ownerOpenid !== this.data.currentOpenid) {
+            wx.showToast({
+                title: '只有物品持有者可以使用',
+                icon: 'none',
+                duration: 2000
+            })
+            return
+        }
+
         //使用物品
         wx.cloud.callFunction({name: 'editAvailable', data: {_id: item._id, value: false, list: getApp().globalData.collectionStorageList}}).then(()=>{
             //显示提示
@@ -156,7 +171,7 @@ Page({
                 icon: 'success',
                 duration: 2000
             })
-  
+
             //触发显示更新
             item.available = false
             this.filterItem()

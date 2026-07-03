@@ -1,7 +1,7 @@
 /* ============================================
    「薛师傅便利店」菜单模块样式
    基准：iPhone 14 (375pt) / 750rpx 设计稿
-   主色：#FF99AA  辅助：#07C160
+   主题：史迪奇蓝色调（#2196F3 / #1565C0）
    ============================================ */
 
 /* === 设计变量（部分属性通过 WXSS 注释说明，实际值直接写入） === */
@@ -91,14 +91,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #FFF0F3;
+  background-color: #E3F2FD;
   border-radius: 50%;
   font-size: 36rpx;
   flex-shrink: 0;
-  box-shadow: 0 2rpx 8rpx rgba(255, 153, 170, 0.15);
+  box-shadow: 0 2rpx 8rpx rgba(33, 150, 243, 0.18);
 }
 .manage-entry-hover {
-  background-color: #FFE6EC;
+  background-color: #BBDEFB;
   transform: scale(0.95);
 }
 
@@ -168,13 +168,13 @@
 }
 .category-item.active {
   background-color: #FFFFFF;
-  color: #FF99AA;
+  color: #2196F3;
   font-weight: 600;
   /* 用 box-shadow 实现指示条（不受 overflow/scroll 影响） */
-  box-shadow: inset 6rpx 0 0 #FF99AA;
+  box-shadow: inset 6rpx 0 0 #2196F3;
 }
 .category-item.active .category-item-count {
-  background-color: #FF99AA;
+  background-color: #2196F3;
   color: #FFFFFF;
 }
 .category-item-hover {
@@ -195,13 +195,13 @@
 .search-tip {
   display: flex;
   align-items: center;
-  background-color: #FFF5F7;
-  border-left: 6rpx solid #FF99AA;
+  background-color: #F0F7FF;
+  border-left: 6rpx solid #2196F3;
   padding: 12rpx 16rpx;
   border-radius: 8rpx;
   margin: 0 4rpx 16rpx;
   font-size: 24rpx;
-  color: #FF7A8E;
+  color: #1565C0;
   font-weight: 500;
 }
 
@@ -270,7 +270,7 @@
   width: 128rpx;
   height: 128rpx;
   border-radius: 16rpx;
-  background: linear-gradient(135deg, #FFE6EC 0%, #FFF5F7 100%);
+  background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -356,8 +356,8 @@
   height: 36rpx;
   padding: 0 14rpx;
   border-radius: 8rpx;
-  background-color: #FFF0F3;
-  color: #FF99AA;
+  background-color: #E3F2FD;
+  color: #2196F3;
   font-size: 24rpx;
   font-weight: 600;
 }
@@ -378,14 +378,14 @@
   width: 56rpx;
   height: 56rpx;
   border-radius: 50%;
-  background-color: #FF99AA;
+  background: linear-gradient(135deg, #2196F3 0%, #1565C0 100%);
   color: #FFFFFF;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 36rpx;
   font-weight: 300;
-  box-shadow: 0 4rpx 12rpx rgba(255, 153, 170, 0.35);
+  box-shadow: 0 4rpx 12rpx rgba(33, 150, 243, 0.35);
   transition: background-color 0.2s ease, transform 0.1s ease;
   z-index: 5;
 }
@@ -476,9 +476,9 @@
   transition: background-color 0.2s ease;
 }
 .cart-bar-icon-active {
-  background-color: #FF99AA;
+  background: linear-gradient(135deg, #2196F3 0%, #1565C0 100%);
   color: #FFFFFF;
-  box-shadow: 0 4rpx 12rpx rgba(255, 153, 170, 0.4);
+  box-shadow: 0 4rpx 12rpx rgba(33, 150, 243, 0.45);
   animation: cart-pulse 2s ease-in-out infinite;
 }
 @keyframes cart-pulse {
@@ -522,16 +522,16 @@
 }
 .cart-bar-text-empty {
   font-size: 28rpx;
-  color: #C8C9CC;
+  color: #8B98AE;
 }
 .cart-bar-count {
-  color: #FF99AA;
+  color: #2196F3;
   font-weight: 700;
   font-size: 28rpx;
   margin: 0 4rpx;
 }
 .cart-bar-credit {
-  color: #FF99AA;
+  color: #2196F3;
   font-weight: 700;
   font-size: 28rpx;
   margin: 0 4rpx;
@@ -543,7 +543,7 @@
 }
 
 .cart-bar-btn {
-  background: linear-gradient(135deg, #FF99AA 0%, #FF7A8E 100%);
+  background: linear-gradient(135deg, #2196F3 0%, #1565C0 100%);
   color: #FFFFFF;
   border-radius: 36rpx;
   font-size: 28rpx;
@@ -552,7 +552,7 @@
   height: 72rpx;
   line-height: 72rpx;
   margin: 0;
-  box-shadow: 0 4rpx 12rpx rgba(255, 153, 170, 0.4);
+  box-shadow: 0 4rpx 12rpx rgba(33, 150, 243, 0.4);
   flex-shrink: 0;
 }
 .cart-bar-btn[disabled],
@@ -660,7 +660,7 @@
   width: 104rpx;
   height: 104rpx;
   border-radius: 16rpx;
-  background: linear-gradient(135deg, #FFE6EC 0%, #FFF5F7 100%);
+  background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -685,16 +685,16 @@
 }
 .cart-item-credit {
   font-size: 24rpx;
-  color: #FF99AA;
+  color: #2196F3;
   font-weight: 600;
 }
 .cart-item-remove {
   width: 48rpx;
   height: 48rpx;
   border-radius: 50%;
-  border: 2rpx solid #FF99AA;
+  border: 2rpx solid #2196F3;
   background-color: transparent;
-  color: #FF99AA;
+  color: #2196F3;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -704,7 +704,7 @@
   margin-left: 16rpx;
 }
 .cart-item-remove:active {
-  background-color: #FFE6EC;
+  background-color: #BBDEFB;
 }
 
 .cart-panel-footer {
@@ -726,11 +726,11 @@
 .cart-panel-total-value {
   font-size: 36rpx;
   font-weight: 700;
-  color: #FF99AA;
+  color: #2196F3;
   margin-top: 4rpx;
 }
 .cart-panel-confirm-btn {
-  background: linear-gradient(135deg, #FF99AA 0%, #FF7A8E 100%);
+  background: linear-gradient(135deg, #2196F3 0%, #1565C0 100%);
   color: #FFFFFF;
   border-radius: 36rpx;
   font-size: 28rpx;
@@ -739,7 +739,7 @@
   height: 72rpx;
   line-height: 72rpx;
   margin: 0;
-  box-shadow: 0 4rpx 12rpx rgba(255, 153, 170, 0.4);
+  box-shadow: 0 4rpx 12rpx rgba(33, 150, 243, 0.4);
 }
 .cart-panel-confirm-btn[disabled] {
   background: #E5E5E5;

@@ -105,6 +105,20 @@
   line-height: 1;
 }
 
+.mission-info_waiting {
+  display: inline-flex;
+  align-items: center;
+  height: 32rpx;
+  padding: 0 12rpx;
+  border-radius: var(--radius-sm);
+  font-size: var(--font-xs);
+  background: var(--color-bg-input);
+  color: var(--color-text-tertiary);
+  font-weight: 600;
+  margin-top: 4rpx;
+  line-height: 1;
+}
+
 .star {
   width: 32rpx;
   height: 32rpx;

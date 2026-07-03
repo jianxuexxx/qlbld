@@ -55,12 +55,15 @@
       ✅ 接单
     </button>
 
-    <!-- 如果当前用户是点菜者，且菜品已被接受但未完成，则显示完成按钮 -->
-    <button wx:if="{{currentOpenid !== menuDetail._openid && menuDetail.accepted && menuDetail.ordered && !menuDetail.available}}"
+    <!-- 如果当前用户是创建者（厨师），且菜品已被接受但未完成，则显示完成按钮（新规则：厨师完成） -->
+    <button wx:if="{{currentOpenid === menuDetail._openid && menuDetail.accepted && menuDetail.ordered && menuDetail.available}}"
             class="btn-success"
             bindtap="completeOrder">
-      🎉 完成
+      🎉 完成订单
     </button>
+    <!-- 点菜者本人看到"等待厨师完成"提示 -->
+    <view wx:if="{{currentOpenid !== menuDetail._openid && menuDetail.accepted && menuDetail.ordered && menuDetail.available}}"
+          class="waiting-hint">⏳ 等待厨师完成</view>
 
     <!-- 如果当前用户是创建者，可以编辑 -->
     <button wx:if="{{currentOpenid === menuDetail._openid}}"

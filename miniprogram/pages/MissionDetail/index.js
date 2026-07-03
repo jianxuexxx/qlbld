@@ -82,14 +82,15 @@ Page({
   },
 
   // 完成订单型任务：标记 available=false + orderStatus=completed
+  // 新规则：只有"非下单者"（即对方）可以完成订单
   async finishOrder() {
     if (!this.data.isOrder) return;
     if (this.data.orderStatus === 'completed') {
       wx.showToast({ title: '订单已完成', icon: 'none' });
       return;
     }
-    if (this.data.mission._openid !== this.data.currentOpenid) {
-      wx.showToast({ title: '只有下单者可以确认完成', icon: 'none' });
+    if (this.data.mission._openid === this.data.currentOpenid) {
+      wx.showToast({ title: '请等待对方完成订单', icon: 'none' });
       return;
     }
 
@@ -103,6 +104,25 @@ Page({
         name: 'editAvailable',
         data: { _id: this.data._id, list: this.data.list, field: 'orderStatus', value: 'completed' }
       });
+      // 新规则：记录完成人 + 完成时间
+      await wx.cloud.callFunction({
+        name: 'editAvailable',
+        data: {
+          _id: this.data._id,
+          list: this.data.list,
+          field: 'completedByOpenid',
+          value: this.data.currentOpenid
+        }
+      }).catch(() => {});
+      await wx.cloud.callFunction({
+        name: 'editAvailable',
+        data: {
+          _id: this.data._id,
+          list: this.data.list,
+          field: 'completedAt',
+          value: new Date()
+        }
+      }).catch(() => {});
 
       // 本地刷新
       const mission = { ...this.data.mission, available: false, orderStatus: 'completed' };

@@ -25,15 +25,17 @@ style="background: white; height: 200px; width: 100%;">
   </view></view>
 
   <view class="form-group_label">货架<mp-badge content="{{unboughtItems.length}}" style="margin-left: 5px;" /></view>
-  <view class="form-group" wx:if="{{unboughtItems.length > 0}}"   
+  <view class="form-group" wx:if="{{unboughtItems.length > 0}}"
   style="z-index: 0; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.05), 0 6px 20px 0 rgba(0, 0, 0, 0.05);">
     <view class="form-cell" wx:for="{{unboughtItems}}" wx:key="index">
-      <mp-slideview buttons="{{slideButtons}}" data-index='{{index}}' icon="{{true}}" bindbuttontap="slideButtonTapUpper">
+      <!-- 新规则：发布者本人不显示左滑按钮（不能购买自己上架的商品） -->
+      <block wx:if="{{item._openid === currentOpenid}}">
         <view class="slide" data-index="{{index}}" bindtap="toDetailPageUpper">
           <view class="item-info">
             <view class="item-info_title">{{util.filterStr(item.title, 10)}}</view>
             <view class="item-info_award">💰 {{util.filterStr(item.credit, 10)}} 积分</view>
             <view class="item-info_date">📅 {{util.cutStr(item.date, 10)}} 创建</view>
+            <view class="mission-info_waiting">⏳ 等待对方购买</view>
           </view>
           <view class="item-info_author">
             <image style="position: absolute; width: 100%; bottom: 0;" wx:if="{{item._openid === _openidA}}" mode="widthFix" src="Images/MarketA.png"/>
@@ -41,7 +43,23 @@ style="background: white; height: 200px; width: 100%;">
           </view>
           <image wx:if="{{item.star}}" class="star" src="Images/Star.png" />
         </view>
-      </mp-slideview>
+      </block>
+      <block wx:else>
+        <mp-slideview buttons="{{slideButtons}}" data-index='{{index}}' icon="{{true}}" bindbuttontap="slideButtonTapUpper">
+          <view class="slide" data-index="{{index}}" bindtap="toDetailPageUpper">
+            <view class="item-info">
+              <view class="item-info_title">{{util.filterStr(item.title, 10)}}</view>
+              <view class="item-info_award">💰 {{util.filterStr(item.credit, 10)}} 积分</view>
+              <view class="item-info_date">📅 {{util.cutStr(item.date, 10)}} 创建</view>
+            </view>
+            <view class="item-info_author">
+              <image style="position: absolute; width: 100%; bottom: 0;" wx:if="{{item._openid === _openidA}}" mode="widthFix" src="Images/MarketA.png"/>
+              <image style="position: absolute; width: 100%; bottom: 0;" wx:if="{{item._openid === _openidB}}" mode="widthFix" src="Images/MarketB.png"/>
+            </view>
+            <image wx:if="{{item.star}}" class="star" src="Images/Star.png" />
+          </view>
+        </mp-slideview>
+      </block>
     </view>
   </view>
 

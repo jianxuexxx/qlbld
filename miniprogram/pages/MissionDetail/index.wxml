@@ -62,9 +62,13 @@
       </view>
     </view>
 
-    <!-- 完成订单按钮：仅下单者可见、未完成时显示 -->
-    <view class="form-cell" wx:if="{{mission._openid === currentOpenid && orderStatus !== 'completed'}}">
+    <!-- 完成订单按钮：新规则 - 只有"非下单者"（对方）可点击 -->
+    <view class="form-cell" wx:if="{{orderStatus !== 'completed' && mission._openid !== currentOpenid}}">
       <button class="finish-btn" bindtap="finishOrder">✅ 完成订单</button>
+    </view>
+    <!-- 下单者本人显示"等待对方完成"提示 -->
+    <view class="form-cell" wx:if="{{orderStatus !== 'completed' && mission._openid === currentOpenid}}">
+      <view class="waiting-hint">⏳ 请等待对方完成订单</view>
     </view>
   </view>
 </view>

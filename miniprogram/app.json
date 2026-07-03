@@ -14,15 +14,15 @@
     "pages/MenuDetail/index"
   ],
   "window": {
-    "backgroundColor": "#F6F6F6",
+    "backgroundColor": "#F0F4FA",
     "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#ff99aa",
+    "navigationBarBackgroundColor": "#1565C0",
     "navigationBarTitleText": "薛师傅便利店",
-    "navigationBarTextStyle": "black"
+    "navigationBarTextStyle": "white"
   },
   "tabBar": {
     "color": "#1a1a1a",
-    "selectedColor": "#ff99aa",
+    "selectedColor": "#1565C0",
     "list": [{
       "pagePath": "pages/MainPage/index",
       "selectedIconPath": "images/TabBar/HomeIconColor.jpg",

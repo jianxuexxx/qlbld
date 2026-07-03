@@ -142,3 +142,17 @@
   color: var(--color-text-tertiary);
   flex-shrink: 0;
 }
+
+/* 等待对方完成提示 */
+.waiting-hint {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 88rpx;
+  border-radius: var(--radius-pill);
+  background: var(--color-bg-input);
+  color: var(--color-text-tertiary);
+  font-size: var(--font-md);
+  font-weight: 600;
+  margin-top: 24rpx;
+}

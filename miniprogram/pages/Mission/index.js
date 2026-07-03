@@ -9,6 +9,7 @@ Page({
     unfinishedMissions: [],
     finishedMissions: [],
 
+    currentOpenid: '',  // 当前用户 openid（用于判断发布者身份）
     _openidA : getApp().globalData._openidA,
     _openidB : getApp().globalData._openidB,
 
@@ -21,6 +22,11 @@ Page({
 
   //页面加载时运行
   async onShow(){
+    // 获取当前用户 openid（用于发布者判定）
+    try {
+      const oid = await wx.cloud.callFunction({name: 'getOpenId'});
+      this.setData({ currentOpenid: oid.result });
+    } catch (e) { /* ignore */ }
     await wx.cloud.callFunction({name: 'getList', data: {list: getApp().globalData.collectionMissionList}}).then(data => {
       this.setData({allMissions: data.result.data})
       this.filterMission()
@@ -169,6 +175,15 @@ Page({
         //完成对方任务，奖金打入对方账号
         await wx.cloud.callFunction({name: 'editAvailable', data: {_id: mission._id, value: false, list: getApp().globalData.collectionMissionList}})
         await wx.cloud.callFunction({name: 'editCredit', data: {_openid: mission._openid, value: mission.credit, list: getApp().globalData.collectionUserList}})
+        // 新规则：记录完成人 + 完成时间
+        await wx.cloud.callFunction({
+          name: 'editAvailable',
+          data: { _id: mission._id, list: getApp().globalData.collectionMissionList, field: 'completedByOpenid', value: openid.result }
+        }).catch(() => {})
+        await wx.cloud.callFunction({
+          name: 'editAvailable',
+          data: { _id: mission._id, list: getApp().globalData.collectionMissionList, field: 'completedAt', value: new Date() }
+        }).catch(() => {})
 
         //触发显示更新
         mission.available = false

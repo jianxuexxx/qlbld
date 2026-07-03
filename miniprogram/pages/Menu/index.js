@@ -324,7 +324,7 @@ Page({
     wx.showModal({
       title: '清空购物车',
       content: '确定要清空已选的菜品吗？',
-      confirmColor: '#FF99AA',
+      confirmColor: '#2196F3',
       success: (res) => {
         if (res.confirm) {
           this.setData({ cart: {}, cartList: [], cartCount: 0, cartTotalCredit: 0 });

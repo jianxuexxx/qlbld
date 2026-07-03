@@ -92,7 +92,7 @@
 .action-buttons button::after { border: none; }
 
 .btn-primary {
-  background: linear-gradient(135deg, #FF99AA 0%, #FF7A8E 100%);
+  background: linear-gradient(135deg, #2196F3 0%, #1565C0 100%);
   color: #fff;
   box-shadow: var(--shadow-primary);
 }
@@ -123,4 +123,18 @@
 .btn-danger:active {
   transform: scale(0.98);
   opacity: 0.92;
+}
+
+/* 等待提示 */
+.waiting-hint {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 88rpx;
+  border-radius: var(--radius-pill);
+  background: var(--color-bg-input);
+  color: var(--color-text-tertiary);
+  font-size: var(--font-md);
+  font-weight: 600;
+  margin: 0;
 }

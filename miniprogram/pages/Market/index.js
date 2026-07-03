@@ -11,6 +11,7 @@ Page({
     unboughtItems: [], //上架商品
     boughtItems: [], //下架商品
 
+    currentOpenid: '',  // 当前用户 openid（用于发布者判定）
     _openidA : getApp().globalData._openidA,
     _openidB : getApp().globalData._openidB,
 
@@ -25,6 +26,11 @@ Page({
   async onShow(){
     this.getCurrentCredit()
     this.getUser()
+    // 获取当前用户 openid
+    try {
+      const oid = await wx.cloud.callFunction({name: 'getOpenId'});
+      this.setData({ currentOpenid: oid.result });
+    } catch (e) { /* ignore */ }
     await wx.cloud.callFunction({name: 'getList', data: {list: getApp().globalData.collectionMarketList}}).then(data => {
       this.setData({allItems: data.result.data})
       this.filterItem()
@@ -218,6 +224,7 @@ Page({
             credit: item.credit,
             title: item.title,
             desc: item.desc,
+            ownerOpenid: openid.result,  // 持有者=购买者
         }})
         
         //显示提示

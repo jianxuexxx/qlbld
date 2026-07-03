@@ -10,13 +10,14 @@ const db = cloud.database()
 // 云函数入口函数
 exports.main = async (context) => {
   // 添加新菜单项到集合
+  // 新规则：_openid 始终使用服务端 OPENID，避免客户端伪造
   return await db.collection(context.list).add({
     data: {
       title: context.title,
       category: context.category,
       desc: context.desc,
       credit: context.credit,
-      _openid: context._openid,
+      _openid: cloud.getWXContext().OPENID,
       date: context.date,
       available: context.available,
       ordered: context.ordered,

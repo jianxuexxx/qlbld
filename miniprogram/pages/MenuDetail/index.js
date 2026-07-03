@@ -67,7 +67,7 @@ Page({
 
     wx.cloud.callFunction({
       name: 'editMenuOrdered',
-      data: { _id: menu._id, value: true, list: 'MenuList' }
+      data: { _id: menu._id, value: true, list: 'MenuList', openid: this.data.currentOpenid }
     }).then(() => {
       wx.showToast({
         title: '点菜成功',
@@ -139,11 +139,11 @@ Page({
   async completeOrder() {
     const menu = this.data.menuDetail;
 
-    // 确保是点菜的用户才能完成订单
-    if (menu._openid === this.data.currentOpenid) {
+    // 新规则：只有创建者（厨师）能完成订单
+    if (menu._openid !== this.data.currentOpenid) {
       wx.showToast({
-        title: '创建者无法完成订单',
-        icon: 'error'
+        title: '请等待厨师完成',
+        icon: 'none'
       });
       return;
     }
@@ -172,23 +172,27 @@ Page({
       return;
     }
 
+    // 查询点菜者 openid：单菜流程下点菜者记录在 ordererOpenid
+    const ordererOpenid = menu.ordererOpenid || menu.orderedByOpenid;
+    const rewardOpenid = ordererOpenid || menu._openid; // 兜底：若没记录则不分账
+
     // 完成订单：将积分奖励给点菜者
     wx.cloud.callFunction({
       name: 'editMenuAvailable',
       data: { _id: menu._id, value: false, list: 'MenuList' }
     }).then(async () => {
-      // 奖励积分给点菜者
-      await wx.cloud.callFunction({
-        name: 'editCredit',
-        data: { _openid: this.data.currentOpenid, value: menu.credit, list: getApp().globalData.collectionUserList }
-      });
+      if (ordererOpenid) {
+        await wx.cloud.callFunction({
+          name: 'editCredit',
+          data: { _openid: rewardOpenid, value: menu.credit, list: getApp().globalData.collectionUserList }
+        });
+      }
 
       wx.showToast({
         title: '订单完成，积分已奖励',
         icon: 'success'
       });
 
-      // 更新本地数据
       this.setData({
         'menuDetail.available': false
       });

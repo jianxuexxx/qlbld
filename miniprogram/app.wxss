@@ -3,34 +3,39 @@
 
 /* ===== 全局设计 Token ===== */
 page {
-  /* 颜色 */
-  --color-primary: #FF99AA;
-  --color-primary-dark: #FF7A8E;
-  --color-primary-light: #FFF0F3;
-  --color-primary-lighter: #FFF5F7;
+  /* 颜色 - 史迪奇蓝色主题 */
+  --color-primary: #2196F3;          /* 主色：史迪奇蓝（body）*/
+  --color-primary-dark: #1565C0;     /* 深蓝（hover/渐变终点）*/
+  --color-primary-light: #E3F2FD;    /* 浅蓝（标签/底色）*/
+  --color-primary-lighter: #F0F7FF;  /* 极浅蓝（提示条底）*/
+  --color-accent: #7B68EE;           /* 紫色（外星质感强调）*/
+  --color-accent-light: #EDE7F6;     /* 浅紫（紫色标签底）*/
+  --color-star: #FFC107;             /* 黄色（星星/积分亮点）*/
+  --color-star-light: #FFF8E1;       /* 浅黄（积分徽章底）*/
   --color-success: #07C160;
   --color-success-light: #D4F8D4;
   --color-success-dark: #2D8A2D;
   --color-warning: #FFB400;
   --color-danger: #FA5151;
+  --color-danger-light: #FFEDED;
 
-  --color-bg-page: #F7F8FA;
+  --color-bg-page: #F0F4FA;          /* 整体淡蓝底（呼应主题）*/
   --color-bg-card: #FFFFFF;
-  --color-bg-sub: #FAFAFA;
-  --color-bg-input: #F5F6F8;
+  --color-bg-sub: #F5F8FD;
+  --color-bg-input: #EEF3FA;
 
-  --color-text-primary: #1A1A1A;
-  --color-text-body: #333333;
-  --color-text-secondary: #666666;
-  --color-text-tertiary: #8E8E93;
-  --color-text-placeholder: #C8C9CC;
+  --color-text-primary: #0D2A4D;     /* 深蓝主文字（呼应主题）*/
+  --color-text-body: #1F3A5F;
+  --color-text-secondary: #5A6B85;
+  --color-text-tertiary: #8B98AE;
+  --color-text-placeholder: #B0BBC9;
 
-  --color-divider: #F0F0F0;
+  --color-divider: #E4ECF6;
 
   /* 阴影 */
-  --shadow-card: 0 2rpx 12rpx rgba(0,0,0,0.04);
-  --shadow-card-hover: 0 4rpx 20rpx rgba(0,0,0,0.08);
-  --shadow-primary: 0 4rpx 12rpx rgba(255,153,170,0.4);
+  --shadow-card: 0 2rpx 12rpx rgba(33,150,243,0.06);
+  --shadow-card-hover: 0 6rpx 20rpx rgba(33,150,243,0.12);
+  --shadow-primary: 0 4rpx 12rpx rgba(33,150,243,0.35);
   --shadow-success: 0 4rpx 12rpx rgba(7,193,96,0.3);
 
   /* 尺寸 */
@@ -113,9 +118,14 @@ button::before { display: none; }
 .btn::after { border: none; }
 .btn:active { transform: scale(0.97); }
 .btn-primary {
-  background: linear-gradient(135deg, #FF99AA 0%, #FF7A8E 100%);
+  background: linear-gradient(135deg, #2196F3 0%, #1565C0 100%);
   color: #fff;
   box-shadow: var(--shadow-primary);
+}
+.btn-accent {
+  background: linear-gradient(135deg, #7B68EE 0%, #5E50D8 100%);
+  color: #fff;
+  box-shadow: 0 4rpx 12rpx rgba(123,104,238,0.4);
 }
 .btn-success {
   background: linear-gradient(135deg, #07C160 0%, #06AD56 100%);
@@ -274,7 +284,7 @@ button::before { display: none; }
   width: 96rpx;
   height: 96rpx;
   border-radius: var(--radius-round);
-  background: linear-gradient(135deg, #FF99AA 0%, #FF7A8E 100%);
+  background: linear-gradient(135deg, #2196F3 0%, #1565C0 100%);
   color: #fff;
   font-size: 56rpx;
   font-weight: 300;

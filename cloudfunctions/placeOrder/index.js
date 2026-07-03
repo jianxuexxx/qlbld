@@ -16,12 +16,15 @@ exports.main = async (context) => {
   //   credit: 总积分,
   //   dishes: [{ menuId, title, category, desc, credit, _openid }],
   //   cookerNames: ['薛师傅', '宝宝'],
-  //   ordererName: '薛师傅'
+  //   ordererName: '薛师傅',
+  //   ordererOpenid: '...'   // 可选：下单者 openid（冗余，便于跨账号追踪）
   // }
+
+  const OPENID = cloud.getWXContext().OPENID;
 
   const orderId = (await db.collection(context.list).add({
     data: {
-      _openid: cloud.getWXContext().OPENID,   // 下单者（监督方）
+      _openid: OPENID,                         // 下单者（监督方）
 
       date: db.serverDate(),
       credit: Number(context.credit),
@@ -35,6 +38,11 @@ exports.main = async (context) => {
       dishes: context.dishes || [],           // 菜品快照
       cookerNames: context.cookerNames || [], // 去重的厨师名
       ordererName: context.ordererName || '', // 下单者姓名
+      // 新规则：记录下单者与期待完成人
+      requesterOpenid: context.ordererOpenid || OPENID,
+      assigneeOpenid: null,                   // 接单方由 editMenuAccepted 时回填（厨师的 _openid）
+      completedByOpenid: null,                // 完成人
+      completedAt: null,                      // 完成时间
 
       available: true,                        // 沿用任务完成标志位
       star: false
