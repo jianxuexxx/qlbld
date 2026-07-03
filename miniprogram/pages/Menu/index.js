@@ -18,11 +18,12 @@ Page({
     userB: getApp().globalData.userB,
     currentOpenid: '',
 
-    // === 点菜多选模式状态 ===
-    selectMode: false,
-    selectedIds: {},          // { menuId: true }
-    selectedCount: 0,
-    totalCredit: 0,
+    // === 购物车 ===
+    cart: {},                    // { [menuId]: menuObject }
+    cartList: [],                // 购物车菜品列表（用于展开面板渲染）
+    cartCount: 0,
+    cartTotalCredit: 0,
+    cartExpanded: false,         // 购物车展开/收起
 
     slideButtons: [
       { extClass: 'orderBtn', text: '点菜', src: "Images/icon_order.svg" },
@@ -33,7 +34,6 @@ Page({
 
   // 页面加载时运行
   async onShow() {
-    // 取一次当前 openid 缓存本地
     await wx.cloud.callFunction({ name: 'getOpenId' }).then(res => {
       this.setData({ currentOpenid: res.result });
     }).catch(() => {});
@@ -62,9 +62,7 @@ Page({
     const defaultCategories = await wx.cloud.callFunction({ name: 'getCategoryList', data: { list: 'CategoryList' } }).then(data => {
       return data.result.data;
     });
-    this.setData({
-      categories: defaultCategories
-    });
+    this.setData({ categories: defaultCategories });
   },
 
   // 加载菜单数据
@@ -77,21 +75,20 @@ Page({
 
   // 转到菜单详情
   async toDetailPage(event) {
+    if (this.data.cartExpanded) return;
     const menuIndex = event.currentTarget.dataset.index;
     const menu = this.data.currentCategoryMenus[menuIndex];
     wx.navigateTo({ url: '../MenuDetail/index?id=' + menu._id });
   },
 
-  // 转到添加菜单（保留为弱化入口）
+  // 转到添加菜单
   async toAddPage() {
     wx.navigateTo({ url: '../MenuAdd/index' });
   },
 
   // 设置搜索
   onSearch(event) {
-    this.setData({
-      search: event.detail.value
-    });
+    this.setData({ search: event.detail.value });
     this.filterMenus();
   },
 
@@ -104,7 +101,6 @@ Page({
       currentCategoryIndex: index,
       currentCategoryName: category.name
     });
-
     this.filterMenus();
   },
 
@@ -123,15 +119,13 @@ Page({
       menuList = menuList.filter(item => item.title.toLowerCase().includes(this.data.search.toLowerCase()));
     }
 
-    // 给每个菜品附加 _selected 标志位，供模板渲染勾选样式
+    // 给每个菜品附加 _inCart 标志位
     menuList = menuList.map(item => ({
       ...item,
-      _selected: !!this.data.selectedIds[item._id]
+      _inCart: !!this.data.cart[item._id]
     }));
 
-    this.setData({
-      currentCategoryMenus: menuList
-    });
+    this.setData({ currentCategoryMenus: menuList });
   },
 
   // 响应左划按钮事件
@@ -141,14 +135,13 @@ Page({
     const menu = this.data.currentCategoryMenus[menuIndex];
 
     await wx.cloud.callFunction({ name: 'getOpenId' }).then(async openid => {
-      // 左滑"点菜"按钮：进入多选模式
+      // 旧的"点菜"左滑按钮：改为引导用户使用 ➕
       if (index === 0) {
-        this.enterSelectMode();
+        wx.showToast({ title: '请点击 ➕ 加入购物车', icon: 'none' });
         return;
       }
-      // 检查是否是菜单创建者操作
+      // 星标 / 删除：仅菜品创建者可操作
       else if (menu._openid === openid.result) {
-        // 处理星标按钮点击事件
         if (index === 1) {
           wx.cloud.callFunction({
             name: 'editMenuStar',
@@ -156,8 +149,6 @@ Page({
           });
           menu.star = !menu.star;
         }
-
-        // 处理删除按钮点击事件
         else if (index === 2) {
           wx.cloud.callFunction({
             name: 'deleteMenu',
@@ -166,10 +157,7 @@ Page({
 
           const updatedMenus = this.data.allMenus.filter(item => item._id !== menu._id);
           if (updatedMenus.length === 0) {
-            this.setData({
-              allMenus: [],
-              currentCategoryMenus: []
-            });
+            this.setData({ allMenus: [], currentCategoryMenus: [] });
           } else {
             this.setData({ allMenus: updatedMenus });
             this.filterMenus();
@@ -182,91 +170,65 @@ Page({
         });
       }
       else {
-        wx.showToast({
-          title: '只能编辑自己的菜单',
-          icon: 'error',
-          duration: 2000
-        });
+        wx.showToast({ title: '只能编辑自己的菜单', icon: 'error' });
       }
     });
   },
 
-  // 旧版单菜点菜（已废弃，保留以兼容）
-  async orderMenu(menu) {
-    this.enterSelectMode();
-  },
-
-  // === 点菜多选模式 ===
-  enterSelectMode() {
-    this.setData({
-      selectMode: true,
-      selectedIds: {},
-      selectedCount: 0,
-      totalCredit: 0
-    });
-    this.filterMenus();
-    wx.showToast({
-      title: '请勾选要点的菜',
-      icon: 'none',
-      duration: 1500
-    });
-  },
-
-  cancelSelect() {
-    this.setData({
-      selectMode: false,
-      selectedIds: {},
-      selectedCount: 0,
-      totalCredit: 0
-    });
-    this.filterMenus();
-  },
-
-  // 多选模式下点击菜品行：切换选中状态
-  onMenuItemTap(event) {
-    if (!this.data.selectMode) {
-      // 非多选模式：走详情页
-      this.toDetailPage(event);
-      return;
-    }
-    const menuIndex = event.currentTarget.dataset.index;
-    const menu = this.data.currentCategoryMenus[menuIndex];
+  // === 购物车操作 ===
+  addToCart(event) {
+    const menuId = event.currentTarget.dataset.id;
+    const menu = this.data.allMenus.find(m => m._id === menuId);
     if (!menu) return;
 
-    const selectedIds = { ...this.data.selectedIds };
-    if (selectedIds[menu._id]) {
-      delete selectedIds[menu._id];
-    } else {
-      selectedIds[menu._id] = true;
+    const cart = { ...this.data.cart };
+    if (cart[menuId]) {
+      // 已加入：点击 ➕ 无效果（采用方案 A：不累加数量）
+      wx.showToast({ title: '已在购物车中', icon: 'none' });
+      return;
     }
+    cart[menuId] = menu;
 
-    let count = 0;
-    let total = 0;
-    this.data.allMenus.forEach(m => {
-      if (selectedIds[m._id]) {
-        count += 1;
-        total += Number(m.credit) || 0;
-      }
-    });
+    this.setData({ cart });
+    this.refreshCart();
+    // 微反馈
+    wx.vibrateShort && wx.vibrateShort({ type: 'light' });
+  },
 
-    this.setData({
-      selectedIds,
-      selectedCount: count,
-      totalCredit: total
-    });
-    this.filterMenus();
+  removeFromCart(event) {
+    const menuId = event.currentTarget.dataset.id;
+    const cart = { ...this.data.cart };
+    delete cart[menuId];
+    this.setData({ cart });
+    this.refreshCart();
+  },
+
+  toggleCart() {
+    this.setData({ cartExpanded: !this.data.cartExpanded });
+  },
+
+  closeCart() {
+    if (this.data.cartExpanded) {
+      this.setData({ cartExpanded: false });
+    }
+  },
+
+  refreshCart() {
+    const cartList = Object.values(this.data.cart);
+    const cartCount = cartList.length;
+    const cartTotalCredit = cartList.reduce((sum, m) => sum + (Number(m.credit) || 0), 0);
+    this.setData({ cartList, cartCount, cartTotalCredit });
+    this.filterMenus(); // 刷新菜品 _inCart 标志
   },
 
   // 确认下单
   async submitOrder() {
-    if (this.data.selectedCount === 0) {
-      wx.showToast({ title: '请先勾选菜品', icon: 'none' });
+    if (this.data.cartCount === 0) {
+      wx.showToast({ title: '购物车空空如也', icon: 'none' });
       return;
     }
 
-    // 收集所选菜品完整快照
-    const selectedMenus = this.data.allMenus.filter(m => this.data.selectedIds[m._id]);
-    const dishes = selectedMenus.map(m => ({
+    const dishes = this.data.cartList.map(m => ({
       menuId: m._id,
       title: m.title,
       category: m.category || '',
@@ -313,7 +275,7 @@ Page({
 
       const orderId = orderRes.result && orderRes.result._id;
 
-      // 2. 计算每位厨师的积分奖励并批量发放
+      // 2. 按厨师分账
       const deltasMap = {};
       dishes.forEach(d => {
         if (!d._openid) return;
@@ -331,19 +293,20 @@ Page({
         });
       }
 
+      // 3. 清空购物车 + 收起面板
+      this.setData({
+        cart: {},
+        cartList: [],
+        cartCount: 0,
+        cartTotalCredit: 0,
+        cartExpanded: false
+      });
+
       wx.hideLoading();
       wx.showToast({ title: '下单成功', icon: 'success', duration: 1500 });
 
-      // 退出多选模式并刷新列表
-      this.setData({
-        selectMode: false,
-        selectedIds: {},
-        selectedCount: 0,
-        totalCredit: 0
-      });
       await this.loadMenus();
 
-      // 跳转到订单详情
       if (orderId) {
         setTimeout(() => {
           wx.navigateTo({ url: '../MissionDetail/index?id=' + orderId });
