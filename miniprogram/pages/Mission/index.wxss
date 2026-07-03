@@ -1,6 +1,110 @@
 /* ===== Mission 任务列表页（统一规范） ===== */
 
-/* 顶部图片 */
+/* 空状态：浅蓝居中卡片 */
+.empty-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 160rpx 32rpx 80rpx;
+  text-align: center;
+}
+.empty-hero-emoji {
+  font-size: 120rpx;
+  margin-bottom: 24rpx;
+  opacity: 0.85;
+}
+.empty-hero-title {
+  font-size: 36rpx;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-bottom: 12rpx;
+}
+.empty-hero-sub {
+  font-size: 26rpx;
+  color: var(--color-text-tertiary);
+  line-height: 1.5;
+}
+
+/* 任务引导头（替代轮播图）*/
+.mission-hero {
+  display: flex;
+  align-items: center;
+  gap: 24rpx;
+  margin: 24rpx 24rpx 8rpx;
+  padding: 28rpx 28rpx;
+  background: linear-gradient(135deg, #2196F3 0%, #1565C0 100%);
+  border-radius: var(--radius-xl);
+  color: #FFFFFF;
+  box-shadow: 0 6rpx 20rpx rgba(33, 150, 243, 0.25);
+}
+.mission-hero-icon {
+  font-size: 64rpx;
+  line-height: 1;
+  flex-shrink: 0;
+  filter: drop-shadow(0 4rpx 8rpx rgba(0,0,0,0.18));
+}
+.mission-hero-text {
+  flex: 1;
+  min-width: 0;
+}
+.mission-hero-title {
+  font-size: 32rpx;
+  font-weight: 700;
+  letter-spacing: 1rpx;
+  margin-bottom: 4rpx;
+  text-shadow: 0 2rpx 6rpx rgba(0,0,0,0.12);
+}
+.mission-hero-sub {
+  font-size: 22rpx;
+  opacity: 0.92;
+  line-height: 1.4;
+  text-shadow: 0 1rpx 4rpx rgba(0,0,0,0.1);
+}
+.mission-hero-stats {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.18);
+  padding: 12rpx 18rpx;
+  border-radius: 16rpx;
+  border: 2rpx solid rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(8rpx);
+}
+.mission-hero-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 56rpx;
+}
+.mission-hero-stat-num {
+  font-size: 30rpx;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: 0.5rpx;
+}
+.mission-hero-stat-label {
+  font-size: 18rpx;
+  opacity: 0.92;
+  margin-top: 2rpx;
+}
+.mission-hero-divider {
+  width: 2rpx;
+  height: 36rpx;
+  background: rgba(255, 255, 255, 0.35);
+}
+
+/* 历史遗留轮播图样式保留兼容 */
+.swiper-image {
+  display: block;
+  height: 100%;
+  width: 100%;
+  background-color: var(--color-bg-sub);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
 .background {
   width: 280rpx;
   margin-top: 5vh;
@@ -19,17 +123,6 @@
   margin-top: 8rpx;
   font-size: var(--font-xs);
   color: var(--color-text-tertiary);
-}
-
-/* 轮播图 */
-.swiper-image {
-  display: block;
-  height: 100%;
-  width: 100%;
-  background-color: var(--color-bg-sub);
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
 }
 
 /* 任务列表卡片 */
@@ -81,6 +174,7 @@
   color: var(--color-text-tertiary);
 }
 .mission-info_author {
+  position: relative;
   width: 80rpx;
   height: 80rpx;
   flex-shrink: 0;
@@ -89,6 +183,11 @@
   background: var(--color-bg-input);
 }
 .mission-info_author image {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
   width: 100%;
   height: 100%;
 }

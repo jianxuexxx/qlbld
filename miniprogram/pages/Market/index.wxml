@@ -1,22 +1,22 @@
 <wxs module="util" src="../util.wxs" />
 
 <view class="container white" wx:if="{{allItems.length === 0}}">
-  <image class="background" src="Images/None.png" mode="aspectFit" />
-  <view class="title">暂无商品</view>
-  <view class="subtitle">好像什么商品也没有...</view>
+  <view class="empty-hero">
+    <view class="empty-hero-emoji">🛍️</view>
+    <view class="empty-hero-title">暂无商品</view>
+    <view class="empty-hero-sub">上架一个好物，给对方一个惊喜～</view>
+  </view>
 </view>
 
-<view wx:if="{{allItems.length > 0}}" class="page-title">
-    <div style="position: absolute; top: 5px; left: 10px;">欢迎来到商城, {{user}}!</div>
-    <div style="position: absolute; top: 5px; right: 10px;">💰{{credit}} 积分</div>
+<!-- 商城引导头（替代轮播图） -->
+<view wx:if="{{allItems.length > 0}}" class="market-hero">
+  <view class="market-hero-icon">🛍️</view>
+  <view class="market-hero-text">
+    <view class="market-hero-title">欢迎来到商城, {{user}}</view>
+    <view class="market-hero-sub">用积分兑换对方的爱 · {{credit}} 积分</view>
+  </view>
 </view>
-
-<swiper wx:if="{{allItems.length > 0}}" indicator-dots="true" autoplay="true" interval="2000" duration="500" 
-style="background: white; height: 200px; width: 100%;">
-  <swiper-item><image src="Images/MarketCover01.jpg" mode='widthFix' class="swiper-image" /></swiper-item>
-  <swiper-item><image src="Images/MarketCover02.jpg" mode='widthFix' class="swiper-image" /></swiper-item>
-  <swiper-item><image src="Images/MarketCover03.jpg" mode='widthFix' class="swiper-image" /></swiper-item>
-</swiper>
+<view wx:if="{{allItems.length > 0}}" class="divider-soft"></view>
 
 <view class="container" wx:if="{{allItems.length > 0}}">
   <view class="form-group"><view class="search-bar">
@@ -38,8 +38,8 @@ style="background: white; height: 200px; width: 100%;">
             <view class="mission-info_waiting">⏳ 等待对方购买</view>
           </view>
           <view class="item-info_author">
-            <image style="position: absolute; width: 100%; bottom: 0;" wx:if="{{item._openid === _openidA}}" mode="widthFix" src="Images/MarketA.png"/>
-            <image style="position: absolute; width: 100%; bottom: 0;" wx:if="{{item._openid === _openidB}}" mode="widthFix" src="Images/MarketB.png"/>
+            <image wx:if="{{item._openid === _openidA}}" mode="aspectFill" src="Images/MarketA.png"/>
+            <image wx:if="{{item._openid === _openidB}}" mode="aspectFill" src="Images/MarketB.png"/>
           </view>
           <image wx:if="{{item.star}}" class="star" src="Images/Star.png" />
         </view>
@@ -53,8 +53,8 @@ style="background: white; height: 200px; width: 100%;">
               <view class="item-info_date">📅 {{util.cutStr(item.date, 10)}} 创建</view>
             </view>
             <view class="item-info_author">
-              <image style="position: absolute; width: 100%; bottom: 0;" wx:if="{{item._openid === _openidA}}" mode="widthFix" src="Images/MarketA.png"/>
-              <image style="position: absolute; width: 100%; bottom: 0;" wx:if="{{item._openid === _openidB}}" mode="widthFix" src="Images/MarketB.png"/>
+              <image wx:if="{{item._openid === _openidA}}" mode="aspectFill" src="Images/MarketA.png"/>
+              <image wx:if="{{item._openid === _openidB}}" mode="aspectFill" src="Images/MarketB.png"/>
             </view>
             <image wx:if="{{item.star}}" class="star" src="Images/Star.png" />
           </view>
@@ -75,8 +75,8 @@ style="background: white; height: 200px; width: 100%;">
             <view class="item-info_date">📅 {{util.cutStr(item.date, 10)}} 创建</view>
           </view>
           <view class="item-info_author">
-              <image style="position: absolute; width:100%; bottom: 0;" wx:if="{{item._openid === _openidA}}" mode="widthFix" src="Images/MarketA.png"/>
-              <image style="position: absolute; width:100%; bottom: 0;" wx:if="{{item._openid === _openidB}}" mode="widthFix" src="Images/MarketB.png"/>
+              <image wx:if="{{item._openid === _openidA}}" mode="aspectFill" src="Images/MarketA.png"/>
+              <image wx:if="{{item._openid === _openidB}}" mode="aspectFill" src="Images/MarketB.png"/>
           </view>
           <image wx:if="{{item.star}}" class="star" src="Images/Star.png" />
         </view>

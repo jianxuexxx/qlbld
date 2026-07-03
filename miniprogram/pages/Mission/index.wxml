@@ -1,17 +1,32 @@
 <wxs module="util" src="../util.wxs" />
 
 <view class="container white" wx:if="{{allMissions.length === 0}}">
-  <image class="background" src="Images/None.png" mode="aspectFit" />
-  <view class="title">暂无任务</view>
-  <view class="subtitle">好像什么任务也没有...</view>
+  <view class="empty-hero">
+    <view class="empty-hero-emoji">📋</view>
+    <view class="empty-hero-title">暂无任务</view>
+    <view class="empty-hero-sub">发布一个任务，开始攒积分之旅～</view>
+  </view>
 </view>
 
-<swiper wx:if="{{allMissions.length > 0}}" indicator-dots="true" autoplay="true" interval="2000" duration="500" 
-style="height: 200px; width: 100%; background: white; ">
-      <swiper-item><image src="Images/MissionCover01.jpg" mode='widthFix' class="swiper-image" /></swiper-item>
-      <swiper-item><image src="Images/MissionCover02.jpg" mode='widthFix' class="swiper-image" /></swiper-item>
-      <swiper-item><image src="Images/MissionCover03.jpg" mode='widthFix' class="swiper-image" /></swiper-item>
-</swiper>
+<!-- 任务引导头（原轮播图位置） -->
+<view wx:if="{{allMissions.length > 0}}" class="mission-hero">
+  <view class="mission-hero-icon">🎯</view>
+  <view class="mission-hero-text">
+    <view class="mission-hero-title">任务清单</view>
+    <view class="mission-hero-sub">完成彼此的小目标，一起变更好 ✨</view>
+  </view>
+  <view class="mission-hero-stats">
+    <view class="mission-hero-stat">
+      <text class="mission-hero-stat-num">{{unfinishedMissions.length}}</text>
+      <text class="mission-hero-stat-label">进行中</text>
+    </view>
+    <view class="mission-hero-divider"></view>
+    <view class="mission-hero-stat">
+      <text class="mission-hero-stat-num">{{finishedMissions.length}}</text>
+      <text class="mission-hero-stat-label">已完成</text>
+    </view>
+  </view>
+</view>
 
 <view class="container" wx:if="{{allMissions.length > 0}}">
   <view class="form-group"><view class="search-bar">
@@ -33,8 +48,8 @@ style="height: 200px; width: 100%; background: white; ">
             <view class="mission-info_waiting">⏳ 等待对方完成</view>
           </view>
           <view class="mission-info_author">
-            <image style="position: absolute; width: 100%; bottom: 0;" wx:if="{{item._openid === _openidA}}" mode="widthFix" src="Images/MissionA.png"/>
-            <image style="position: absolute; width: 100%; bottom: 0;" wx:if="{{item._openid === _openidB}}" mode="widthFix" src="Images/MissionB.png"/>
+            <image wx:if="{{item._openid === _openidA}}" mode="aspectFill" src="Images/MissionA.png"/>
+            <image wx:if="{{item._openid === _openidB}}" mode="aspectFill" src="Images/MissionB.png"/>
           </view>
           <image wx:if="{{item.star}}" class="star" src="Images/Star.png" />
         </view>
@@ -48,8 +63,8 @@ style="height: 200px; width: 100%; background: white; ">
               <view class="mission-info_date">📅 {{util.cutStr(item.date, 10)}} 创建</view>
             </view>
             <view class="mission-info_author">
-              <image style="position: absolute; width: 100%; bottom: 0;" wx:if="{{item._openid === _openidA}}" mode="widthFix" src="Images/MissionA.png"/>
-              <image style="position: absolute; width: 100%; bottom: 0;" wx:if="{{item._openid === _openidB}}" mode="widthFix" src="Images/MissionB.png"/>
+              <image wx:if="{{item._openid === _openidA}}" mode="aspectFill" src="Images/MissionA.png"/>
+              <image wx:if="{{item._openid === _openidB}}" mode="aspectFill" src="Images/MissionB.png"/>
             </view>
             <image wx:if="{{item.star}}" class="star" src="Images/Star.png" />
           </view>
@@ -70,8 +85,8 @@ style="height: 200px; width: 100%; background: white; ">
             <view class="mission-info_date">📅 {{util.cutStr(item.date, 10)}} 创建</view>
           </view>
           <view class="mission-info_author">
-              <image style="position: absolute; width:100%; bottom: 0;" wx:if="{{item._openid === _openidA}}" mode="widthFix" src="Images/MissionA.png"/>
-              <image style="position: absolute; width:100%; bottom: 0;" wx:if="{{item._openid === _openidB}}" mode="widthFix" src="Images/MissionB.png"/>
+              <image wx:if="{{item._openid === _openidA}}" mode="aspectFill" src="Images/MissionA.png"/>
+              <image wx:if="{{item._openid === _openidB}}" mode="aspectFill" src="Images/MissionB.png"/>
           </view>
           <image wx:if="{{item.star}}" class="star" src="Images/Star.png" />
         </view>
