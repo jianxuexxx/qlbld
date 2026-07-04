@@ -57,84 +57,105 @@
         </view>
       </scroll-view>
 
-      <!-- 右侧菜品栏 -->
+      <!-- 右侧菜品栏：连续滚动，按分类切 section -->
       <scroll-view class="menu-scroll"
         scroll-y="true"
-        scroll-with-animation="false"
+        scroll-with-animation="true"
         scroll-into-view="{{scrollIntoViewMenuId}}"
+        bindscroll="onMenuScroll"
+        scroll-top="{{menuScrollTop}}"
         enhanced="true"
         show-scrollbar="{{false}}">
 
-        <!-- 当前分类标题 -->
-        <view class="section-title" id="menu-section-title">
-          <text class="section-title-name">{{currentCategoryName}}</text>
-          <text class="section-title-count">共 {{currentCategoryMenus.length}} 道</text>
-        </view>
+        <!-- 顶部间距（不顶到搜索栏） -->
+        <view class="menu-scroll-spacer" id="menu-top-anchor"></view>
 
-        <!-- 搜索提示 -->
+        <!-- 全局搜索提示（搜索时统一提示） -->
         <view class="search-tip" wx:if="{{search}}">
-          🔍 搜索 "{{search}}" 的结果
+          🔍 搜索 "{{search}}" 的结果（{{totalMatchCount}} 道）
         </view>
 
-        <!-- 菜品卡片列表 -->
-        <view class="menu-card-list" wx:if="{{currentCategoryMenus.length > 0}}">
-          <view class="menu-card"
-                wx:for="{{currentCategoryMenus}}"
-                wx:key="index"
-                id="menu-item-{{item._id}}"
-                hover-class="menu-card-hover"
-                data-id="{{item._id}}"
-                data-index="{{index}}"
-                bindtap="toDetailPage"
-                bindlongpress="onCardLongPress">
-
-            <!-- 左侧图标 -->
-            <view class="menu-card-left">
-              <text>🍴</text>
-              <view class="menu-card-author">
-                <image wx:if="{{item._openid === _openidA}}" src="Images/MenuA.png" mode="aspectFill" />
-                <image wx:if="{{item._openid === _openidB}}" src="Images/MenuB.png" mode="aspectFill" />
-              </view>
-            </view>
-
-            <!-- 中部信息 -->
-            <view class="menu-card-center">
-              <view class="menu-card-title">{{item.title}}</view>
-              <view class="menu-card-desc" wx:if="{{item.desc}}">{{item.desc}}</view>
-              <view class="menu-card-meta">
-                <view class="menu-card-tag" wx:if="{{item.category}}">🏷️ {{item.category}}</view>
-                <view class="menu-card-credit">💰 {{item.credit}} 积分</view>
-              </view>
-            </view>
-
-            <!-- 收藏标识 -->
-            <image wx:if="{{item.star}}" class="menu-card-star" src="Images/Star.png" />
-
-            <!-- 右侧加号按钮 -->
-            <view class="add-btn {{item._inCart ? 'add-btn-checked' : ''}}"
-                  data-id="{{item._id}}"
-                  catchtap="addToCart"
-                  hover-class="add-btn-hover">
-              <text wx:if="{{item._inCart}}">✓</text>
-              <text wx:else>＋</text>
-            </view>
-          </view>
-        </view>
-
-        <!-- 搜索无结果 -->
-        <view class="empty-state" wx:if="{{currentCategoryMenus.length === 0 && search}}">
+        <!-- 全局空状态 -->
+        <view class="empty-state" wx:if="{{displayedMenus.length === 0 && search}}">
           <text class="empty-state-icon">🔍</text>
           <text class="empty-state-text">没有找到 "{{search}}" 相关菜品</text>
           <text class="empty-state-hint">试试切换其他分类或更换关键词</text>
         </view>
 
-        <!-- 分类为空（无搜索时） -->
-        <view class="empty-state" wx:if="{{currentCategoryMenus.length === 0 && !search}}">
+        <view class="empty-state" wx:if="{{displayedMenus.length === 0 && !search}}">
           <text class="empty-state-icon">🍽️</text>
-          <text class="empty-state-text">该分类下还没有菜品～</text>
+          <text class="empty-state-text">还没有添加任何菜品～</text>
           <text class="empty-state-hint">点击右上角 🍳 添加一道吧</text>
         </view>
 
+        <!-- 按分类 section 顺序渲染 -->
+        <block wx:for="{{displayedMenus}}" wx:key="categoryId" wx:for-item="section">
+          <view wx:if="{{section.menus.length > 0}}"
+                class="menu-section"
+                id="menu-section-{{section.categoryId}}"
+                data-category-index="{{section.categoryIndex}}">
+
+            <!-- section 标题 -->
+            <view class="section-title">
+              <text class="section-title-name">{{section.categoryName}}</text>
+              <text class="section-title-count">{{section.menus.length}} 道</text>
+            </view>
+
+            <!-- 该分类下的菜品列表 -->
+            <view class="menu-card-list">
+              <view class="menu-card"
+                    wx:for="{{section.menus}}"
+                    wx:key="_id"
+                    wx:for-item="menu"
+                    id="menu-item-{{menu._id}}"
+                    hover-class="menu-card-hover"
+                    data-id="{{menu._id}}"
+                    data-category-index="{{section.categoryIndex}}"
+                    bindtap="toDetailPage"
+                    bindlongpress="onCardLongPress">
+
+                <!-- 左侧图标 -->
+                <view class="menu-card-left">
+                  <text>🍴</text>
+                  <view class="menu-card-author">
+                    <image wx:if="{{menu._openid === _openidA}}" src="Images/MenuA.png" mode="aspectFill" />
+                    <image wx:if="{{menu._openid === _openidB}}" src="Images/MenuB.png" mode="aspectFill" />
+                  </view>
+                </view>
+
+                <!-- 中部信息 -->
+                <view class="menu-card-center">
+                  <view class="menu-card-title">{{menu.title}}</view>
+                  <view class="menu-card-desc" wx:if="{{menu.desc}}">{{menu.desc}}</view>
+                  <view class="menu-card-meta">
+                    <view class="menu-card-tag" wx:if="{{menu.category}}">🏷️ {{menu.category}}</view>
+                    <view class="menu-card-credit">💰 {{menu.credit}} 积分</view>
+                  </view>
+                </view>
+
+                <!-- 收藏标识 -->
+                <image wx:if="{{menu.star}}" class="menu-card-star" src="Images/Star.png" />
+
+                <!-- 右侧数量加减器 -->
+                <view class="stepper {{cart[menu._id] ? 'stepper-active' : ''}}">
+                  <view wx:if="{{cart[menu._id]}}"
+                        class="stepper-btn stepper-minus"
+                        data-id="{{menu._id}}"
+                        catchtap="decCart"
+                        hover-class="stepper-btn-hover">−</view>
+                  <text wx:if="{{cart[menu._id]}}" class="stepper-count">{{cart[menu._id]}}</text>
+                  <view class="stepper-btn stepper-plus"
+                        data-id="{{menu._id}}"
+                        catchtap="incCart"
+                        hover-class="stepper-btn-hover">＋</view>
+                </view>
+              </view>
+            </view>
+          </view>
+        </block>
+
+        <!-- 底部留白（防止最后一个卡片被购物车条遮挡） -->
+        <view class="menu-scroll-bottom-spacer"></view>
       </scroll-view>
     </view>
 
@@ -160,9 +181,19 @@
       <view class="cart-item-emoji">🍴</view>
       <view class="cart-item-info">
         <view class="cart-item-title">{{ci.title}}</view>
-        <view class="cart-item-credit">💰 {{ci.credit}} 积分</view>
+        <view class="cart-item-credit">💰 {{ci.credit}} × {{ci._count}} = {{ci.credit * ci._count}} 积分</view>
       </view>
-      <view class="cart-item-remove" data-id="{{ci._id}}" bindtap="removeFromCart" hover-class="cart-item-remove-hover">−</view>
+      <view class="stepper stepper-mini">
+        <view class="stepper-btn stepper-minus"
+              data-id="{{ci._id}}"
+              catchtap="decCart"
+              hover-class="stepper-btn-hover">−</view>
+        <text class="stepper-count">{{ci._count}}</text>
+        <view class="stepper-btn stepper-plus"
+              data-id="{{ci._id}}"
+              catchtap="incCart"
+              hover-class="stepper-btn-hover">＋</view>
+      </view>
     </view>
   </scroll-view>
   <view class="cart-panel-footer" wx:if="{{cartCount > 0}}">

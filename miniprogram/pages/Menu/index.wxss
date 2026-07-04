@@ -223,22 +223,55 @@
   background-color: #8E8E93;
 }
 
-/* ===== 当前分类标题 ===== */
+/* ===== 顶部留白（防止首菜顶到搜索栏） ===== */
+.menu-scroll-spacer {
+  height: 12rpx;
+  flex-shrink: 0;
+}
+
+/* ===== 底部留白（防止最后一张菜被购物车条遮挡） ===== */
+.menu-scroll-bottom-spacer {
+  height: 140rpx;
+  flex-shrink: 0;
+}
+
+/* ===== 分类 section 标题 ===== */
+.menu-section {
+  margin-bottom: 20rpx;
+}
 .section-title {
   display: flex;
   align-items: baseline;
-  margin: 8rpx 0 20rpx;
-  padding: 0 4rpx;
+  margin: 16rpx 0 16rpx;
+  padding: 8rpx 0;
+  border-bottom: 2rpx solid var(--color-divider, #E4ECF6);
+  position: relative;
+}
+.section-title::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 8rpx;
+  height: 28rpx;
+  background: linear-gradient(180deg, #2196F3, #1565C0);
+  border-radius: 4rpx;
 }
 .section-title-name {
-  font-size: 32rpx;
-  font-weight: 600;
-  color: #1A1A1A;
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #0D2A4D;
+  margin-left: 18rpx;
+  letter-spacing: 1rpx;
 }
 .section-title-count {
   font-size: 22rpx;
   color: #8E8E93;
   margin-left: 12rpx;
+  background: var(--color-bg-input, #F5F6F8);
+  padding: 2rpx 12rpx;
+  border-radius: 16rpx;
 }
 
 /* ===== 菜品卡片 ===== */
@@ -370,11 +403,18 @@
   z-index: 2;
 }
 
-/* 菜品右侧：加号按钮（绝对定位右上） */
-.add-btn {
+/* 菜品右侧：数量加减器（绝对定位右下） */
+.stepper {
   position: absolute;
   right: 20rpx;
   bottom: 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  height: 56rpx;
+  z-index: 5;
+}
+.stepper-btn {
   width: 56rpx;
   height: 56rpx;
   border-radius: 50%;
@@ -385,18 +425,61 @@
   justify-content: center;
   font-size: 36rpx;
   font-weight: 300;
+  line-height: 1;
   box-shadow: 0 4rpx 12rpx rgba(33, 150, 243, 0.35);
-  transition: background-color 0.2s ease, transform 0.1s ease;
-  z-index: 5;
+  transition: transform 0.1s ease;
+  flex-shrink: 0;
 }
-.add-btn:active {
+.stepper-btn-hover {
   transform: scale(0.9);
+  opacity: 0.85;
 }
-.add-btn-checked {
-  background-color: #07C160;
-  box-shadow: 0 4rpx 12rpx rgba(7, 193, 96, 0.3);
-  font-size: 32rpx;
-  font-weight: 600;
+.stepper-minus {
+  margin-right: 16rpx;
+  background: #FFFFFF;
+  color: #2196F3;
+  border: 2rpx solid #2196F3;
+  box-shadow: 0 2rpx 6rpx rgba(33, 150, 243, 0.15);
+}
+.stepper-count {
+  min-width: 56rpx;
+  text-align: center;
+  font-size: 30rpx;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin: 0 16rpx 0 0;
+  line-height: 56rpx;
+  animation: stepper-pop 0.18s ease-out;
+}
+@keyframes stepper-pop {
+  0% { transform: scale(0.6); opacity: 0; }
+  60% { transform: scale(1.15); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+.stepper-active .stepper-plus {
+  background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
+  box-shadow: 0 4rpx 12rpx rgba(76, 175, 80, 0.3);
+}
+/* 紧凑型（小尺寸，购物车面板使用） */
+.stepper-mini {
+  position: static;
+  height: 48rpx;
+}
+.stepper-mini .stepper-btn {
+  width: 48rpx;
+  height: 48rpx;
+  font-size: 30rpx;
+  box-shadow: 0 2rpx 6rpx rgba(33, 150, 243, 0.25);
+}
+.stepper-mini .stepper-minus {
+  margin-right: 12rpx;
+  box-shadow: none;
+}
+.stepper-mini .stepper-count {
+  min-width: 48rpx;
+  font-size: 28rpx;
+  margin: 0 12rpx 0 0;
+  line-height: 48rpx;
 }
 
 /* 空分类状态 */

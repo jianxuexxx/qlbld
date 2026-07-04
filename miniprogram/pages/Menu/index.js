@@ -12,6 +12,13 @@ Page({
     currentCategoryName: '全部',
     currentCategoryMenus: [],
 
+    // === 右侧扁平连续渲染 ===
+    displayedMenus: [],            // [{ categoryId, categoryName, categoryIndex, menus: [...] }, ...]
+    totalMatchCount: 0,            // 搜索命中总条数
+    menuScrollTop: 0,              // 用于回顶
+    isUserScrolling: false,        // 防止主动设置 scrollIntoView 与 bindscroll 冲突
+    scrollLockTimer: null,         // 解锁定时器
+
     // === 滚动定位 ===
     scrollIntoViewCategoryId: '',  // 左侧分类栏定位目标
     scrollIntoViewMenuId: '',      // 右侧菜品栏定位目标
@@ -22,11 +29,11 @@ Page({
     userB: getApp().globalData.userB,
     currentOpenid: '',
 
-    // === 购物车 ===
-    cart: {},                    // { [menuId]: menuObject }
-    cartList: [],                // 购物车菜品列表（用于展开面板渲染）
-    cartCount: 0,
-    cartTotalCredit: 0,
+    // === 购物车（数量加减模式） ===
+    cart: {},                    // { [menuId]: count } 数量
+    cartList: [],                // 购物车菜品列表（含 _count 字段）
+    cartCount: 0,                // 总数量（所有菜数量累加）
+    cartTotalCredit: 0,          // 总积分（credit * count）
     cartExpanded: false,         // 购物车展开/收起
 
     slideButtons: [
@@ -37,12 +44,19 @@ Page({
   },
 
   // 页面加载时运行
+  onUnload() {
+    if (this.data.scrollLockTimer) {
+      clearTimeout(this.data.scrollLockTimer);
+      this.setData({ scrollLockTimer: null });
+    }
+  },
+
   async onShow() {
     await wx.cloud.callFunction({ name: 'getOpenId' }).then(res => {
       this.setData({ currentOpenid: res.result });
     }).catch(() => {});
 
-    // 先加载分类（保证 filterMenus 不会因 categories 为空而报错）
+    // 先加载分类（保证 buildDisplayedMenus 不会因 categories 为空而报错）
     await this.loadCategories();
     // 再加载菜单
     await this.loadMenus();
@@ -88,7 +102,7 @@ Page({
       const res = await wx.cloud.callFunction({ name: 'getMenuList', data: { list: 'MenuList' } });
       const menuData = (res && res.result && res.result.data) || [];
       this.setData({ allMenus: menuData });
-      this.filterMenus();
+      this.buildDisplayedMenus();
       // 重新计算分类计数
       if (this.data.categories.length > 0) {
         const enriched = this.data.categories.map(c => {
@@ -119,43 +133,44 @@ Page({
     wx.navigateTo({ url: '../MenuAdd/index' });
   },
 
-  // 设置搜索（保留左侧激活分类，搜索时仅在原分类下过滤 + 右侧定位）
+  // 设置搜索：保留左侧激活分类，全局搜索所有 section，定位到第一道匹配菜
   onSearch(event) {
     const value = event.detail.value || '';
     this.setData({ search: value });
-    this.filterMenus();
+    this.buildDisplayedMenus();
 
-    // 关键：搜索无结果时，scrollIntoViewMenuId 保持稳定（不要在搜索无结果时清空/重置，
-    // 避免与 scroll-view 内部高度剧变冲突导致视觉抖动）
     if (value && this.data.allMenus.length > 0 && this.data.categories.length > 0) {
-      // 在当前分类下查找第一个命中项
       const lower = value.toLowerCase();
-      const firstMatch = (this.data.currentCategoryMenus || []).find(m =>
-        (m.title || '').toLowerCase().includes(lower)
+      // 在全局命中（displayedMenus 是按分类过滤后的）
+      const firstMatch = (this.data.displayedMenus || []).find(section =>
+        (section.menus || []).length > 0
       );
-
-      if (firstMatch) {
-        // 当前分类有命中，定位到第一道匹配菜
+      if (firstMatch && firstMatch.menus[0]) {
+        const matchedMenu = firstMatch.menus[0];
+        // 同时联动左侧激活态到该分类
+        this.setData({
+          currentCategoryIndex: firstMatch.categoryIndex,
+          currentCategoryName: firstMatch.categoryName
+        });
+        this.lockAutoScroll();
         this.setData({ scrollIntoViewMenuId: '' });
         wx.nextTick(() => {
-          this.setData({
-            scrollIntoViewMenuId: 'menu-item-' + firstMatch._id
-          });
+          this.setData({ scrollIntoViewMenuId: 'menu-item-' + matchedMenu._id });
         });
       }
-      // 无命中时不动 scrollIntoViewMenuId，避免视觉错乱
+      // 无命中：不动 scrollIntoViewMenuId
+    } else {
+      // 清空搜索：不重置 scrollIntoViewMenuId，避免与 bindscroll 冲突
     }
   },
 
-  // 清空搜索框
+  // 清空搜索框：滚动回顶部
   clearSearch() {
     this.setData({ search: '' });
-    this.filterMenus();
-    // 重置右侧滚动条到顶部（清空再设置，确保 scroll-with-animation=false 下也能定位）
-    this.setData({ scrollIntoViewMenuId: '' });
-    wx.nextTick(() => {
-      this.setData({ scrollIntoViewMenuId: 'menu-section-title' });
-    });
+    this.buildDisplayedMenus();
+    // 用 scroll-top 重置（最稳妥）
+    this.lockAutoScroll();
+    this.setData({ menuScrollTop: 0, scrollIntoViewMenuId: '' });
   },
 
   // 切换分类（保留搜索词，跨分类查找）
@@ -163,76 +178,154 @@ Page({
     const index = event.currentTarget.dataset.index;
     const category = this.data.categories[index];
 
-    // 第一步：先切换激活态（不触发滚动）
+    // 第一步：先切换激活态
     this.setData({
       currentCategoryIndex: index,
       currentCategoryName: category.name
     });
-    this.filterMenus();
+    this.buildDisplayedMenus();
 
-    // 第二步：等激活态稳定后再设置滚动定位
+    // 第二步：等 DOM 稳定后，再设置滚动定位
     wx.nextTick(() => {
-      this.setData({
-        scrollIntoViewCategoryId: 'category-item-' + index
-      });
-      // 如果有搜索词，尝试在当前分类下定位到第一个命中项
+      // 1) 左侧分类栏定位
+      this.setData({ scrollIntoViewCategoryId: 'category-item-' + index });
+
+      // 2) 右侧滚动到该分类 section；如有搜索词则定位到第一道匹配菜
+      const targetSectionId = 'menu-section-' + (category._id || `idx-${index}`);
       if (this.data.search) {
         const lower = this.data.search.toLowerCase();
         const firstMatch = (this.data.currentCategoryMenus || []).find(m =>
           (m.title || '').toLowerCase().includes(lower)
         );
         if (firstMatch) {
+          this.lockAutoScroll();
           this.setData({ scrollIntoViewMenuId: '' });
           wx.nextTick(() => {
             this.setData({ scrollIntoViewMenuId: 'menu-item-' + firstMatch._id });
           });
+        } else {
+          this.lockAutoScroll();
+          this.setData({ scrollIntoViewMenuId: '' });
+          wx.nextTick(() => {
+            this.setData({ scrollIntoViewMenuId: targetSectionId });
+          });
         }
-        // 无命中时不重置 scrollIntoViewMenuId
       } else {
-        // 无搜索词时重置到顶部
+        // 无搜索词：定位到 section 标题
+        this.lockAutoScroll();
         this.setData({ scrollIntoViewMenuId: '' });
         wx.nextTick(() => {
-          this.setData({ scrollIntoViewMenuId: 'menu-section-title' });
+          this.setData({ scrollIntoViewMenuId: targetSectionId });
         });
       }
     });
   },
 
-  // 根据分类和搜索条件过滤菜单
+  // 防止主动 scrollIntoView 与 bindscroll 冲突：短时间内忽略 bindscroll 联动
+  lockAutoScroll() {
+    if (this.data.scrollLockTimer) clearTimeout(this.data.scrollLockTimer);
+    this.data.isUserScrolling = false;
+    this.setData({ isUserScrolling: false });
+    const that = this;
+    const timer = setTimeout(() => {
+      // 500ms 后允许 bindscroll 再次联动
+      that.setData({ isUserScrolling: true, scrollLockTimer: null });
+    }, 500);
+    that.data.scrollLockTimer = timer;
+  },
+
+  // 监听右侧滚动：自动联动左侧分类激活态
+  onMenuScroll(event) {
+    const { scrollTop } = event.detail;
+    // 取 scrollTop 对应的 section：根据每个 section 顶部的位置判断
+    // 简化实现：使用 querySelector 找到最接近 scrollTop 上方的一个 section
+    const query = wx.createSelectorQuery().in(this);
+    query.selectAll('.menu-section').fields({
+      rect: true, id: true, dataset: true
+    }).exec((res) => {
+      if (!res || !res[0] || res[0].length === 0) return;
+      const sections = res[0];
+      let activeIdx = -1;
+      // 找到最后一个 top <= scrollTop + 100 的 section（100 为偏移容差）
+      for (let i = 0; i < sections.length; i++) {
+        const rect = sections[i];
+        if (!rect) continue;
+        const top = rect.top; // 相对 scroll-view 内容顶部的偏移
+        if (top <= scrollTop + 100) {
+          activeIdx = sections[i].dataset.categoryIndex;
+        } else {
+          break;
+        }
+      }
+      if (activeIdx === -1) return;
+
+      const { currentCategoryIndex, scrollIntoViewCategoryId } = this.data;
+      if (activeIdx !== currentCategoryIndex) {
+        // 联动左侧：更新激活态 + 滚动左侧分类栏
+        this.setData({
+          currentCategoryIndex: activeIdx,
+          currentCategoryName: this.data.categories[activeIdx] ? this.data.categories[activeIdx].name : '全部',
+          scrollIntoViewCategoryId: 'category-item-' + activeIdx
+        });
+      }
+    });
+  },
+
+  // 按分类顺序生成扁平显示数据（保留 search 过滤）
+  buildDisplayedMenus() {
+    const { categories, allMenus, search } = this.data;
+
+    if (!categories || categories.length === 0 || !allMenus || allMenus.length === 0) {
+      this.setData({
+        displayedMenus: [],
+        currentCategoryMenus: [],
+        totalMatchCount: 0
+      });
+      return;
+    }
+
+    const lower = (search || '').toLowerCase();
+
+    // 按 categories 顺序构造 section
+    const sections = categories
+      .map((cat, idx) => {
+        const isAll = cat._id === 'all';
+        let menus = isAll
+          ? allMenus.slice()
+          : allMenus.filter(m => m.category === cat.name);
+
+        if (lower) {
+          menus = menus.filter(m => (m.title || '').toLowerCase().includes(lower));
+        }
+
+        return {
+          categoryId: cat._id || `idx-${idx}`,
+          categoryName: cat.name,
+          categoryIndex: idx,
+          menus
+        };
+      })
+      // 去掉没有任何菜（且搜索命中也不空）的分类，避免空标题
+      .filter(section => section.menus.length > 0);
+
+    const totalMatchCount = sections.reduce((sum, s) => sum + s.menus.length, 0);
+
+    // 兼容旧字段：取当前激活分类的菜单作为 currentCategoryMenus
+    const activeIdx = Math.min(this.data.currentCategoryIndex || 0, sections.length - 1);
+    const currentSection = sections[activeIdx] || sections[0];
+    const currentCategoryMenus = currentSection ? currentSection.menus : [];
+
+    this.setData({
+      displayedMenus: sections,
+      totalMatchCount,
+      currentCategoryMenus,
+      currentCategoryName: currentSection ? currentSection.categoryName : '全部'
+    });
+  },
+
+  // 兼容旧调用（保留接口，内部直接调新方法）
   filterMenus() {
-    const { categories, currentCategoryIndex, allMenus, search, cart } = this.data;
-
-    // 防御：分类或菜单未加载时直接清空
-    if (!categories || categories.length === 0) {
-      this.setData({ currentCategoryMenus: [] });
-      return;
-    }
-    if (!allMenus || allMenus.length === 0) {
-      this.setData({ currentCategoryMenus: [] });
-      return;
-    }
-
-    const currentCategory = categories[currentCategoryIndex] || categories[0];
-
-    let menuList;
-    if (currentCategory && currentCategory._id === 'all') {
-      menuList = allMenus.slice();
-    } else {
-      menuList = allMenus.filter(item => item.category === (currentCategory ? currentCategory.name : ''));
-    }
-
-    if (search) {
-      const lower = search.toLowerCase();
-      menuList = menuList.filter(item => (item.title || '').toLowerCase().includes(lower));
-    }
-
-    // 给每个菜品附加 _inCart 标志位
-    menuList = menuList.map(item => ({
-      ...item,
-      _inCart: !!cart[item._id]
-    }));
-
-    this.setData({ currentCategoryMenus: menuList });
+    this.buildDisplayedMenus();
   },
 
   // 响应左划按钮事件
@@ -282,26 +375,43 @@ Page({
     });
   },
 
-  // === 购物车操作 ===
-  addToCart(event) {
+  // === 购物车操作（数量加减） ===
+
+  // +号：增加数量
+  incCart(event) {
     const menuId = event.currentTarget.dataset.id;
     const menu = this.data.allMenus.find(m => m._id === menuId);
     if (!menu) return;
 
     const cart = { ...this.data.cart };
-    if (cart[menuId]) {
-      // 已加入：点击 ➕ 无效果（采用方案 A：不累加数量）
-      wx.showToast({ title: '已在购物车中', icon: 'none' });
-      return;
-    }
-    cart[menuId] = menu;
+    const newCount = (cart[menuId] || 0) + 1;
+    cart[menuId] = newCount;
 
     this.setData({ cart });
     this.refreshCart();
-    // 微反馈
     wx.vibrateShort && wx.vibrateShort({ type: 'light' });
   },
 
+  // -号：减少数量（减到 0 自动从购物车移除）
+  decCart(event) {
+    const menuId = event.currentTarget.dataset.id;
+    const menu = this.data.allMenus.find(m => m._id === menuId);
+    if (!menu) return;
+
+    const cart = { ...this.data.cart };
+    const newCount = (cart[menuId] || 0) - 1;
+    if (newCount <= 0) {
+      delete cart[menuId];
+    } else {
+      cart[menuId] = newCount;
+    }
+
+    this.setData({ cart });
+    this.refreshCart();
+    wx.vibrateShort && wx.vibrateShort({ type: 'light' });
+  },
+
+  // 兼容旧调用：长按菜品→设为星标逻辑里若使用
   removeFromCart(event) {
     const menuId = event.currentTarget.dataset.id;
     const cart = { ...this.data.cart };
@@ -387,11 +497,21 @@ Page({
   },
 
   refreshCart() {
-    const cartList = Object.values(this.data.cart);
-    const cartCount = cartList.length;
-    const cartTotalCredit = cartList.reduce((sum, m) => sum + (Number(m.credit) || 0), 0);
+    const { cart, allMenus } = this.data;
+    // 计算 cartList：每个有数量的菜品展开为 { ...menu, _count }
+    const cartList = Object.keys(cart)
+      .map(menuId => {
+        const menu = allMenus.find(m => m._id === menuId);
+        if (!menu) return null;
+        return { ...menu, _count: cart[menuId] };
+      })
+      .filter(Boolean);
+    // 总数量（累加 count）
+    const cartCount = cartList.reduce((sum, m) => sum + (m._count || 0), 0);
+    // 总积分（credit * count）
+    const cartTotalCredit = cartList.reduce((sum, m) => sum + (Number(m.credit) || 0) * (m._count || 0), 0);
     this.setData({ cartList, cartCount, cartTotalCredit });
-    this.filterMenus(); // 刷新菜品 _inCart 标志
+    this.buildDisplayedMenus(); // 重建 displayedMenus
   },
 
   // 确认下单
@@ -401,23 +521,26 @@ Page({
       return;
     }
 
-    const dishes = this.data.cartList.map(m => ({
-      menuId: m._id,
-      title: m.title,
-      category: m.category || '',
-      desc: m.desc || '',
-      credit: Number(m.credit) || 0,
-      _openid: m._openid
-    }));
-
-    // 去重厨师姓名
-    const cookerNames = [];
+    // 展开为独立的 dish 记录：每道菜按 count 重复展开
+    const dishes = [];
     const userByOpenid = {
       [this.data._openidA]: this.data.userA,
       [this.data._openidB]: this.data.userB
     };
-    dishes.forEach(d => {
-      const name = userByOpenid[d._openid];
+    const cookerNames = [];
+    this.data.cartList.forEach(m => {
+      const count = m._count || 1;
+      for (let i = 0; i < count; i++) {
+        dishes.push({
+          menuId: m._id,
+          title: m.title,
+          category: m.category || '',
+          desc: m.desc || '',
+          credit: Number(m.credit) || 0,
+          _openid: m._openid
+        });
+      }
+      const name = userByOpenid[m._openid];
       if (name && cookerNames.indexOf(name) === -1) {
         cookerNames.push(name);
       }
