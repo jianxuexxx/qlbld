@@ -1,0 +1,9 @@
+{
+  "navigationStyle": "default",
+  "navigationBarTitleText": "维护菜单",
+  "navigationBarBackgroundColor": "#1565C0",
+  "navigationBarTextStyle": "white",
+  "usingComponents": {
+    "mp-slideview": "../../../miniprogram_npm/weui-miniprogram/slideview/slideview"
+  }
+}

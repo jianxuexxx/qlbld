@@ -1,0 +1,45 @@
+<!-- pages/Settings/menu-edit/index.wxml -->
+<view class="page">
+  <view class="form-card">
+
+    <view class="form-row">
+      <view class="form-label">菜品名称<text class="form-required">*</text></view>
+      <input class="form-input" placeholder="例：可乐鸡翅" value="{{menu.title}}" bindinput="onInputTitle" maxlength="20"/>
+    </view>
+
+    <view class="form-row">
+      <view class="form-label">分类</view>
+      <input class="form-input" placeholder="例：中餐 / 创意菜" value="{{menu.category}}" bindinput="onInputCategory" maxlength="10"/>
+    </view>
+
+    <view class="form-row">
+      <view class="form-label">积分价格<text class="form-required">*</text></view>
+      <input class="form-input" type="digit" placeholder="例：10" value="{{menu.credit}}" bindinput="onInputCredit"/>
+    </view>
+
+    <view class="form-row">
+      <view class="form-label">描述</view>
+      <textarea class="form-textarea" placeholder="介绍一下这道菜吧…" value="{{menu.desc}}" bindinput="onInputDesc" maxlength="80"></textarea>
+    </view>
+
+    <view class="form-row">
+      <view class="form-label">状态</view>
+      <view class="status-toggle">
+        <view class="status-opt {{!menu.disabled ? 'active' : ''}}" data-v="0" bindtap="toggleDisabled">上架中</view>
+        <view class="status-opt {{menu.disabled ? 'active' : ''}}" data-v="1" bindtap="toggleDisabled">已下架</view>
+      </view>
+    </view>
+
+    <view class="form-row">
+      <view class="form-label">星标</view>
+      <switch checked="{{menu.star}}" color="#1565C0" bindchange="onToggleStar"/>
+    </view>
+
+  </view>
+
+  <!-- 操作 -->
+  <view class="action-bar">
+    <button class="btn-secondary" bindtap="onCancel" hover-class="btn-secondary-hover">取消</button>
+    <button class="btn-primary" bindtap="onSave" hover-class="btn-primary-hover">保存</button>
+  </view>
+</view>

@@ -1,0 +1,95 @@
+<!--pages/Settings/index.wxml-->
+<view class="page">
+  <!-- 用户卡片 -->
+  <view class="user-card">
+    <view class="user-avatar">
+      <image wx:if="{{userInfo.avatar}}" src="{{userInfo.avatar}}" mode="aspectFill"/>
+      <text wx:else>👤</text>
+    </view>
+    <view class="user-info">
+      <view class="user-name">{{userInfo.name}}</view>
+      <view class="user-meta">💰 {{credit}} 积分 · {{todayLabel}}</view>
+    </view>
+  </view>
+
+  <!-- 维护组 -->
+  <view class="section">
+    <view class="section-header">
+      <text class="section-title">维护</text>
+      <text class="section-desc">管理你们的小店</text>
+    </view>
+    <view class="cell-group">
+      <view class="cell" hover-class="cell-hover" bindtap="onTapMenuManage">
+        <view class="cell-left">
+          <view class="cell-icon cell-icon-blue">🍴</view>
+          <view class="cell-text">
+            <view class="cell-title">维护菜单</view>
+            <view class="cell-subtitle">查看、上架、下架、编辑菜品</view>
+          </view>
+        </view>
+        <text class="cell-arrow">›</text>
+      </view>
+
+      <!-- 占位：后续扩展用 -->
+      <view class="cell cell-disabled">
+        <view class="cell-left">
+          <view class="cell-icon cell-icon-grey">🛒</view>
+          <view class="cell-text">
+            <view class="cell-title">维护商品（敬请期待）</view>
+            <view class="cell-subtitle">即将上线</view>
+          </view>
+        </view>
+        <text class="cell-tag-soon">敬请期待</text>
+      </view>
+
+      <view class="cell cell-disabled">
+        <view class="cell-left">
+          <view class="cell-icon cell-icon-grey">🎯</view>
+          <view class="cell-text">
+            <view class="cell-title">维护任务（敬请期待）</view>
+            <view class="cell-subtitle">即将上线</view>
+          </view>
+        </view>
+        <text class="cell-tag-soon">敬请期待</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 通用组 -->
+  <view class="section">
+    <view class="section-header">
+      <text class="section-title">通用</text>
+      <text class="section-desc">个性化与提醒</text>
+    </view>
+    <view class="cell-group">
+      <view class="cell cell-disabled">
+        <view class="cell-left">
+          <view class="cell-icon cell-icon-grey">🔔</view>
+          <view class="cell-text">
+            <view class="cell-title">订阅消息（敬请期待）</view>
+            <view class="cell-subtitle">推送设置</view>
+          </view>
+        </view>
+        <text class="cell-tag-soon">敬请期待</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 关于 -->
+  <view class="section">
+    <view class="cell-group">
+      <view class="cell cell-disabled">
+        <view class="cell-left">
+          <view class="cell-icon cell-icon-grey">ℹ️</view>
+          <view class="cell-text">
+            <view class="cell-title">关于</view>
+            <view class="cell-subtitle">版本 v{{version}}</view>
+          </view>
+        </view>
+        <text class="cell-arrow">›</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="footer-tip">OHANA · 家人即一切 👽</view>
+</view>

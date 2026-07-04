@@ -1,0 +1,85 @@
+<!-- pages/Settings/menu-manage/index.wxml -->
+<view class="page">
+
+  <!-- 顶部统计 -->
+  <view class="stats-bar">
+    <view class="stats-item">
+      <text class="stats-num">{{totalCount}}</text>
+      <text class="stats-label">总菜品</text>
+    </view>
+    <view class="stats-item stats-item-active">
+      <text class="stats-num">{{onCount}}</text>
+      <text class="stats-label">上架中</text>
+    </view>
+    <view class="stats-item">
+      <text class="stats-num">{{offCount}}</text>
+      <text class="stats-label">已下架</text>
+    </view>
+  </view>
+
+  <!-- 搜索 + 筛选 -->
+  <view class="filter-row">
+    <view class="search-bar">
+      <icon class="search-icon" type="search" size="16" color="#8E8E93"></icon>
+      <input class="search-input" placeholder-class="placeholder" placeholder="搜索菜品名…" bindinput="onSearch" value="{{search}}"/>
+      <view wx:if="{{search}}" class="search-clear" bindtap="clearSearch">✕</view>
+    </view>
+    <view class="filter-tabs">
+      <view class="filter-tab {{filter === 'all' ? 'active' : ''}}" bindtap="setFilter" data-f="all">全部</view>
+      <view class="filter-tab {{filter === 'on' ? 'active' : ''}}" bindtap="setFilter" data-f="on">上架</view>
+      <view class="filter-tab {{filter === 'off' ? 'active' : ''}}" bindtap="setFilter" data-f="off">下架</view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view wx:if="{{filteredMenus.length === 0}}" class="empty-state">
+    <text class="empty-icon">🍴</text>
+    <text class="empty-text">{{search ? '没有找到相关菜品' : '还没有菜品'}}</text>
+    <text class="empty-hint" wx:if="{{!search}}">点击下方"新增菜品"开始维护</text>
+  </view>
+
+  <!-- 菜品列表（带左划操作） -->
+  <view wx:if="{{filteredMenus.length > 0}}" class="menu-list">
+    <view class="menu-card" wx:for="{{filteredMenus}}" wx:key="_id" id="card-{{item._id}}">
+      <mp-slideview
+        buttons="{{item.disabled ? onSlideButtons : offSlideButtons}}"
+        icon="{{true}}"
+        data-id="{{item._id}}"
+        data-name="{{item.title}}"
+        bindbuttontap="slideButtonTap"
+        show="{{item._showSlide}}"
+        bindshow="onSlideShow"
+        data-show-id="{{item._id}}">
+        <view class="card-main" data-id="{{item._id}}" bindtap="onTapRow">
+          <!-- 左侧信息 -->
+          <view class="card-info">
+            <view class="card-title-line">
+              <text class="card-title {{item.disabled ? 'card-title-disabled' : ''}}">{{item.title}}</text>
+              <view wx:if="{{item.disabled}}" class="status-pill status-off">下架</view>
+              <view wx:else class="status-pill status-on">上架中</view>
+              <view wx:if="{{item.star}}" class="card-star">⭐</view>
+            </view>
+            <view class="card-meta">
+              <text class="meta-tag" wx:if="{{item.category}}">🏷️ {{item.category}}</text>
+              <text class="meta-credit">💰 {{item.credit}} 积分</text>
+              <text class="meta-author">👤 {{item._openid === _openidA ? userA : userB}}</text>
+            </view>
+            <view class="card-desc" wx:if="{{item.desc}}">{{item.desc}}</view>
+          </view>
+
+          <!-- 右侧箭头 -->
+          <view class="card-arrow">›</view>
+        </view>
+      </mp-slideview>
+    </view>
+  </view>
+
+  <!-- 底部新增按钮 -->
+  <view class="fab-row">
+    <button class="fab-add" bindtap="onTapAdd" hover-class="fab-add-hover">
+      <text class="fab-icon">＋</text>
+      <text class="fab-text">新增菜品</text>
+    </button>
+  </view>
+
+</view>

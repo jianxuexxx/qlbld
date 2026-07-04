@@ -1,0 +1,171 @@
+/* pages/Settings/index.wxss */
+.page {
+  min-height: 100vh;
+  padding: 24rpx 24rpx 80rpx;
+  box-sizing: border-box;
+}
+
+/* ===== 用户卡片 ===== */
+.user-card {
+  display: flex;
+  align-items: center;
+  gap: 24rpx;
+  padding: 32rpx 28rpx;
+  margin-bottom: 32rpx;
+  background: linear-gradient(135deg, #2196F3 0%, #1565C0 100%);
+  border-radius: 24rpx;
+  box-shadow: 0 8rpx 20rpx rgba(33, 150, 243, 0.25);
+  color: #FFFFFF;
+}
+.user-avatar {
+  width: 96rpx;
+  height: 96rpx;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  border: 4rpx solid rgba(255, 255, 255, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+  font-size: 50rpx;
+  line-height: 1;
+}
+.user-avatar image {
+  width: 100%;
+  height: 100%;
+}
+.user-info {
+  flex: 1;
+  min-width: 0;
+}
+.user-name {
+  font-size: 32rpx;
+  font-weight: 700;
+  letter-spacing: 1rpx;
+  margin-bottom: 6rpx;
+  text-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.18);
+}
+.user-meta {
+  font-size: 24rpx;
+  opacity: 0.95;
+  text-shadow: 0 1rpx 4rpx rgba(0, 0, 0, 0.12);
+}
+
+/* ===== Section ===== */
+.section {
+  margin-bottom: 32rpx;
+}
+.section-header {
+  display: flex;
+  align-items: baseline;
+  padding: 0 12rpx;
+  margin-bottom: 16rpx;
+}
+.section-title {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #0D2A4D;
+  letter-spacing: 1rpx;
+}
+.section-desc {
+  font-size: 22rpx;
+  color: #8E8E93;
+  margin-left: 14rpx;
+}
+
+/* ===== Cell 列表 ===== */
+.cell-group {
+  background: #FFFFFF;
+  border-radius: 20rpx;
+  overflow: hidden;
+  box-shadow: 0 2rpx 12rpx rgba(13, 42, 77, 0.05);
+}
+.cell {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16rpx;
+  padding: 26rpx 28rpx;
+  background: #FFFFFF;
+  transition: background-color 0.15s ease;
+  border-bottom: 2rpx solid #F0F4FA;
+}
+.cell:last-child {
+  border-bottom: none;
+}
+.cell-hover {
+  background-color: #F0F7FF;
+}
+.cell-disabled {
+  opacity: 0.55;
+}
+
+.cell-left {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  flex: 1;
+  min-width: 0;
+}
+.cell-icon {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 16rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32rpx;
+  line-height: 1;
+  flex-shrink: 0;
+  background: #E3F2FD;
+}
+.cell-icon-blue {
+  background: linear-gradient(135deg, #2196F3, #1565C0);
+  color: #FFFFFF;
+  box-shadow: 0 4rpx 10rpx rgba(33, 150, 243, 0.3);
+}
+.cell-icon-grey {
+  background: #EEF0F4;
+  color: #8E8E93;
+}
+.cell-text {
+  flex: 1;
+  min-width: 0;
+}
+.cell-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #0D2A4D;
+  margin-bottom: 4rpx;
+}
+.cell-subtitle {
+  font-size: 22rpx;
+  color: #8E8E93;
+  line-height: 1.4;
+}
+.cell-arrow {
+  font-size: 36rpx;
+  color: #C8C9CC;
+  font-weight: 300;
+  line-height: 1;
+  margin-left: auto;
+}
+.cell-tag-soon {
+  font-size: 20rpx;
+  color: #FFFFFF;
+  background: linear-gradient(135deg, #FFC107, #FF9800);
+  padding: 4rpx 12rpx;
+  border-radius: 12rpx;
+  flex-shrink: 0;
+}
+
+/* ===== Footer ===== */
+.footer-tip {
+  text-align: center;
+  font-size: 22rpx;
+  color: #8E8E93;
+  margin-top: 60rpx;
+  letter-spacing: 2rpx;
+  opacity: 0.7;
+}

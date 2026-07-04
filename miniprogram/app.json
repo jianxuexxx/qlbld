@@ -4,9 +4,9 @@
     "pages/Mission/index",
     "pages/MissionAdd/index",
     "pages/MissionDetail/index",
-    "pages/Market/index",
-    "pages/MarketAdd/index",
-    "pages/MarketDetail/index",
+    "pages/Settings/index",
+    "pages/Settings/menu-manage/index",
+    "pages/Settings/menu-edit/index",
     "pages/Account/index",
     "pages/ItemDetail/index",
     "pages/Menu/index",
@@ -39,10 +39,10 @@
       "iconPath": "images/TabBar/MissionIconGrey.jpg",
       "text": "任务"
     }, {
-      "pagePath": "pages/Market/index",
+      "pagePath": "pages/Settings/index",
       "selectedIconPath": "images/TabBar/MarketIconColor.jpg",
       "iconPath": "images/TabBar/MarketIconGrey.jpg",
-      "text": "商城"
+      "text": "设置"
     }, {
       "pagePath": "pages/Account/index",
       "selectedIconPath": "images/TabBar/AccountIconColor.jpg",

@@ -1,0 +1,299 @@
+/* pages/Settings/menu-manage/index.wxss */
+.page {
+  min-height: 100vh;
+  padding: 24rpx 24rpx 200rpx;
+  box-sizing: border-box;
+}
+
+/* ===== 顶部统计 ===== */
+.stats-bar {
+  display: flex;
+  gap: 16rpx;
+  margin-bottom: 24rpx;
+}
+.stats-item {
+  flex: 1;
+  background: #FFFFFF;
+  border-radius: 20rpx;
+  padding: 24rpx 0;
+  text-align: center;
+  box-shadow: 0 2rpx 10rpx rgba(13, 42, 77, 0.05);
+  border: 2rpx solid transparent;
+  transition: all 0.2s ease;
+}
+.stats-item-active {
+  background: linear-gradient(135deg, #2196F3 0%, #1565C0 100%);
+  color: #FFFFFF;
+  box-shadow: 0 6rpx 16rpx rgba(33, 150, 243, 0.3);
+}
+.stats-num {
+  display: block;
+  font-size: 36rpx;
+  font-weight: 700;
+  line-height: 1.2;
+}
+.stats-label {
+  display: block;
+  font-size: 22rpx;
+  margin-top: 6rpx;
+  opacity: 0.8;
+}
+
+/* ===== 搜索 + 筛选 ===== */
+.filter-row {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+  margin-bottom: 24rpx;
+}
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  background: #FFFFFF;
+  border-radius: 32rpx;
+  padding: 14rpx 24rpx;
+  box-shadow: 0 2rpx 10rpx rgba(13, 42, 77, 0.05);
+}
+.search-icon {
+  flex-shrink: 0;
+}
+.search-input {
+  flex: 1;
+  font-size: 26rpx;
+  color: #0D2A4D;
+  background: transparent;
+}
+.placeholder {
+  color: #C8C9CC;
+}
+.search-clear {
+  width: 36rpx;
+  height: 36rpx;
+  border-radius: 50%;
+  background: #C8C9CC;
+  color: #FFFFFF;
+  font-size: 22rpx;
+  line-height: 36rpx;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.filter-tabs {
+  display: flex;
+  background: #FFFFFF;
+  border-radius: 32rpx;
+  padding: 8rpx;
+  box-shadow: 0 2rpx 10rpx rgba(13, 42, 77, 0.05);
+}
+.filter-tab {
+  flex: 1;
+  padding: 14rpx 0;
+  text-align: center;
+  font-size: 26rpx;
+  color: #8E8E93;
+  border-radius: 24rpx;
+  transition: all 0.2s ease;
+}
+.filter-tab.active {
+  background: linear-gradient(135deg, #2196F3 0%, #1565C0 100%);
+  color: #FFFFFF;
+  font-weight: 600;
+  box-shadow: 0 4rpx 10rpx rgba(33, 150, 243, 0.3);
+}
+
+/* ===== 空状态 ===== */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 120rpx 24rpx 60rpx;
+  text-align: center;
+}
+.empty-icon {
+  font-size: 120rpx;
+  margin-bottom: 24rpx;
+  opacity: 0.7;
+}
+.empty-text {
+  font-size: 32rpx;
+  color: #0D2A4D;
+  font-weight: 600;
+  margin-bottom: 8rpx;
+}
+.empty-hint {
+  font-size: 24rpx;
+  color: #8E8E93;
+}
+
+/* ===== 菜品卡片 ===== */
+.menu-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+.menu-card {
+  background: #FFFFFF;
+  border-radius: 20rpx;
+  overflow: hidden;
+  box-shadow: 0 2rpx 10rpx rgba(13, 42, 77, 0.05);
+}
+.card-main {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  padding: 24rpx;
+  background: #FFFFFF;
+  transition: background-color 0.15s ease;
+}
+.card-main:active {
+  background-color: #F0F7FF;
+}
+
+.card-info {
+  flex: 1;
+  min-width: 0;
+}
+.card-title-line {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  margin-bottom: 8rpx;
+  flex-wrap: wrap;
+}
+.card-title {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #0D2A4D;
+  letter-spacing: 0.5rpx;
+  max-width: 60%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.card-title-disabled {
+  color: #8E8E93;
+  text-decoration: line-through;
+}
+.card-star {
+  font-size: 24rpx;
+}
+
+.status-pill {
+  font-size: 20rpx;
+  padding: 4rpx 14rpx;
+  border-radius: 16rpx;
+  font-weight: 600;
+}
+.status-on {
+  background: linear-gradient(135deg, #4CAF50, #2E7D32);
+  color: #FFFFFF;
+}
+.status-off {
+  background: #F5F6F8;
+  color: #8E8E93;
+}
+
+.card-meta {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  font-size: 22rpx;
+  color: #8E8E93;
+  margin-bottom: 6rpx;
+  flex-wrap: wrap;
+}
+.meta-tag {
+  background: #E3F2FD;
+  color: #1976D2;
+  padding: 2rpx 12rpx;
+  border-radius: 12rpx;
+}
+.meta-credit {
+  color: #FF9800;
+  font-weight: 600;
+}
+.meta-author {
+  color: #8E8E93;
+}
+
+.card-desc {
+  font-size: 22rpx;
+  color: #8E8E93;
+  line-height: 1.4;
+  margin-top: 4rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+}
+
+.card-arrow {
+  font-size: 40rpx;
+  color: #C8C9CC;
+  font-weight: 300;
+  line-height: 1;
+}
+
+/* ===== 滑动按钮 ===== */
+.editBtn,
+.starBtn,
+.removeBtn {
+  display: inline-block;
+  width: 80rpx;
+  height: 80rpx;
+  line-height: 80rpx;
+  color: #FFFFFF;
+  text-align: center;
+  font-size: 24rpx;
+}
+.editBtn {
+  background-color: #2196F3;
+}
+.starBtn {
+  background-color: #FFC107;
+}
+.removeBtn {
+  background-color: #FF9800;
+}
+
+/* ===== FAB 新增 ===== */
+.fab-row {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 32rpx;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+  padding: 0 24rpx;
+  box-sizing: border-box;
+}
+.fab-add {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  padding: 18rpx 40rpx;
+  background: linear-gradient(135deg, #2196F3 0%, #1565C0 100%);
+  color: #FFFFFF;
+  border-radius: 50rpx;
+  font-size: 28rpx;
+  font-weight: 600;
+  border: none;
+  box-shadow: 0 8rpx 24rpx rgba(33, 150, 243, 0.4);
+  pointer-events: auto;
+  letter-spacing: 1rpx;
+}
+.fab-add-hover {
+  transform: scale(0.96);
+  opacity: 0.92;
+}
+.fab-icon {
+  font-size: 32rpx;
+  font-weight: 300;
+  line-height: 1;
+}
+.fab-text {
+  font-size: 28rpx;
+}

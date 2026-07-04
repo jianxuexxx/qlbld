@@ -1,0 +1,9 @@
+{
+  "name": "getUserList",
+  "version": "1.0.0",
+  "description": "获取用户积分列表（仅返回 _id/_openid/credit/username）",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}
