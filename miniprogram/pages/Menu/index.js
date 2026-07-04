@@ -604,6 +604,20 @@ Page({
       await this.loadMenus();
 
       if (orderId) {
+        // ===== 推送给厨师（每个 openid 推一次）=====
+        const app = getApp();
+        const me = await app.fetchMyName();
+        const uniqueCookerOpenids = [...new Set(dishes.map(d => d._openid).filter(Boolean))];
+        uniqueCookerOpenids.forEach(openid => {
+          app.sendNotification({
+            action: 'mission_accepted',
+            me,
+            name: title + '（' + totalCredit + ' 积分）',
+            page: 'pages/MissionDetail/index?id=' + orderId,
+            targetOpenid: openid
+          }).catch(() => {});
+        });
+
         setTimeout(() => {
           wx.navigateTo({ url: '../MissionDetail/index?id=' + orderId });
         }, 800);

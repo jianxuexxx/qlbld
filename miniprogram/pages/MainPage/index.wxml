@@ -41,6 +41,17 @@
       </view>
     </view>
   </view>
-  <view bindtap="requestSubscribeMessage" class="subscribe-btn">🔔 接收服务通知</view>
+
+  <!-- 订阅消息区 -->
+  <view class="subscribe-card">
+    <view class="subscribe-card-title" wx:if="{{subscribed}}">✅ 已开启服务通知</view>
+    <view class="subscribe-card-title" wx:else>🔔 接收对方的服务通知</view>
+    <view class="subscribe-card-sub" wx:if="{{subscribed}}">对方发布任务 / 你点单 / 任务完成时，你都会收到微信服务通知</view>
+    <view class="subscribe-card-sub" wx:else>建议开启，否则对方完成你的任务时你收不到提醒</view>
+    <button class="subscribe-btn" hover-class="subscribe-btn-hover" bindtap="onTapSubscribe">
+      <text wx:if="{{subscribed}}">🔄 重新订阅</text>
+      <text wx:else>🔔 立即订阅</text>
+    </button>
+  </view>
 
 </view>

@@ -161,20 +161,52 @@
   backdrop-filter: blur(8rpx);
 }
 
+/* 订阅卡片 */
+.subscribe-card {
+  margin: 24rpx 24rpx 60rpx;
+  padding: 28rpx 28rpx 32rpx;
+  background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
+  border-radius: 24rpx;
+  box-shadow: 0 4rpx 12rpx rgba(33, 150, 243, 0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+  border: 2rpx solid rgba(33, 150, 243, 0.15);
+}
+.subscribe-card-title {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #0D2A4D;
+  letter-spacing: 1rpx;
+}
+.subscribe-card-sub {
+  font-size: 24rpx;
+  color: #1F3A5F;
+  line-height: 1.5;
+  opacity: 0.85;
+}
+
 /* 订阅按钮 */
 .subscribe-btn {
-  margin: 24rpx 24rpx 32rpx;
-  padding: 24rpx;
+  margin-top: 8rpx;
+  padding: 18rpx 0;
   text-align: center;
   background: linear-gradient(135deg, #2196F3 0%, #1565C0 100%);
   color: #fff;
   border-radius: 40rpx;
   font-size: 28rpx;
   font-weight: 600;
-  box-shadow: 0 4rpx 12rpx rgba(33,150,243,0.35);
+  box-shadow: 0 4rpx 12rpx rgba(33, 150, 243, 0.35);
   letter-spacing: 2rpx;
+  border: none;
 }
+.subscribe-btn::after { border: none; }
 .subscribe-btn:active {
   transform: scale(0.98);
   opacity: 0.92;
+}
+.subscribe-btn-hover {
+  transform: scale(0.98);
+  opacity: 0.92;
+}
 }

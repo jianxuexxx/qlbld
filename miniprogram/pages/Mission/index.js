@@ -196,6 +196,15 @@ Page({
             duration: 2000
         })
 
+        // ===== 推送给任务发布者 =====
+        const app = getApp();
+        const me = app.getMyName(openid.result);
+        app.notify('mission_done', {
+          me,
+          name: mission.title || '任务',
+          page: 'pages/Mission/index'
+        }).catch(() => {});
+
       }else{
         wx.showToast({
           title: '不能完成自己的任务',

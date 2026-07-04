@@ -130,6 +130,15 @@ Page({
 
       wx.hideLoading();
       wx.showToast({ title: '订单已完成', icon: 'success' });
+
+      // ===== 推送给订单发布者 =====
+      const app = getApp();
+      const me = await app.fetchMyName();
+      app.notify('mission_finished', {
+        me,
+        name: this.data.mission.title || '订单',
+        page: 'pages/MissionDetail/index?id=' + this.data._id
+      }).catch(() => {});
     } catch (err) {
       wx.hideLoading();
       console.error('完成订单失败', err);

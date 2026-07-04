@@ -196,6 +196,15 @@ Page({
       this.setData({
         'menuDetail.available': false
       });
+
+      // ===== 推送给点菜者：订单已由厨师完成 =====
+      const app = getApp();
+      const me = await app.fetchMyName();
+      app.notify('mission_finished', {
+        me,
+        name: menu.title || '点单',
+        page: 'pages/MenuDetail/index?id=' + menu._id
+      }).catch(() => {});
     }).catch(error => {
       console.error('完成订单失败:', error);
       wx.showToast({

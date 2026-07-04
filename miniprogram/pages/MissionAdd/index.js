@@ -1,45 +1,4 @@
 Page({
-    //增加消息接收与发送功能
-    async handleTap() {
-        await this.saveMission();
-        await this.sendSubscribeMessage();
-  },
-  //发送消息
-  sendSubscribeMessage(e) {
-      //调用云函数，
-      wx.cloud.callFunction({
-      name: 'information',
-      //data是用来传给云函数event的数据，你可以把你当前页面获取消息填写到服务通知里面
-      data: {
-          action: 'sendSubscribeMessage',
-          templateId: 'R5sHALA7TKs6jCyH_kwNr9l8vVfWKCU5cXQnFKWlwfA',//这里我就直接把模板ID传给云函数了
-          me:'Test_me',
-          name:'Test_activity',
-          _openid:'odPPg4mBicTjUXPX29A3KIzu5kYc'//填入自己的openid
-      },
-      success: res => {
-          console.warn('[云函数] [openapi] subscribeMessage.send 调用成功：', res)
-          wx.showModal({
-          title: '发送成功',
-          content: '请返回微信主界面查看',
-          showCancel: false,
-          })
-          wx.showToast({
-          title: '发送成功，请返回微信主界面查看',
-          })
-          this.setData({
-          subscribeMessageResult: JSON.stringify(res.result)
-          })
-      },
-      fail: err => {
-          wx.showToast({
-          icon: 'none',
-          title: '调用失败',
-          })
-          console.error('[云函数] [openapi] subscribeMessage.send 调用失败：', err)
-      }
-      })
-  },  
   //保存正在编辑的任务
   data: {
     title: '',
@@ -150,19 +109,24 @@ Page({
         duration: 2000
       })
       return
-    }else{
-        await wx.cloud.callFunction({name: 'addElement', data: this.data}).then(
-            () => {
-                wx.showToast({
-                    title: '添加成功',
-                    icon: 'success',
-                    duration: 1000
-                })
-            }
-        )
-        setTimeout(function () {
-            wx.navigateBack()
-        }, 1000)
+    }
+    // ===== 保存 =====
+    try {
+      await wx.cloud.callFunction({ name: 'addElement', data: this.data });
+      wx.showToast({ title: '添加成功', icon: 'success', duration: 1000 });
+
+      // ===== 推送给对方：新任务提醒 =====
+      const app = getApp();
+      const me = await app.fetchMyName();
+      app.notify('mission_new', {
+        me,
+        name: this.data.title,
+        page: 'pages/Mission/index'
+      }).catch(() => {});
+
+      setTimeout(() => wx.navigateBack(), 1000);
+    } catch (err) {
+      wx.showToast({ title: '保存失败', icon: 'none' });
     }
   },
 
