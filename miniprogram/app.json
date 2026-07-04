@@ -11,7 +11,8 @@
     "pages/ItemDetail/index",
     "pages/Menu/index",
     "pages/MenuAdd/index",
-    "pages/MenuDetail/index"
+    "pages/MenuDetail/index",
+    "pages/Market/index"
   ],
   "window": {
     "backgroundColor": "#F0F4FA",

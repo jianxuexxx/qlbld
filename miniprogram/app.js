@@ -21,7 +21,7 @@ App({
       maxCredit: 500,
 
       // ===== 订阅消息（统一模板） =====
-      subscribeTemplateId: 'R5sHALA7TKs6jCyH_kwNr9l8vVfWKCU5cXQnFKWlwfA',
+      subscribeTemplateId: 'tkhfBTA9LoKMkBpq8nxv8bDh5_GSeVYOz157x_Zfsd8',
       // 已订阅动作的累计集合（按动作名记录）
       subscribedActions: wx.getStorageSync('subscribedActions') || {},
     }

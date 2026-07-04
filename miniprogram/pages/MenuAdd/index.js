@@ -74,13 +74,24 @@ Page({
           available: true,  // 初始为可用状态
           ordered: false,   // 初始未被点
           accepted: false,  // 初始未被接单
-          star: false       // 初始未星标
+          star: false,      // 初始未星标
+          categoryListName: 'CategoryList' // 启用自动同步分类
         }
-      }).then(() => {
-        wx.showToast({
-          title: '菜品添加成功',
-          icon: 'success'
-        });
+      }).then((addRes) => {
+        // 提示同步分类结果
+        if (addRes && addRes.result && addRes.result.categoryCreated) {
+          wx.showToast({ title: `新增菜品 & 新分类「${addRes.result.categoryName}」`, icon: 'success' });
+        } else {
+          wx.showToast({
+            title: '菜品添加成功',
+            icon: 'success'
+          });
+        }
+
+        // 通知菜单页刷新分类（onShow 重读）
+        const pages = getCurrentPages();
+        const menuPage = pages.find(p => p.route === 'pages/Menu/index');
+        if (menuPage) menuPage.loadCategories && menuPage.loadCategories();
 
         // 返回上级页面
         setTimeout(() => {

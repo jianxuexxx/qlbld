@@ -1,0 +1,9 @@
+/* 占位页样式 */
+.stub {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  font-size: 28rpx;
+  color: #8E8E93;
+}
