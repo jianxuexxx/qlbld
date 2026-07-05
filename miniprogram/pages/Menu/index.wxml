@@ -10,9 +10,8 @@
   interval="3000"
   duration="500"
   circular="true">
-  <swiper-item><image src="Images/MenuCover01.jpg" mode="aspectFill" class="swiper-image" /></swiper-item>
-  <swiper-item><image src="Images/MenuCover02.jpg" mode="aspectFill" class="swiper-image" /></swiper-item>
-  <swiper-item><image src="Images/MenuCover03.jpg" mode="aspectFill" class="swiper-image" /></swiper-item>
+  <swiper-item><image src="Images/MenuCover04.jpg" mode="aspectFill" class="swiper-image" /></swiper-item>
+  <swiper-item><image src="Images/MenuCover05.jpg" mode="aspectFill" class="swiper-image" /></swiper-item>
 </swiper>
 
 <view class="container {{allMenus.length === 0 ? 'white' : ''}}">
