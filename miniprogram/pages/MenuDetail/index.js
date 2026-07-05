@@ -2,6 +2,7 @@ Page({
   data: {
     menuDetail: {},
     currentOpenid: '',
+    creatorName: '',
     _openidA: getApp().globalData._openidA,
     _openidB: getApp().globalData._openidB,
     userA: getApp().globalData.userA,
@@ -14,11 +15,24 @@ Page({
     this.getCurrentOpenid();
   },
 
+  onShow() {
+    // 每次进入都同步刷新 userA/userB + 重新计算创建者
+    const app = getApp();
+    app.refreshUserNames && app.refreshUserNames().then(() => {
+      this.setData({
+        userA: app.globalData.userA,
+        userB: app.globalData.userB
+      });
+      this.recomputeCreator();
+    });
+  },
+
   async getCurrentOpenid() {
     wx.cloud.callFunction({ name: 'getOpenId' }).then(res => {
       this.setData({
         currentOpenid: res.result
       });
+      this.recomputeCreator();
     });
   },
 
@@ -30,7 +44,20 @@ Page({
       this.setData({
         menuDetail: res.result.data[0]
       });
+      this.recomputeCreator();
     });
+  },
+
+  // 根据 _openid + globalData 算出正确的创建者名
+  recomputeCreator() {
+    const m = this.data.menuDetail || {};
+    const app = getApp();
+    const oid = m._openid;
+    let name = '';
+    if (oid === app.globalData._openidA) name = app.globalData.userA;
+    else if (oid === app.globalData._openidB) name = app.globalData.userB;
+    else name = '未知';
+    this.setData({ creatorName: name });
   },
 
   getStatusText() {

@@ -2,17 +2,17 @@
   <form bindsubmit="submitForm">
     <view class="form-group">
       <view class="form-group_label">菜品名称</view>
-      <input class="form-control" name="title" placeholder="请输入菜品名称" value="{{formData.title}}" bindinput="onInput" data-field="title" />
+      <input class="form-control input-single" name="title" placeholder="请输入菜品名称" value="{{formData.title}}" bindinput="onInput" data-field="title" style="height:120rpx;min-height:120rpx;line-height:120rpx;font-size:32rpx;" />
     </view>
 
     <view class="form-group">
       <view class="form-group_label">分类</view>
-      <input class="form-control" name="category" placeholder="请输入分类名称" value="{{formData.category}}" bindinput="onInput" data-field="category" />
+      <input class="form-control input-single" name="category" placeholder="请输入分类名称" value="{{formData.category}}" bindinput="onInput" data-field="category" style="height:120rpx;min-height:120rpx;line-height:120rpx;font-size:32rpx;" />
     </view>
 
     <view class="form-group">
       <view class="form-group_label">菜品描述</view>
-      <textarea class="form-control textarea" name="desc" placeholder="请输入菜品描述" value="{{formData.desc}}" bindinput="onInput" data-field="desc" />
+      <textarea class="textarea" name="desc" placeholder="请输入菜品描述" value="{{formData.desc}}" bindinput="onInput" data-field="desc" style="min-height:240rpx;font-size:30rpx;line-height:1.6;" />
     </view>
 
     <view class="form-group">

@@ -49,7 +49,8 @@
           </view>
           <view class="mission-info_author">
             <image wx:if="{{item._openid === _openidA}}" mode="aspectFill" src="Images/MissionA.png"/>
-            <image wx:if="{{item._openid === _openidB}}" mode="aspectFill" src="Images/MissionB.png"/>
+            <image class="author-img" wx:elif="{{item._openid === _openidB}}" mode="aspectFill" src="Images/MissionB.png"/>
+            <image wx:else mode="aspectFill" src="Images/MissionA.png"/>
           </view>
           <image wx:if="{{item.star}}" class="star" src="Images/Star.png" />
         </view>
@@ -64,7 +65,8 @@
             </view>
             <view class="mission-info_author">
               <image wx:if="{{item._openid === _openidA}}" mode="aspectFill" src="Images/MissionA.png"/>
-              <image wx:if="{{item._openid === _openidB}}" mode="aspectFill" src="Images/MissionB.png"/>
+              <image wx:elif="{{item._openid === _openidB}}" mode="aspectFill" src="Images/MissionB.png"/>
+              <image wx:else mode="aspectFill" src="Images/MissionB.png"/>
             </view>
             <image wx:if="{{item.star}}" class="star" src="Images/Star.png" />
           </view>
@@ -85,8 +87,9 @@
             <view class="mission-info_date">📅 {{util.cutStr(item.date, 10)}} 创建</view>
           </view>
           <view class="mission-info_author">
-              <image wx:if="{{item._openid === _openidA}}" mode="aspectFill" src="Images/MissionA.png"/>
-              <image wx:if="{{item._openid === _openidB}}" mode="aspectFill" src="Images/MissionB.png"/>
+              <image class="author-img" wx:if="{{item._openid === _openidA}}" mode="aspectFill" src="Images/MissionA.png"/>
+              <image class="author-img" wx:elif="{{item._openid === _openidB}}" mode="aspectFill" src="Images/MissionB.png"/>
+              <image class="author-img" wx:else mode="aspectFill" src="Images/MissionB.png"/>
           </view>
           <image wx:if="{{item.star}}" class="star" src="Images/Star.png" />
         </view>

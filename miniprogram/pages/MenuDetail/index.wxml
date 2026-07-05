@@ -34,7 +34,8 @@
     <view class="detail-section" wx:if="{{menuDetail._openid === _openidA || menuDetail._openid === _openidB}}">
       <view class="detail-label">创建者</view>
       <view class="detail-content">
-        {{menuDetail._openid === _openidA ? userA : userB}}
+        {{creatorName}}
+        <text class="detail-debug" wx:if="{{menuDetail._openid}}">（{{menuDetail._openid}}）</text>
       </view>
     </view>
   </view>
