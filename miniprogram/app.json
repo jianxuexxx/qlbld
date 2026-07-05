@@ -12,7 +12,8 @@
     "pages/Menu/index",
     "pages/MenuAdd/index",
     "pages/MenuDetail/index",
-    "pages/Market/index"
+    "pages/Market/index",
+    "pages/Period/index"
   ],
   "window": {
     "backgroundColor": "#F0F4FA",
@@ -34,6 +35,11 @@
       "selectedIconPath": "images/TabBar/MarketIconColor.jpg",
       "iconPath": "images/TabBar/MarketIconGrey.jpg",
       "text": "菜单"
+    }, {
+      "pagePath": "pages/Period/index",
+      "selectedIconPath": "images/TabBar/PeriodIconColor.png",
+      "iconPath": "images/TabBar/PeriodIconGrey.png",
+      "text": "经期"
     }, {
       "pagePath": "pages/Settings/index",
       "selectedIconPath": "images/TabBar/MarketIconColor.jpg",

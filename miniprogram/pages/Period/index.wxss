@@ -1,0 +1,504 @@
+/* ===== 经期页样式（蓝色调，与全局史迪奇蓝一致） ===== */
+.container {
+  padding: 0 0 60rpx;
+  background: var(--color-bg-page);
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+/* ===== 经期引导头 ===== */
+.period-hero {
+  display: flex;
+  align-items: center;
+  gap: 24rpx;
+  margin: 24rpx 24rpx 8rpx;
+  padding: 28rpx 28rpx;
+  background: linear-gradient(135deg, #2196F3 0%, #1565C0 60%, #0D47A1 100%);
+  border-radius: var(--radius-xl);
+  color: #FFFFFF;
+  box-shadow: 0 6rpx 20rpx rgba(33, 150, 243, 0.3);
+}
+.period-hero-icon {
+  font-size: 64rpx;
+  line-height: 1;
+  flex-shrink: 0;
+  filter: drop-shadow(0 4rpx 8rpx rgba(0,0,0,0.18));
+}
+.period-hero-text { flex: 1; min-width: 0; }
+.period-hero-title {
+  font-size: 32rpx;
+  font-weight: 700;
+  letter-spacing: 1rpx;
+  margin-bottom: 4rpx;
+  text-shadow: 0 2rpx 6rpx rgba(0,0,0,0.12);
+}
+.period-hero-sub {
+  font-size: 22rpx;
+  opacity: 0.95;
+  line-height: 1.4;
+}
+
+/* ===== 空状态 ===== */
+.period-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80rpx 32rpx;
+  background: #FFFFFF;
+  margin: 16rpx 24rpx 24rpx;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-card);
+}
+.period-empty-emoji {
+  font-size: 96rpx;
+  margin-bottom: 16rpx;
+}
+.period-empty-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-bottom: 8rpx;
+}
+.period-empty-sub {
+  font-size: 24rpx;
+  color: var(--color-text-tertiary);
+  line-height: 1.5;
+}
+
+/* ===== 预测状态卡片 ===== */
+.period-status-card {
+  margin: 16rpx 24rpx 24rpx;
+  padding: 24rpx 24rpx 8rpx;
+  background: #FFFFFF;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-card);
+  border: 2rpx solid rgba(33, 150, 243, 0.1);
+}
+.period-status-row {
+  display: flex;
+  align-items: center;
+  padding: 4rpx 0 16rpx;
+}
+.period-status-item { flex: 1; }
+.period-status-label {
+  font-size: 22rpx;
+  color: var(--color-text-tertiary);
+  margin-bottom: 8rpx;
+}
+.period-status-value { display: flex; align-items: center; }
+.period-status-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 6rpx 18rpx;
+  border-radius: 24rpx;
+  font-size: 24rpx;
+  font-weight: 600;
+  line-height: 1.2;
+}
+.period-status-tag-on {
+  background: linear-gradient(135deg, #42A5F5 0%, #1565C0 100%);
+  color: #FFFFFF;
+  box-shadow: 0 4rpx 10rpx rgba(21, 101, 192, 0.35);
+}
+.period-status-tag-wait {
+  background: linear-gradient(135deg, #B3E5FC 0%, #4FC3F7 100%);
+  color: #0D47A1;
+}
+.period-status-tag-over {
+  background: linear-gradient(135deg, #FFCDD2 0%, #EF5350 100%);
+  color: #B71C1C;
+}
+
+.period-status-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12rpx;
+  padding-bottom: 16rpx;
+  border-top: 1rpx solid var(--color-divider);
+  padding-top: 16rpx;
+}
+.period-status-grid-cell {
+  background: var(--color-bg-page);
+  border-radius: var(--radius-md);
+  padding: 16rpx 18rpx;
+  box-sizing: border-box;
+}
+.period-status-grid-label {
+  font-size: 22rpx;
+  color: var(--color-text-tertiary);
+  margin-bottom: 6rpx;
+}
+.period-status-grid-value {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  line-height: 1.2;
+}
+.period-status-grid-sub {
+  font-size: 20rpx;
+  color: var(--color-text-tertiary);
+  margin-top: 4rpx;
+  line-height: 1.3;
+}
+
+/* ===== 日历 ===== */
+.period-calendar {
+  margin: 0 24rpx 24rpx;
+  padding: 20rpx 16rpx 16rpx;
+  background: #FFFFFF;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-card);
+}
+.period-calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 8rpx 12rpx;
+}
+.period-calendar-nav {
+  width: 60rpx;
+  height: 60rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40rpx;
+  color: var(--color-primary);
+  font-weight: 700;
+  border-radius: 50%;
+  background: var(--color-primary-light);
+  transition: transform 0.1s ease;
+}
+.period-calendar-nav:active {
+  transform: scale(0.92);
+  background: #BBDEFB;
+}
+.period-calendar-title {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  letter-spacing: 1rpx;
+}
+.period-calendar-weekrow {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  margin-bottom: 8rpx;
+}
+.period-calendar-weekcell {
+  text-align: center;
+  font-size: 22rpx;
+  color: var(--color-text-tertiary);
+  padding: 6rpx 0;
+  font-weight: 500;
+}
+.period-calendar-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6rpx;
+}
+.period-calendar-day {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24rpx;
+  color: var(--color-text-primary);
+  border-radius: 12rpx;
+  background: var(--color-bg-page);
+  transition: transform 0.1s ease, background-color 0.15s ease;
+  flex-direction: column;
+}
+.period-calendar-day-empty {
+  background: transparent;
+  pointer-events: none;
+}
+.period-calendar-day:active {
+  transform: scale(0.92);
+}
+.period-calendar-day-num {
+  font-size: 24rpx;
+  font-weight: 500;
+  line-height: 1;
+}
+.period-calendar-day-today {
+  border: 2rpx solid var(--color-primary);
+  box-sizing: border-box;
+}
+/* 经期中（中间） */
+.period-calendar-day-in {
+  background: linear-gradient(135deg, #64B5F6 0%, #1976D2 100%);
+  color: #FFFFFF;
+}
+.period-calendar-day-in .period-calendar-day-num {
+  color: #FFFFFF;
+  font-weight: 700;
+}
+/* 经期开始 */
+.period-calendar-day-start {
+  background: linear-gradient(135deg, #1565C0 0%, #0D47A1 100%);
+  color: #FFFFFF;
+  box-shadow: 0 2rpx 8rpx rgba(21, 101, 192, 0.4);
+}
+.period-calendar-day-start .period-calendar-day-num {
+  color: #FFFFFF;
+  font-weight: 700;
+}
+/* 经期结束 */
+.period-calendar-day-end {
+  background: linear-gradient(135deg, #0D47A1 0%, #1565C0 100%);
+  color: #FFFFFF;
+  box-shadow: inset 0 0 0 2rpx #FFFFFF, 0 2rpx 8rpx rgba(13, 71, 161, 0.4);
+}
+.period-calendar-day-end .period-calendar-day-num {
+  color: #FFFFFF;
+  font-weight: 700;
+}
+/* 同时是开始和结束（单天） */
+.period-calendar-day-start.period-calendar-day-end .period-calendar-day-num::after {
+  content: ' ●';
+  font-size: 16rpx;
+  vertical-align: middle;
+}
+.period-calendar-day-pred {
+  background: repeating-linear-gradient(
+    45deg,
+    rgba(33, 150, 243, 0.18),
+    rgba(33, 150, 243, 0.18) 6rpx,
+    rgba(100, 181, 246, 0.22) 6rpx,
+    rgba(100, 181, 246, 0.22) 12rpx
+  );
+  color: #0D47A1;
+  font-weight: 600;
+}
+.period-calendar-day-selected {
+  border: 3rpx solid var(--color-primary);
+  box-sizing: border-box;
+  box-shadow: 0 2rpx 8rpx rgba(33, 150, 243, 0.3);
+}
+.period-calendar-legend {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 16rpx;
+  padding: 12rpx 0 0;
+  margin-top: 8rpx;
+  border-top: 1rpx solid var(--color-divider);
+}
+.period-calendar-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6rpx;
+  font-size: 20rpx;
+  color: var(--color-text-secondary);
+}
+.period-calendar-legend-dot {
+  width: 18rpx;
+  height: 18rpx;
+  border-radius: 4rpx;
+  flex-shrink: 0;
+}
+.period-calendar-legend-dot-start {
+  background: linear-gradient(135deg, #1565C0 0%, #0D47A1 100%);
+}
+.period-calendar-legend-dot-in {
+  background: linear-gradient(135deg, #64B5F6 0%, #1976D2 100%);
+}
+.period-calendar-legend-dot-end {
+  background: linear-gradient(135deg, #0D47A1 0%, #1565C0 100%);
+  box-shadow: inset 0 0 0 2rpx #FFFFFF;
+}
+.period-calendar-legend-dot-pred {
+  background: repeating-linear-gradient(
+    45deg,
+    rgba(33, 150, 243, 0.55),
+    rgba(33, 150, 243, 0.55) 3rpx,
+    rgba(100, 181, 246, 0.65) 3rpx,
+    rgba(100, 181, 246, 0.65) 6rpx
+  );
+}
+
+/* ===== 选中日期操作面板 ===== */
+.period-action-card {
+  padding: 24rpx !important;
+}
+.period-action-header {
+  display: flex;
+  flex-direction: column;
+  gap: 6rpx;
+  padding-bottom: 16rpx;
+  border-bottom: 1rpx solid var(--color-divider);
+}
+.period-action-title-block { display: flex; flex-direction: column; gap: 4rpx; }
+.period-action-title {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  display: flex;
+  align-items: baseline;
+  gap: 8rpx;
+}
+.period-action-week {
+  font-size: 22rpx;
+  font-weight: 500;
+  color: var(--color-primary);
+  background: var(--color-primary-light);
+  padding: 2rpx 12rpx;
+  border-radius: 12rpx;
+}
+.period-action-sub {
+  font-size: 24rpx;
+  color: var(--color-text-secondary);
+  line-height: 1.4;
+}
+.period-action-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+  padding-top: 16rpx;
+}
+.period-action-btn {
+  flex: 1;
+  min-width: 240rpx;
+  height: 80rpx;
+  line-height: 80rpx;
+  border-radius: 40rpx;
+  font-size: 26rpx;
+  font-weight: 600;
+  letter-spacing: 1rpx;
+  margin: 0;
+  padding: 0 24rpx;
+  border: none;
+}
+.period-action-btn::after { border: none; }
+.period-action-btn-primary {
+  background: linear-gradient(135deg, #42A5F5 0%, #1565C0 100%);
+  color: #FFFFFF;
+  box-shadow: 0 4rpx 12rpx rgba(33, 150, 243, 0.35);
+}
+.period-action-btn-end {
+  background: linear-gradient(135deg, #0D47A1 0%, #1565C0 100%);
+  color: #FFFFFF;
+  box-shadow: 0 4rpx 12rpx rgba(13, 71, 161, 0.35);
+}
+.period-action-btn-danger {
+  background: #FFFFFF;
+  color: #FA5151;
+  border: 2rpx solid #FA5151;
+  box-shadow: none;
+}
+
+/* ===== 统计 ===== */
+.period-stats {
+  padding: 8rpx 20rpx !important;
+}
+.period-stats-row {
+  display: flex;
+  padding: 16rpx 0;
+  gap: 12rpx;
+  border-bottom: 1rpx solid var(--color-divider);
+}
+.period-stats-row:last-child {
+  border-bottom: none;
+}
+.period-stats-cell {
+  flex: 1;
+  text-align: center;
+  background: var(--color-bg-page);
+  border-radius: var(--radius-md);
+  padding: 16rpx 8rpx;
+  box-sizing: border-box;
+}
+.period-stats-num {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: var(--color-primary-dark);
+  line-height: 1.2;
+  margin-bottom: 4rpx;
+}
+.period-stats-label {
+  font-size: 20rpx;
+  color: var(--color-text-tertiary);
+  line-height: 1.3;
+}
+
+/* ===== 历史记录（按段） ===== */
+.period-empty-list {
+  text-align: center;
+  padding: 24rpx 0;
+}
+.period-empty-list-text {
+  padding: 32rpx 0;
+  color: var(--color-text-tertiary);
+  font-size: 24rpx;
+  text-align: center;
+}
+.period-list-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 16rpx;
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid var(--color-divider);
+}
+.period-list-row:last-child {
+  border-bottom: none;
+}
+.period-list-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6rpx;
+}
+.period-list-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4rpx;
+}
+.period-list-date-main { color: var(--color-text-primary); }
+.period-list-date-arrow {
+  color: var(--color-text-tertiary);
+  font-weight: 400;
+}
+.period-list-date-sub {
+  font-size: 20rpx;
+  color: var(--color-text-tertiary);
+  font-family: -apple-system, BlinkMacSystemFont, monospace;
+  letter-spacing: 0.5rpx;
+}
+.period-list-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8rpx;
+  margin-top: 4rpx;
+}
+.period-list-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 4rpx 12rpx;
+  border-radius: 14rpx;
+  background: var(--color-primary-light);
+  color: var(--color-primary-dark);
+  font-size: 20rpx;
+  font-weight: 600;
+  line-height: 1.2;
+}
+.period-list-tag-ongoing {
+  background: linear-gradient(135deg, #B3E5FC 0%, #4FC3F7 100%);
+  color: #0D47A1;
+}
+.period-list-tag-ended {
+  background: var(--color-bg-input);
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+
+.period-bottom-spacer {
+  height: 60rpx;
+  flex-shrink: 0;
+}

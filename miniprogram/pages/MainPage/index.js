@@ -246,5 +246,5 @@ Page({
         page: 'pages/Mission/index'
       }).catch(() => {});
     } catch (e) {}
-  }
+  },
 });
