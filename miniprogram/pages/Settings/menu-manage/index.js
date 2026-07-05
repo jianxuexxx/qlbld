@@ -32,7 +32,17 @@ Page({
   },
 
   onShow() {
-    this.loadMenus();
+    // 先同步刷新 userA/userB 再加载列表
+    const app = getApp();
+    app.refreshUserNames && app.refreshUserNames().then(() => {
+      this.setData({
+        userA: app.globalData.userA,
+        userB: app.globalData.userB,
+        _openidA: app.globalData._openidA,
+        _openidB: app.globalData._openidB
+      });
+      this.loadMenus();
+    });
   },
 
   async loadMenus() {

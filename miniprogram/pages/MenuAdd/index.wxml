@@ -1,23 +1,20 @@
 <!-- pages/MenuAdd/index.wxml -->
 <view class="container">
   <form bindsubmit="submitForm">
+    <view class="form-group">
+      <view class="form-group_label">菜品名称</view>
+      <input class="form-control input-single" name="title" placeholder="请输入菜品名称" value="{{formData.title}}" bindinput="onInput" data-field="title" style="height:120rpx;min-height:120rpx;line-height:120rpx;font-size:32rpx;" />
+    </view>
 
-    <view class="form-card">
-      <view class="form-group">
-        <view class="form-group_label">菜品名称<text class="required">*</text></view>
-        <input class="form-control" name="title" placeholder="请输入菜品名称" value="{{formData.title}}" bindinput="onInput" data-field="title" />
-      </view>
+    <view class="form-group">
+      <view class="form-group_label">分类</view>
+      <input class="form-control input-single" name="category" placeholder="请输入分类名称" value="{{formData.category}}" bindinput="onInput" data-field="category" style="height:120rpx;min-height:120rpx;line-height:120rpx;font-size:32rpx;" />
+    </view>
 
-      <view class="form-group">
-        <view class="form-group_label">分类<text class="required">*</text></view>
-        <input class="form-control" name="category" placeholder="请输入分类名称" value="{{formData.category}}" bindinput="onInput" data-field="category" />
-        <text class="cat-hint">输入新分类名后，菜单页将自动创建该分类</text>
-      </view>
-
-      <view class="form-group">
-        <view class="form-group_label">菜品描述</view>
-        <textarea class="form-control textarea" name="desc" placeholder="介绍一下这道菜吧～" value="{{formData.desc}}" bindinput="onInput" data-field="desc" auto-height="{{false}}" />
-      </view>
+    <view class="form-group">
+      <view class="form-group_label">菜品描述</view>
+      <textarea class="textarea" name="desc" placeholder="请输入菜品描述" value="{{formData.desc}}" bindinput="onInput" data-field="desc" style="min-height:240rpx;font-size:30rpx;line-height:1.6;" />
+    </view>
 
       <view class="form-group">
         <view class="form-group_label">积分奖励</view>

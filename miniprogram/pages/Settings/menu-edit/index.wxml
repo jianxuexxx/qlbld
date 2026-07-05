@@ -14,7 +14,7 @@
 
     <view class="form-row">
       <view class="form-label">积分价格<text class="form-required">*</text></view>
-      <input class="form-input" type="digit" placeholder="例：10" value="{{menu.credit}}" bindinput="onInputCredit"/>
+      <input class="form-input" type="digit" placeholder="例：10" value="{{menu.credit}}" bindinput="onInputCredit" style="height:110rpx;min-height:110rpx;line-height:110rpx;font-size:30rpx;"/>
     </view>
 
     <view class="form-row">

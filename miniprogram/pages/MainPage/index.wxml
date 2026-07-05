@@ -14,7 +14,7 @@
     <view class="stitch-banner-tag">OHANA · 家人即一切</view>
   </view>
 
-<view class="form-group_label">💰 积分榜</view>
+<view class="form-group_label">👋 你好，{{currentUser}}</view>
     <view class="form-group" style="box-shadow: 0 4px 8px 0 rgba(33,150,243,0.06), 0 6px 20px 0 rgba(33,150,243,0.08);">
     <view class="form-cell">
         <view class="slide">

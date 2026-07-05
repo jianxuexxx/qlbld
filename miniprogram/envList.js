@@ -1,5 +1,5 @@
 module.exports = {
   envList: [{
-    envId:'cloud1-d6gg65qwhbbd0f7e2'
+    envId:'cloud1-d5gv35lfkd2690d70'
   }]
 }

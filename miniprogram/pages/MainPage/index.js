@@ -5,6 +5,8 @@ Page({
     creditB: 0,
     userA: '',
     userB: '',
+    currentOpenid: '',
+    currentUser: '',
     subscribed: false,
     requestSubscribeMessageResult: ''
   },
@@ -12,11 +14,41 @@ Page({
   async onShow() {
     const app = getApp();
     const subs = app.globalData.subscribedActions || {};
+    console.log('[MainPage onShow] start, before refresh: userA=', app.globalData.userA, 'userB=', app.globalData.userB);
+    // 每次 onShow 都同步一次真实用户名
+    await (app.refreshUserNames && app.refreshUserNames());
+    console.log('[MainPage onShow] after refresh: userA=', app.globalData.userA, 'userB=', app.globalData.userB);
+    // 当前登录者 openid + 名字
+    let currentOpenid = '';
+    let currentUser = '';
+    try {
+      const r = await wx.cloud.callFunction({ name: 'getOpenId' });
+      currentOpenid = (r && r.result) || '';
+      const g = app.globalData;
+      if (currentOpenid === g._openidA) currentUser = g.userA;
+      else if (currentOpenid === g._openidB) currentUser = g.userB;
+      else currentUser = '未知用户';
+    } catch (e) {}
+    console.log('[MainPage onShow] setData: userA=', app.globalData.userA, 'userB=', app.globalData.userB, 'currentUser=', currentUser);
     this.setData({
+      userA: app.globalData.userA,
+      userB: app.globalData.userB,
+      currentOpenid,
+      currentUser,
       subscribed: Object.keys(subs).length > 0
     });
     this.getCreditA();
     this.getCreditB();
+  },
+
+  // 刷新 userA/userB（拉 UserList -> 写入 globalData -> 同步页面）
+  async refreshUserNames() {
+    const app = getApp();
+    await (app.refreshUserNames && app.refreshUserNames());
+    this.setData({
+      userA: app.globalData.userA,
+      userB: app.globalData.userB
+    });
   },
 
   // 点击订阅按钮

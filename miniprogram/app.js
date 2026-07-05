@@ -4,8 +4,8 @@ App({
 
     this.globalData = {
       //记录使用者的openid
-      _openidA: 'oT6085LEVOtIsSV7zBCh8PLTS6mk',
-      _openidB: 'oT6085Ga7IUxYt-mmP0IdFvaLT0I',
+      _openidA: 'oKXTkxUJqooRziKJ142WuTQhqPZw',
+      _openidB: 'oKXTkxeh5kNqUA2TAPh8hKxw48-4',
 
       //记录使用者的名字
       userA: '薛师傅',
@@ -21,10 +21,12 @@ App({
       maxCredit: 500,
 
       // ===== 订阅消息（统一模板） =====
-      subscribeTemplateId: 'tkhfBTA9LoKMkBpq8nxv8bDh5_GSeVYOz157x_Zfsd8',
+      subscribeTemplateId: 'fipB8zzrCo5upD3L7jvYB1wEeTQ3ohXaMCJyQcjYQS8',
       // 已订阅动作的累计集合（按动作名记录）
       subscribedActions: wx.getStorageSync('subscribedActions') || {},
     }
+    // globalData 初始化完成后再拉真实用户名（异步，不阻塞启动）
+    this.refreshUserNames && this.refreshUserNames();
   },
 
   flag: false,
@@ -94,6 +96,49 @@ App({
     } catch (e) {
       return '我';
     }
+  },
+
+  // 从 UserList 拉取真实用户名，覆盖到 globalData.userA/userB
+  // 命中字段顺序：name > username > nickname > 默认值
+  async refreshUserNames() {
+    const g = this.globalData;
+    if (!g) {
+      console.warn('[refreshUserNames] globalData 未初始化');
+      return;
+    }
+    try {
+      const res = await wx.cloud.callFunction({
+        name: 'getUserList',
+        data: { list: g.collectionUserList }
+      });
+      const list = (res && res.result && res.result.data) || [];
+      console.log('[refreshUserNames] getUserList returned', list.length, 'users', JSON.stringify(list));
+      const pickName = (u) => u && (u.name || u.username || u.nickname || '');
+      const a = list.find(u => u._openid === g._openidA);
+      const b = list.find(u => u._openid === g._openidB);
+      console.log('[refreshUserNames] matched A=', a, 'B=', b);
+      if (a && pickName(a)) g.userA = pickName(a);
+      if (b && pickName(b)) g.userB = pickName(b);
+      // 缓存，供后续同步
+      try { wx.setStorageSync('userNameCache', { userA: g.userA, userB: g.userB, ts: Date.now() }); } catch (_) {}
+      console.log('[refreshUserNames] final userA=', g.userA, 'userB=', g.userB);
+    } catch (e) {
+      console.error('[refreshUserNames] getUserList 调用失败：', e);
+      // 网络/云函数失败时使用本地缓存
+      try {
+        const cache = wx.getStorageSync('userNameCache') || {};
+        if (cache.userA) g.userA = cache.userA;
+        if (cache.userB) g.userB = cache.userB;
+      } catch (_) {}
+    }
+  },
+
+  // 根据 openid 取名字（A/B/我 + 缓存优先）
+  resolveUserName(currentOpenid) {
+    const g = this.globalData;
+    if (currentOpenid === g._openidA) return g.userA || '薛师傅';
+    if (currentOpenid === g._openidB) return g.userB || '宝宝';
+    return '我';
   },
 
   /**

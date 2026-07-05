@@ -10,93 +10,77 @@
 const cloud = require('wx-server-sdk');
 cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV });
 
-const OPENID_A = 'oT6085LEVOtIsSV7zBCh8PLTS6mk';
-const OPENID_B = 'oT6085Ga7IUxYt-mmP0IdFvaLT0I'; // B 的真实 openid
+const OPENID_A = 'oKXTkxUJqooRziKJ142WuTQhqPZw';
+const OPENID_B = 'oKXTkxeh5kNqUA2TAPh8hKxw48-4';   // 部署前改成实际 openid
 
-const TEMPLATE_ID = 'tkhfBTA9LoKMkBpq8nxv8bDh5_GSeVYOz157x_Zfsd8';
+// 你自己的模板 ID（保持与前端一致）
+const TEMPLATE_ID = 'fipB8zzrCo5upD3L7jvYB1wEeTQ3ohXaMCJyQcjYQS8';
 
-// 日期字段：date 类型必须 YYYY-MM-DD HH:MM:SS
-function nowDateStr() {
-  const d = new Date();
-  const p = (n) => String(n).padStart(2, '0');
-  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}`;
-}
-
-// 文本字段：thing 类型必须 ≤ 20 字符。emoji 算长度时微信服务端做拆分，建议用户文本 emoji 不超 3 个
-function truncate(s, n = 20) {
-  s = String(s == null ? '' : s);
-  // 直接按字符数裁断；emoji 被 JS 当作 2 个 surrogate 半区，截断可能留半个 emoji，后面做兜底
-  if (s.length > n) return s.slice(0, n - 1) + '…';
-  return s;
-}
-
-// 安全裁断后兜底为合法 thing（去可能产生孤立 surrogate 的字符）
-function safeThing(s, n = 20) {
-  const t = truncate(s, n);
-  // 去掉末尾半个 surrogate
-  return t.replace(/[\uD800-\uDBFF]$/, '').replace(/[\uDC00-\uDFFF]$/, '');
-}
-
-// 每个动作预制 4 个字段文案
-// thing1 活动名称：形如"📋薛师傅发布：洗碗"
-// thing12 活动详情：简明动作描述
-// thing22 备注：额外提示（如"等你去完成"）
+// 消息类型 → 模板字段映射（项目进展提醒模板）
+// thing2=项目名称, thing4=项目进展, date5=开始时间, thing7=备注, thing8=项目执行人
+// 模板字段个数务必与你申请模板一致，否则 send 会报 40037
 const ACTION_MAP = {
   // ===== 任务 =====
   mission_new: {
     label: '新任务',
-    build: ({ me, name }) => ({
-      thing1: { value: safeThing(`${me || ''}发布：${name || ''}`, 20) },
-      date6:  { value: nowDateStr() },
-      thing12:{ value: safeThing('有新的任务', 20) },
-      thing22:{ value: safeThing('点击查看', 20) }
+    build: ({ me, name, extra1 }) => ({
+      thing2: { value: truncate(name || '任务', 20) },
+      thing4: { value: truncate('📋 已发布，待对方完成', 20) },
+      date5:  { value: formatDate(new Date()) },
+      thing7: { value: truncate(extra1 || '请尽快处理', 20) },
+      thing8: { value: truncate(me || '我', 20) }
     })
   },
   mission_done: {
     label: '任务完成',
-    build: ({ me, name }) => ({
-      thing1: { value: safeThing(`${me || ''}完成：${name || ''}`, 20) },
-      date6:  { value: nowDateStr() },
-      thing12:{ value: safeThing('任务已完成', 20) },
-      thing22:{ value: safeThing('积分已发放', 20) }
+    build: ({ me, name, extra1 }) => ({
+      thing2: { value: truncate(name || '任务', 20) },
+      thing4: { value: truncate('✅ 已被对方完成', 20) },
+      date5:  { value: formatDate(new Date()) },
+      thing7: { value: truncate(extra1 || '积分已发放', 20) },
+      thing8: { value: truncate(me || '对方', 20) }
     })
   },
   mission_accepted: {
     label: '订单确认',
-    build: ({ me, name }) => ({
-      thing1: { value: safeThing(`${me || ''}点单：${name || ''}`, 20) },
-      date6:  { value: nowDateStr() },
-      thing12:{ value: safeThing('订单已建立', 20) },
-      thing22:{ value: safeThing('请及时处理', 20) }
+    build: ({ me, name, extra1 }) => ({
+      thing2: { value: truncate(name || '菜品', 20) },
+      thing4: { value: truncate('🛒 已下单，请及时处理', 20) },
+      date5:  { value: formatDate(new Date()) },
+      thing7: { value: truncate(extra1 || '请尽快制作', 20) },
+      thing8: { value: truncate(me || '对方', 20) }
     })
   },
   mission_finished: {
     label: '订单完成',
-    build: ({ me, name }) => ({
-      thing1: { value: safeThing(`${me || ''}已完成：${name || ''}`, 20) },
-      date6:  { value: nowDateStr() },
-      thing12:{ value: safeThing('订单已完成', 20) },
-      thing22:{ value: safeThing('积分已发放', 20) }
+    build: ({ me, name, extra1 }) => ({
+      thing2: { value: truncate(name || '菜品', 20) },
+      thing4: { value: truncate('🎉 已完成', 20) },
+      date5:  { value: formatDate(new Date()) },
+      thing7: { value: truncate(extra1 || '订单已完成，积分已发放', 20) },
+      thing8: { value: truncate(me || '我', 20) }
     })
   },
 
   // ===== 商品（暂未触发，商城已改设置页） =====
   item_added: {
     label: '商品上架',
-    build: ({ me, name }) => ({
-      thing1: { value: safeThing(`${me || ''}上架：${name || ''}`, 20) },
-      date6:  { value: nowDateStr() },
-      thing12:{ value: safeThing('商品已上架', 20) },
-      thing22:{ value: safeThing('点击去购买', 20) }
+    build: ({ me, name, extra1 }) => ({
+      thing2: { value: truncate(name || '商品', 20) },
+      thing4: { value: truncate('🛍️ 刚上架', 20) },
+      date5:  { value: formatDate(new Date()) },
+      thing7: { value: truncate(extra1 || '快来看看吧', 20) },
+      thing8: { value: truncate(me || '我', 20) }
     })
   },
   item_bought: {
     label: '商品购买',
-    build: ({ me, name }) => ({
-      thing1: { value: safeThing(`${me || ''}已购：${name || ''}`, 20) },
-      date6:  { value: nowDateStr() },
-      thing12:{ value: safeThing('商品已入仓', 20) },
-      thing22:{ value: safeThing('快去使用吧', 20) }
+    build: ({ me, name, extra1 }) => ({
+      thing2: { value: truncate(name || '商品', 20) },
+      thing4: { value: truncate('💖 已购买', 20) },
+      date5:  { value: formatDate(new Date()) },
+      thing7: { value: truncate(extra1 || '心爱商品已送达仓库', 20) },
+      thing8: { value: truncate(me || '我', 20) }
     })
   },
 
@@ -104,13 +88,25 @@ const ACTION_MAP = {
   custom: {
     label: '自定义',
     build: ({ me, name, extra1 }) => ({
-      thing1: { value: safeThing(name || me || '提醒', 20) },
-      date6:  { value: nowDateStr() },
-      thing12:{ value: safeThing(me || '事件', 20) },
-      thing22:{ value: safeThing(extra1 || '你有一条新提醒', 20) }
+      thing2: { value: truncate(name || me || '提醒', 20) },
+      thing4: { value: truncate(extra1 || '你有一条新提醒', 20) },
+      date5:  { value: formatDate(new Date()) },
+      thing7: { value: truncate(me || '系统', 20) },
+      thing8: { value: truncate(me || '系统', 20) }
     })
   }
 };
+
+// 日期格式化为 YYYY-MM-DD HH:mm
+function formatDate(d) {
+  const pad = n => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
+function truncate(s, n) {
+  s = String(s == null ? '' : s);
+  return s.length > n ? s.slice(0, n - 1) + '…' : s;
+}
 
 exports.main = async (event, context) => {
   const {

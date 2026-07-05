@@ -18,6 +18,7 @@ exports.main = async (context) => {
       desc: context.desc,
       credit: context.credit,
       _openid: OPENID,
+      _openid: OPENID,
       date: context.date,
       available: context.available,
       ordered: context.ordered,
