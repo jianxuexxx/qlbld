@@ -155,7 +155,6 @@ exports.main = async (event, context) => {
       miniprogramState: 'developer',
       page
     });
-    console.log('[information] send ok:', res);
     return { success: true, errCode: res.errCode, errMsg: res.errMsg, touser, payload };
   } catch (err) {
     console.error('[information] send fail:', err, 'payload=', payload);

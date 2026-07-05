@@ -14,10 +14,8 @@ Page({
   async onShow() {
     const app = getApp();
     const subs = app.globalData.subscribedActions || {};
-    console.log('[MainPage onShow] start, before refresh: userA=', app.globalData.userA, 'userB=', app.globalData.userB);
     // 每次 onShow 都同步一次真实用户名
     await (app.refreshUserNames && app.refreshUserNames());
-    console.log('[MainPage onShow] after refresh: userA=', app.globalData.userA, 'userB=', app.globalData.userB);
     // 当前登录者 openid + 名字
     let currentOpenid = '';
     let currentUser = '';
@@ -29,7 +27,6 @@ Page({
       else if (currentOpenid === g._openidB) currentUser = g.userB;
       else currentUser = '未知用户';
     } catch (e) {}
-    console.log('[MainPage onShow] setData: userA=', app.globalData.userA, 'userB=', app.globalData.userB, 'currentUser=', currentUser);
     this.setData({
       userA: app.globalData.userA,
       userB: app.globalData.userB,

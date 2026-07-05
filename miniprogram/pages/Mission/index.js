@@ -87,9 +87,26 @@ Page({
       missionList = this.data.allMissions
     }
 
+    // 统一时间戳比较：date / completedAt 都是 Date 对象或 ISO 字符串
+    const ts = (v) => {
+      if (!v) return 0
+      if (typeof v === 'object' && typeof v.getTime === 'function') return v.getTime()
+      const t = new Date(v).getTime()
+      return isNaN(t) ? 0 : t
+    }
+    const byDateDesc = (a, b) => ts(b.date) - ts(a.date)
+    const byCompletedDesc = (a, b) => ts(b.completedAt) - ts(a.completedAt)
+
+    const unfinished = missionList
+      .filter(item => item.available === true)
+      .sort(byDateDesc)
+    const finished = missionList
+      .filter(item => item.available === false)
+      .sort(byCompletedDesc)
+
     this.setData({
-      unfinishedMissions: missionList.filter(item => item.available === true),
-      finishedMissions: missionList.filter(item => item.available === false),
+      unfinishedMissions: unfinished,
+      finishedMissions: finished,
     })
   },
 
@@ -180,9 +197,10 @@ Page({
           name: 'editAvailable',
           data: { _id: mission._id, list: getApp().globalData.collectionMissionList, field: 'completedByOpenid', value: openid.result }
         }).catch(() => {})
+        // 不传 value：云函数会用服务端时间写入（避免客户端时间不准）
         await wx.cloud.callFunction({
           name: 'editAvailable',
-          data: { _id: mission._id, list: getApp().globalData.collectionMissionList, field: 'completedAt', value: new Date() }
+          data: { _id: mission._id, list: getApp().globalData.collectionMissionList, field: 'completedAt' }
         }).catch(() => {})
 
         //触发显示更新

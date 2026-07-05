@@ -103,7 +103,6 @@ App({
   async refreshUserNames() {
     const g = this.globalData;
     if (!g) {
-      console.warn('[refreshUserNames] globalData 未初始化');
       return;
     }
     try {
@@ -112,16 +111,13 @@ App({
         data: { list: g.collectionUserList }
       });
       const list = (res && res.result && res.result.data) || [];
-      console.log('[refreshUserNames] getUserList returned', list.length, 'users', JSON.stringify(list));
       const pickName = (u) => u && (u.name || u.username || u.nickname || '');
       const a = list.find(u => u._openid === g._openidA);
       const b = list.find(u => u._openid === g._openidB);
-      console.log('[refreshUserNames] matched A=', a, 'B=', b);
       if (a && pickName(a)) g.userA = pickName(a);
       if (b && pickName(b)) g.userB = pickName(b);
       // 缓存，供后续同步
       try { wx.setStorageSync('userNameCache', { userA: g.userA, userB: g.userB, ts: Date.now() }); } catch (_) {}
-      console.log('[refreshUserNames] final userA=', g.userA, 'userB=', g.userB);
     } catch (e) {
       console.error('[refreshUserNames] getUserList 调用失败：', e);
       // 网络/云函数失败时使用本地缓存

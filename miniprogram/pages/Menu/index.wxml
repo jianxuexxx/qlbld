@@ -27,13 +27,15 @@
   <block wx:if="{{allMenus.length > 0}}">
 
     <!-- 搜索栏 + 菜品管理入口 -->
-    <view class="search-row">
-      <view class="search-bar">
-        <icon class="search-icon" type="search" size="18" color="#8E8E93"></icon>
-        <input class="search-input" placeholder-class="placeholder" placeholder="搜索想吃的菜…" bindinput="onSearch" value="{{search}}" />
-        <view wx:if="{{search}}" class="search-clear" bindtap="clearSearch">✕</view>
+    <view class="search-block">
+      <view class="search-row">
+        <view class="search-bar">
+          <icon class="search-icon" type="search" size="16" color="#8E8E93"></icon>
+          <input class="search-input" placeholder-class="placeholder" placeholder="搜索想吃的菜…" bindinput="onSearch" value="{{search}}" />
+          <view wx:if="{{search}}" class="search-clear" bindtap="clearSearch">✕</view>
+        </view>
+        <view class="manage-entry" hover-class="manage-entry-hover" bindtap="toAddPage">🍳</view>
       </view>
-      <view class="manage-entry" hover-class="manage-entry-hover" bindtap="toAddPage">🍳</view>
     </view>
 
     <!-- 左右分栏布局 -->
@@ -114,41 +116,47 @@
                     bindtap="toDetailPage"
                     bindlongpress="onCardLongPress">
 
-                <!-- 左侧图标 -->
-                <view class="menu-card-left">
-                  <text>🍴</text>
-                  <view class="menu-card-author">
-                    <image wx:if="{{menu._openid === _openidA}}" src="Images/MenuA.png" mode="aspectFill" />
-                    <image wx:if="{{menu._openid === _openidB}}" src="Images/MenuB.png" mode="aspectFill" />
+                <!-- 顶部行：图标 + 信息 -->
+                <view class="menu-card-row menu-card-row--top">
+                  <!-- 左侧图标 -->
+                  <view class="menu-card-left">
+                    <text>🍴</text>
+                    <view class="menu-card-author">
+                      <image wx:if="{{menu._openid === _openidA}}" src="Images/MenuA.png" mode="aspectFill" />
+                      <image wx:if="{{menu._openid === _openidB}}" src="Images/MenuB.png" mode="aspectFill" />
+                    </view>
+                  </view>
+
+                  <!-- 信息 -->
+                  <view class="menu-card-center">
+                    <view class="menu-card-title">{{menu.title}}</view>
+                    <view class="menu-card-desc" wx:if="{{menu.desc}}">{{menu.desc}}</view>
+                    <view class="menu-card-meta">
+                      <view class="menu-card-tag" wx:if="{{menu.category}}">🏷️ {{menu.category}}</view>
+                      <view class="menu-card-credit">💰 {{menu.credit}} 积分</view>
+                    </view>
                   </view>
                 </view>
 
-                <!-- 中部信息 -->
-                <view class="menu-card-center">
-                  <view class="menu-card-title">{{menu.title}}</view>
-                  <view class="menu-card-desc" wx:if="{{menu.desc}}">{{menu.desc}}</view>
-                  <view class="menu-card-meta">
-                    <view class="menu-card-tag" wx:if="{{menu.category}}">🏷️ {{menu.category}}</view>
-                    <view class="menu-card-credit">💰 {{menu.credit}} 积分</view>
+                <!-- 底部行：积分左、stepper 右（独占一行，绝不和 meta 同行） -->
+                <view class="menu-card-row menu-card-row--bottom">
+                  <view class="menu-card-row-spacer"></view>
+                  <view class="stepper {{cart[menu._id] ? 'stepper-active' : ''}}">
+                    <view wx:if="{{cart[menu._id]}}"
+                          class="stepper-btn stepper-minus"
+                          data-id="{{menu._id}}"
+                          catchtap="decCart"
+                          hover-class="stepper-btn-hover">−</view>
+                    <text wx:if="{{cart[menu._id]}}" class="stepper-count">{{cart[menu._id]}}</text>
+                    <view class="stepper-btn stepper-plus"
+                          data-id="{{menu._id}}"
+                          catchtap="incCart"
+                          hover-class="stepper-btn-hover">＋</view>
                   </view>
                 </view>
 
                 <!-- 收藏标识 -->
                 <image wx:if="{{menu.star}}" class="menu-card-star" src="Images/Star.png" />
-
-                <!-- 右侧数量加减器 -->
-                <view class="stepper {{cart[menu._id] ? 'stepper-active' : ''}}">
-                  <view wx:if="{{cart[menu._id]}}"
-                        class="stepper-btn stepper-minus"
-                        data-id="{{menu._id}}"
-                        catchtap="decCart"
-                        hover-class="stepper-btn-hover">−</view>
-                  <text wx:if="{{cart[menu._id]}}" class="stepper-count">{{cart[menu._id]}}</text>
-                  <view class="stepper-btn stepper-plus"
-                        data-id="{{menu._id}}"
-                        catchtap="incCart"
-                        hover-class="stepper-btn-hover">＋</view>
-                </view>
               </view>
             </view>
           </view>

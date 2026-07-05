@@ -48,7 +48,7 @@ exports.main = async (context) => {
         categoryCreated = true;
       }
     } catch (e) {
-      console.warn('addMenu 同步分类失败：', e);
+      // 分类同步失败不影响主流程
     }
   }
 

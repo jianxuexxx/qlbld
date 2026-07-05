@@ -14,44 +14,28 @@
     <view class="stitch-banner-tag">OHANA · 家人即一切</view>
   </view>
 
-<view class="form-group_label">👋 你好，{{currentUser}}</view>
-    <view class="form-group" style="box-shadow: 0 4px 8px 0 rgba(33,150,243,0.06), 0 6px 20px 0 rgba(33,150,243,0.08);">
-    <view class="form-cell">
-        <view class="slide">
-        <view class="title">{{userA}}的积分：{{creditA}}</view>
-        </view>
-    </view>
-    <view class="form-cell">
-        <view class="slide">
-        <view class="title">{{userB}}的积分：{{creditB}}</view>
-        </view>
-    </view>
-</view>
-
-<view class="form-group_label">🐻 欢迎回来</view>
+  <view class="form-group_label">👋 你好，{{currentUser}}</view>
   <view class="form-group" style="box-shadow: 0 4px 8px 0 rgba(33,150,243,0.06), 0 6px 20px 0 rgba(33,150,243,0.08);">
     <view class="form-cell">
-      <view class="slide">
-        <view class="title">欢迎！蓝卡比和红卡比！</view>
-      </view>
+            <view class="slide">
+            <view class="title">{{userA}}的积分：{{creditA}}</view>
+            </view>
     </view>
     <view class="form-cell">
-      <view class="slide">
-        <view class="title">今天想做什么呢？</view>
-      </view>
+            <view class="slide">
+            <view class="title">{{userB}}的积分：{{creditB}}</view>
+            </view>
     </view>
   </view>
 
-  <!-- 订阅消息区 -->
   <view class="subscribe-card">
-    <view class="subscribe-card-title" wx:if="{{subscribed}}">✅ 已开启服务通知</view>
-    <view class="subscribe-card-title" wx:else>🔔 接收对方的服务通知</view>
-    <view class="subscribe-card-sub" wx:if="{{subscribed}}">对方发布任务 / 你点单 / 任务完成时，你都会收到微信服务通知</view>
-    <view class="subscribe-card-sub" wx:else>建议开启，否则对方完成你的任务时你收不到提醒</view>
-    <button class="subscribe-btn" hover-class="subscribe-btn-hover" bindtap="onTapSubscribe">
-      <text wx:if="{{subscribed}}">🔄 重新订阅</text>
-      <text wx:else>🔔 立即订阅</text>
-    </button>
+      <view class="subscribe-card-title" wx:if="{{subscribed}}">✅ 已开启服务通知</view>
+      <view class="subscribe-card-title" wx:else>🔔 接收对方的服务通知</view>
+      <view class="subscribe-card-sub" wx:if="{{subscribed}}">对方发布任务 / 你点单 / 任务完成时，你都会收到微信服务通知</view>
+      <view class="subscribe-card-sub" wx:else>建议开启，否则对方完成你的任务时你收不到提醒</view>
+      <button class="subscribe-btn" hover-class="subscribe-btn-hover" bindtap="onTapSubscribe">
+        <text wx:if="{{subscribed}}">🔄 重新订阅</text>
+        <text wx:else>🔔 立即订阅</text>
+      </button>
   </view>
-
 </view>

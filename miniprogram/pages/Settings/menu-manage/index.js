@@ -173,7 +173,6 @@ Page({
       wx.showToast({ title: disabled ? '已下架' : '已上架', icon: 'success' });
     } catch (e) {
       // 云函数 toggleMenuDisable 不存在时，降级本地操作
-      console.warn('toggleMenuDisable fail, fallback local:', e);
       const menu = this.data.allMenus.find(m => m._id === id);
       if (menu) {
         menu.disabled = disabled;
