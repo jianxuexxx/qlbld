@@ -1,29 +1,90 @@
 <!-- pages/MenuAdd/index.wxml -->
-<view class="container">
+<view class="page">
   <form bindsubmit="submitForm">
-    <view class="form-group">
-      <view class="form-group_label">菜品名称</view>
-      <input class="form-control input-single" name="title" placeholder="请输入菜品名称" value="{{formData.title}}" bindinput="onInput" data-field="title" style="height:120rpx;min-height:120rpx;line-height:120rpx;font-size:32rpx;" />
+
+    <!-- 标题卡片 -->
+    <view class="card card-header">
+      <view class="card-header_title">新增菜品</view>
+      <view class="card-header_sub">填写菜品信息后即可上架</view>
     </view>
 
-    <view class="form-group">
-      <view class="form-group_label">分类</view>
-      <input class="form-control input-single" name="category" placeholder="请输入分类名称" value="{{formData.category}}" bindinput="onInput" data-field="category" style="height:120rpx;min-height:120rpx;line-height:120rpx;font-size:32rpx;" />
-    </view>
+    <!-- 基础信息 -->
+    <view class="card">
+      <view class="field">
+        <view class="field-label">菜品名称</view>
+        <input
+          class="field-input"
+          name="title"
+          placeholder="请输入菜品名称"
+          placeholder-class="field-placeholder"
+          value="{{formData.title}}"
+          bindinput="onInput"
+          data-field="title"
+        />
+      </view>
 
-    <view class="form-group">
-      <view class="form-group_label">菜品描述</view>
-      <textarea class="textarea" name="desc" placeholder="请输入菜品描述" value="{{formData.desc}}" bindinput="onInput" data-field="desc" style="min-height:240rpx;font-size:30rpx;line-height:1.6;" />
-    </view>
+      <view class="field-divider"></view>
 
-    <view class="form-group">
-      <view class="form-group_label">积分奖励</view>
-      <view class="slider-container">
-        <slider name="credit" min="1" max="{{maxCredit}}" value="{{formData.credit}}" show-value activeColor="#1565C0" backgroundColor="#E4ECF6" block-size="22" bindchange="onSliderChange" />
-        <view class="slider-value">{{formData.credit}} 积分</view>
+      <view class="field">
+        <view class="field-label">分类</view>
+        <input
+          class="field-input"
+          name="category"
+          placeholder="请输入分类名称"
+          placeholder-class="field-placeholder"
+          value="{{formData.category}}"
+          bindinput="onInput"
+          data-field="category"
+        />
       </view>
     </view>
 
-    <button class="btn-submit" form-type="submit" hover-class="none">添加菜品</button>
+    <!-- 描述 -->
+    <view class="card">
+      <view class="field field--block">
+        <view class="field-label">菜品描述</view>
+        <textarea
+          class="field-textarea"
+          name="desc"
+          placeholder="请输入菜品描述"
+          placeholder-class="field-placeholder"
+          value="{{formData.desc}}"
+          bindinput="onInput"
+          data-field="desc"
+          auto-height
+        />
+      </view>
+    </view>
+
+    <!-- 积分 -->
+    <view class="card">
+      <view class="field field--block">
+        <view class="field-label field-label--row">
+          <text>积分奖励</text>
+          <text class="field-label-tag">{{formData.credit}} 分</text>
+        </view>
+        <view class="slider-wrap">
+          <slider
+            name="credit"
+            min="1"
+            max="{{maxCredit}}"
+            value="{{formData.credit}}"
+            show-value="{{false}}"
+            activeColor="#1565C0"
+            backgroundColor="#E4ECF6"
+            block-size="22"
+            block-color="#FFFFFF"
+            bindchange="onSliderChange"
+          />
+        </view>
+        <view class="slider-scale">
+          <text>1</text>
+          <text>{{maxCredit}}</text>
+        </view>
+      </view>
+    </view>
+
+    <button class="btn-submit" form-type="submit" hover-class="btn-submit--hover">添加菜品</button>
+
   </form>
 </view>

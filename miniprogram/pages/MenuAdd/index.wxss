@@ -1,94 +1,126 @@
 /* pages/MenuAdd/index.wxss */
-.container {
-  padding: 24rpx;
+.page {
+  padding: 32rpx 28rpx 64rpx;
   background-color: #F0F4FA;
   min-height: 100vh;
   box-sizing: border-box;
 }
 
-/* ===== 表单卡片 ===== */
-.form-card {
+/* ===== 通用卡片 ===== */
+.card {
   background: #FFFFFF;
   border-radius: 24rpx;
   padding: 8rpx 32rpx;
   box-shadow: 0 4rpx 16rpx rgba(13, 42, 77, 0.06);
-  margin-bottom: 32rpx;
-}
-.form-group {
-  margin-bottom: 32rpx;
-  background: #FFFFFF;
-  border-radius: 24rpx;
-  padding: 32rpx 32rpx;
-  box-shadow: 0 2rpx 12rpx rgba(33,150,243,0.06);
+  margin-bottom: 28rpx;
   box-sizing: border-box;
-  display: block;
-  height: 100rpx;
-  overflow: visible;
 }
 
-.form-group_label {
-  font-weight: 600;
-  font-size: 30rpx;
-  margin-bottom: 20rpx;
+.card-header {
+  background: linear-gradient(135deg, #1976D2 0%, #1565C0 100%);
+  padding: 36rpx 32rpx;
+  margin-bottom: 32rpx;
+  box-shadow: 0 8rpx 24rpx rgba(21, 101, 192, 0.18);
+}
+
+.card-header_title {
+  font-size: 38rpx;
+  font-weight: 700;
+  color: #FFFFFF;
+  letter-spacing: 1rpx;
+}
+
+.card-header_sub {
+  margin-top: 8rpx;
+  font-size: 24rpx;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+/* ===== 字段 ===== */
+.field {
+  padding: 28rpx 0;
   display: block;
+  box-sizing: border-box;
+}
+
+.field--block {
+  padding: 32rpx 0;
+}
+
+.field-divider {
+  height: 1rpx;
+  background: #EEF2F8;
+  margin: 0 -8rpx;
+}
+
+.field-label {
+  font-weight: 600;
+  font-size: 28rpx;
   color: #0D2A4D;
   line-height: 1.4;
+  margin-bottom: 16rpx;
 }
 
-/* ===== 输入控件 ===== */
-.form-control {
-  width: 100% !important;
-  height: 96rpx !important;
-  min-height: 96rpx !important;
-  line-height: 96rpx !important;
-  padding: 0 28rpx !important;
-  border: 2rpx solid #E4ECF6 !important;
-  border-radius: 20rpx !important;
-  box-sizing: border-box !important;
-  background-color: #F0F4FA !important;
-  font-size: 32rpx !important;
-  color: #0D2A4D !important;
+.field-label--row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8rpx;
 }
 
-.form-control.input-single {
-  height: 110rpx !important;
-  min-height: 110rpx !important;
-  line-height: 110rpx !important;
-  padding: 0 28rpx !important;
-  font-size: 32rpx !important;
+.field-label-tag {
+  font-weight: 700;
+  font-size: 26rpx;
+  color: #1565C0;
+  background: rgba(21, 101, 192, 0.08);
+  padding: 6rpx 16rpx;
+  border-radius: 999rpx;
 }
 
-.form-control:focus,
-.form-control.focused {
+/* ===== 输入框 ===== */
+.field-input,
+.field-textarea {
+  width: 100%;
+  padding: 20rpx 24rpx;
+  border: 2rpx solid #E4ECF6;
+  border-radius: 16rpx;
+  box-sizing: border-box;
+  background-color: #F4F8FD;
+  font-size: 30rpx;
+  color: #0D2A4D;
+  line-height: 1.5;
+}
+
+.field-input {
+  height: 84rpx;
+  line-height: 44rpx;
+}
+
+.field-textarea {
+  min-height: 200rpx;
+}
+
+.field-placeholder {
+  color: #A6B5CC;
+}
+
+.field-input:focus,
+.field-textarea:focus {
   border-color: #2196F3;
   background-color: #FFFFFF;
 }
 
-.textarea {
-  width: 100%;
-  min-height: 240rpx;
-  line-height: 1.6;
-  padding: 24rpx 28rpx;
-  border: 2rpx solid #E4ECF6;
-  border-radius: 20rpx;
-  box-sizing: border-box;
-  background-color: #F0F4FA;
-  font-size: 30rpx;
-  color: #0D2A4D;
+/* ===== 滑块 ===== */
+.slider-wrap {
+  padding: 8rpx 4rpx 0;
 }
 
-/* ===== 滑块 ===== */
-.slider-container {
-  background-color: #F0F4FA;
-  padding: 16rpx 20rpx;
-  border-radius: 16rpx;
-}
-.slider-value {
-  text-align: center;
-  margin-top: 12rpx;
-  font-weight: 700;
-  font-size: 30rpx;
-  color: #2196F3;
+.slider-scale {
+  display: flex;
+  justify-content: space-between;
+  font-size: 22rpx;
+  color: #98A8BF;
+  padding: 4rpx 4rpx 0;
 }
 
 /* ===== 提交按钮 ===== */
@@ -97,16 +129,22 @@
   background: linear-gradient(135deg, #2196F3 0%, #1565C0 100%);
   color: #FFFFFF;
   border: none;
-  border-radius: 40rpx;
-  padding: 28rpx;
+  border-radius: 48rpx;
+  padding: 26rpx;
   font-size: 32rpx;
   font-weight: 600;
-  margin-top: 40rpx;
-  box-shadow: 0 6rpx 20rpx rgba(33,150,243,0.25);
+  margin-top: 56rpx;
+  box-shadow: 0 10rpx 24rpx rgba(33, 150, 243, 0.28);
+  letter-spacing: 2rpx;
 }
 
 .btn-submit::after {
   border: none;
+}
+
+.btn-submit--hover {
+  opacity: 0.92;
+  transform: translateY(2rpx);
 }
 
 .btn-submit[disabled] {
