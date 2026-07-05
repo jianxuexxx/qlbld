@@ -19,11 +19,17 @@
   box-shadow: var(--shadow-card-hover);
 }
 
+.slide--mission {
+  background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
+  cursor: pointer;
+}
+
 .title {
   font-size: var(--font-md);
   font-weight: 600;
   color: var(--color-text-primary);
   line-height: 1.3;
+  flex: 1;
 }
 
 .swiper-image {
@@ -72,7 +78,6 @@
   box-shadow: 0 8rpx 24rpx rgba(33,150,243,0.35);
   overflow: hidden;
 }
-/* 紫色光晕（左上） */
 .stitch-banner::before {
   content: '';
   position: absolute;
@@ -84,7 +89,6 @@
   border-radius: 50%;
   pointer-events: none;
 }
-/* 黄色光晕（右下） */
 .stitch-banner::after {
   content: '';
   position: absolute;
@@ -159,6 +163,323 @@
   position: relative;
   z-index: 1;
   backdrop-filter: blur(8rpx);
+}
+
+/* 待办徽标 */
+.slide-mission-badge {
+  flex-shrink: 0;
+  min-width: 36rpx;
+  height: 36rpx;
+  padding: 0 12rpx;
+  border-radius: 18rpx;
+  background: linear-gradient(135deg, #FF3B30 0%, #E53935 100%);
+  color: #fff;
+  font-size: 22rpx;
+  font-weight: 700;
+  line-height: 36rpx;
+  text-align: center;
+  margin-left: 16rpx;
+  box-shadow: 0 2rpx 8rpx rgba(229, 57, 53, 0.35);
+}
+
+/* ===== 顶部 Tab 切换栏 ===== */
+.home-tabs {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background-color: #FFFFFF;
+  border-bottom: 2rpx solid #EEF2F8;
+}
+.home-tabs-bar {
+  display: flex;
+  align-items: stretch;
+  height: 96rpx;
+  padding: 0 16rpx;
+}
+.home-tabs-item {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  color: #5A6B85;
+  font-size: 28rpx;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+.home-tabs-item.active {
+  color: #1565C0;
+  font-weight: 700;
+}
+.home-tabs-text {
+  position: relative;
+  z-index: 1;
+}
+.home-tabs-underline {
+  position: absolute;
+  left: 50%;
+  bottom: 12rpx;
+  width: 56rpx;
+  height: 6rpx;
+  border-radius: 3rpx;
+  background: linear-gradient(90deg, #2196F3, #1565C0);
+  transform: translateX(-50%);
+}
+.home-tabs-badge {
+  position: absolute;
+  top: 16rpx;
+  right: 18%;
+  min-width: 32rpx;
+  height: 32rpx;
+  padding: 0 8rpx;
+  border-radius: 16rpx;
+  background: #FF3B30;
+  color: #fff;
+  font-size: 20rpx;
+  font-weight: 700;
+  line-height: 32rpx;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+/* ===== Swiper 高度 ===== */
+.home-swiper {
+  height: calc(100vh - 96rpx - env(safe-area-inset-top) - 100rpx);
+  width: 100%;
+}
+.home-scroll {
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* ===== 任务引导头 ===== */
+.mission-hero {
+  display: flex;
+  align-items: center;
+  gap: 24rpx;
+  margin: 24rpx 24rpx 8rpx;
+  padding: 28rpx 28rpx;
+  background: linear-gradient(135deg, #2196F3 0%, #1565C0 100%);
+  border-radius: var(--radius-xl);
+  color: #FFFFFF;
+  box-shadow: 0 6rpx 20rpx rgba(33, 150, 243, 0.25);
+}
+.mission-hero-icon {
+  font-size: 64rpx;
+  line-height: 1;
+  flex-shrink: 0;
+  filter: drop-shadow(0 4rpx 8rpx rgba(0,0,0,0.18));
+}
+.mission-hero-text {
+  flex: 1;
+  min-width: 0;
+}
+.mission-hero-title {
+  font-size: 32rpx;
+  font-weight: 700;
+  letter-spacing: 1rpx;
+  margin-bottom: 4rpx;
+  text-shadow: 0 2rpx 6rpx rgba(0,0,0,0.12);
+}
+.mission-hero-sub {
+  font-size: 22rpx;
+  opacity: 0.92;
+  line-height: 1.4;
+}
+.mission-hero-stats {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  padding: 8rpx 16rpx;
+  background: rgba(255,255,255,0.18);
+  border-radius: 16rpx;
+  border: 2rpx solid rgba(255,255,255,0.25);
+  backdrop-filter: blur(6rpx);
+}
+.mission-hero-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 56rpx;
+}
+.mission-hero-stat-num {
+  font-size: 30rpx;
+  font-weight: 700;
+  line-height: 1.1;
+}
+.mission-hero-stat-label {
+  font-size: 20rpx;
+  opacity: 0.85;
+  margin-top: 2rpx;
+}
+.mission-hero-divider {
+  width: 1rpx;
+  height: 36rpx;
+  background-color: rgba(255,255,255,0.35);
+}
+
+/* ===== 任务搜索 ===== */
+.mission-search-wrap {
+  margin: 16rpx 24rpx !important;
+  padding: 0 24rpx;
+  height: 76rpx;
+  display: flex;
+  align-items: center;
+  background: #FFFFFF;
+  border-radius: 38rpx;
+  box-shadow: 0 4rpx 14rpx rgba(13, 42, 77, 0.06);
+  box-sizing: border-box;
+}
+.mission-search-wrap .search-bar {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+.mission-search-wrap .search-icon {
+  margin-right: 10rpx;
+}
+.mission-search-wrap .search-input {
+  flex: 1;
+  font-size: 26rpx;
+  color: #0D2A4D;
+  height: 76rpx;
+}
+
+/* 任务分组计数 */
+.mission-count {
+  display: inline-block;
+  min-width: 32rpx;
+  height: 28rpx;
+  padding: 0 10rpx;
+  margin-left: 8rpx;
+  border-radius: 14rpx;
+  background: rgba(33, 150, 243, 0.12);
+  color: #1565C0;
+  font-size: 22rpx;
+  font-weight: 700;
+  line-height: 28rpx;
+  text-align: center;
+  vertical-align: middle;
+}
+
+/* ===== 任务卡片信息 ===== */
+.mission-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6rpx;
+}
+.mission-info_title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #0D2A4D;
+  line-height: 1.3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.mission-info_award {
+  font-size: 24rpx;
+  color: #1565C0;
+  font-weight: 600;
+}
+.mission-info_date {
+  font-size: 22rpx;
+  color: #8E8E93;
+}
+.mission-info_waiting {
+  font-size: 22rpx;
+  color: #FF6F00;
+  font-weight: 600;
+}
+.mission-info_author {
+  flex-shrink: 0;
+  width: 56rpx;
+  height: 56rpx;
+  margin-left: 16rpx;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #F2F5FB;
+}
+.mission-info_author image {
+  width: 100%;
+  height: 100%;
+}
+.star {
+  position: absolute;
+  top: 16rpx;
+  right: 16rpx;
+  width: 32rpx;
+  height: 32rpx;
+  z-index: 2;
+}
+
+/* 空状态 */
+.empty-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 160rpx 32rpx 80rpx;
+  text-align: center;
+}
+.empty-hero-emoji {
+  font-size: 120rpx;
+  margin-bottom: 24rpx;
+  opacity: 0.85;
+}
+.empty-hero-title {
+  font-size: 36rpx;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-bottom: 12rpx;
+}
+.empty-hero-sub {
+  font-size: 26rpx;
+  color: var(--color-text-tertiary);
+  line-height: 1.5;
+}
+
+/* 底部留白 */
+.mission-bottom-spacer {
+  height: 200rpx;
+  flex-shrink: 0;
+}
+
+/* ===== FAB：浮动新增任务按钮 ===== */
+.mission-fab {
+  position: fixed;
+  right: 28rpx;
+  bottom: calc(140rpx + env(safe-area-inset-bottom));
+  width: 112rpx;
+  height: 112rpx;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #2196F3 0%, #1565C0 100%);
+  color: #FFFFFF;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10rpx 24rpx rgba(33, 150, 243, 0.4);
+  z-index: 100;
+  transition: transform 0.1s ease, box-shadow 0.2s ease;
+}
+.mission-fab:active {
+  transform: scale(0.94);
+  box-shadow: 0 6rpx 14rpx rgba(33, 150, 243, 0.3);
+}
+.mission-fab-plus {
+  font-size: 44rpx;
+  line-height: 1;
+  font-weight: 300;
+}
+.mission-fab-label {
+  font-size: 20rpx;
+  margin-top: 2rpx;
+  letter-spacing: 1rpx;
+  opacity: 0.92;
 }
 
 /* 订阅卡片 */

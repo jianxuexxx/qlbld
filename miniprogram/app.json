@@ -35,11 +35,6 @@
       "iconPath": "images/TabBar/MarketIconGrey.jpg",
       "text": "菜单"
     }, {
-      "pagePath": "pages/Mission/index",
-      "selectedIconPath": "images/TabBar/MissionIconColor.jpg",
-      "iconPath": "images/TabBar/MissionIconGrey.jpg",
-      "text": "任务"
-    }, {
       "pagePath": "pages/Settings/index",
       "selectedIconPath": "images/TabBar/MarketIconColor.jpg",
       "iconPath": "images/TabBar/MarketIconGrey.jpg",
