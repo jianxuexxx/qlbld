@@ -1,92 +1,69 @@
 <view class="container">
-  <!-- 经期引导头 -->
-  <view class="period-hero">
-    <view class="period-hero-icon">📅</view>
-    <view class="period-hero-text">
-      <view class="period-hero-title">经期记录</view>
-      <view class="period-hero-sub">每一天都可记录 · 温柔陪伴</view>
+  <!-- 本次开始 / 上次结束（左右双卡） -->
+  <view class="period-summary" wx:if="{{summary.hasData}}">
+    <view class="period-summary-card period-summary-card-start">
+      <view class="period-summary-label">本次开始</view>
+      <view wx:if="{{summary.currentStart}}" class="period-summary-value">{{summary.currentStartFriendly}}</view>
+      <view wx:else class="period-summary-value period-summary-empty">—</view>
+      <view wx:if="{{summary.currentStart}}" class="period-summary-sub">{{summary.currentStart}} · {{summary.currentStartWeekCN}}</view>
+      <view wx:else class="period-summary-sub">尚未开始</view>
+    </view>
+    <view class="period-summary-card period-summary-card-end">
+      <view class="period-summary-label">上次结束</view>
+      <view wx:if="{{summary.lastEnd}}" class="period-summary-value">{{summary.lastEndFriendly}}</view>
+      <view wx:else class="period-summary-value period-summary-empty">—</view>
+      <view wx:if="{{summary.lastEnd}}" class="period-summary-sub">{{summary.lastEnd}} · {{summary.lastEndWeekCN}}</view>
+      <view wx:else class="period-summary-sub">尚未结束</view>
     </view>
   </view>
 
-  <!-- 预测状态卡片 -->
-  <view class="period-status-card" wx:if="{{periodSummary.hasData}}">
-    <view class="period-status-row">
-      <view class="period-status-item">
-        <view class="period-status-label">当前状态</view>
-        <view class="period-status-value">
-          <text wx:if="{{periodSummary.inPeriod}}" class="period-status-tag period-status-tag-on">经期中 · 第 {{periodSummary.currentDuration}} 天</text>
-          <text wx:elif="{{periodSummary.daysUntilNext >= 0}}" class="period-status-tag period-status-tag-wait">距离下次 {{periodSummary.daysUntilNext}} 天</text>
-          <text wx:else class="period-status-tag period-status-tag-over">已延迟 {{-periodSummary.daysUntilNext}} 天</text>
-        </view>
-      </view>
-    </view>
-    <view class="period-status-grid">
-      <view class="period-status-grid-cell">
-        <view class="period-status-grid-label">本次开始</view>
-        <view class="period-status-grid-value">{{periodSummary.currentStartFriendly || '—'}}</view>
-        <view class="period-status-grid-sub">{{periodSummary.currentStartWeekCN}} · {{periodSummary.currentStart}}</view>
-      </view>
-      <view class="period-status-grid-cell">
-        <view class="period-status-grid-label">{{periodSummary.inPeriod ? '预计结束' : '上次结束'}}</view>
-        <view class="period-status-grid-value">{{periodSummary.predictedEndFriendly || periodSummary.currentEndFriendly || '—'}}</view>
-        <view class="period-status-grid-sub">{{periodSummary.inPeriod ? (periodSummary.predictedEnd || '—') : (periodSummary.currentEnd || '—')}}</view>
-      </view>
-      <view class="period-status-grid-cell">
-        <view class="period-status-grid-label">预计持续</view>
-        <view class="period-status-grid-value">{{periodSummary.predictedDuration ? periodSummary.predictedDuration + ' 天' : '—'}}</view>
-      </view>
-      <view class="period-status-grid-cell">
-        <view class="period-status-grid-label">下次预计</view>
-        <view class="period-status-grid-value">{{periodSummary.nextPredictedStartFriendly || '—'}}</view>
-        <view class="period-status-grid-sub">{{periodSummary.nextPredictedStartWeekCN || ''}} · {{periodSummary.nextPredictedStart || '—'}}</view>
-      </view>
-    </view>
-  </view>
-
-  <!-- 空状态 -->
-  <view wx:elif="{{!periodSummary.hasData}}" class="period-empty">
-    <view class="period-empty-emoji">🌷</view>
-    <view class="period-empty-title">还没有记录</view>
-    <view class="period-empty-sub">点击下方日历任意日期，开始记录经期</view>
-  </view>
-
-  <!-- 日历 -->
-  <view class="form-group_label">📅 日历 · 点击日期记录</view>
+  <!-- 日历（含年月选择） -->
   <view class="period-calendar">
+    <!-- 日历头部：左箭头 + 年月选择（picker）+ 右箭头 -->
     <view class="period-calendar-header">
       <view class="period-calendar-nav" bindtap="prevMonth">‹</view>
-      <view class="period-calendar-title">{{calendarYear}} 年 {{calendarMonth}} 月</view>
+      <view class="period-calendar-title">
+        <picker mode="selector" value="{{yearIndex}}" range="{{yearRange}}" bindchange="onYearChange">
+          <view class="period-calendar-title-pick">{{calendarYear}} 年</view>
+        </picker>
+        <text class="period-calendar-title-sep">/</text>
+        <picker mode="selector" value="{{calendarMonth - 1}}" range="{{monthRange}}" bindchange="onMonthChange">
+          <view class="period-calendar-title-pick">{{calendarMonth}} 月</view>
+        </picker>
+      </view>
       <view class="period-calendar-nav" bindtap="nextMonth">›</view>
     </view>
+
     <view class="period-calendar-weekrow">
       <view class="period-calendar-weekcell" wx:for="{{weekLabels}}" wx:key="*this">{{item}}</view>
     </view>
     <view class="period-calendar-days">
       <view wx:for="{{calendarDays}}" wx:key="index"
-            class="period-calendar-day {{item.empty ? 'period-calendar-day-empty' : ''}} {{item.isToday ? 'period-calendar-day-today' : ''}} {{item.inPeriod ? 'period-calendar-day-in' : ''}} {{item.isPeriodStart ? 'period-calendar-day-start' : ''}} {{item.isPeriodEnd ? 'period-calendar-day-end' : ''}} {{item.isPredicted ? 'period-calendar-day-pred' : ''}} {{item.selected ? 'period-calendar-day-selected' : ''}}"
+            class="period-calendar-day {{item.empty ? 'period-calendar-day-empty' : ''}} {{item.isToday ? 'period-calendar-day-today' : ''}} {{item.inPeriod ? 'period-calendar-day-in' : ''}} {{item.isPeriodStart ? 'period-calendar-day-start' : ''}} {{item.isPeriodEnd ? 'period-calendar-day-end' : ''}} {{item.selected ? 'period-calendar-day-selected' : ''}}"
             data-date="{{item.date}}"
             bindtap="onTapCalendarDay">
         <view class="period-calendar-day-num">{{item.day}}</view>
+        <view wx:if="{{item.inPeriod && !item.isPeriodStart && !item.isPeriodEnd}}" class="period-calendar-day-tag">经</view>
+        <view wx:if="{{item.isPeriodStart && !item.isPeriodEnd}}" class="period-calendar-day-tag">始</view>
+        <view wx:if="{{item.isPeriodEnd && !item.isPeriodStart}}" class="period-calendar-day-tag">末</view>
+        <view wx:if="{{item.isPeriodStart && item.isPeriodEnd}}" class="period-calendar-day-tag">●</view>
       </view>
     </view>
     <view class="period-calendar-legend">
       <view class="period-calendar-legend-item"><view class="period-calendar-legend-dot period-calendar-legend-dot-start"></view>开始</view>
       <view class="period-calendar-legend-item"><view class="period-calendar-legend-dot period-calendar-legend-dot-in"></view>经期中</view>
       <view class="period-calendar-legend-item"><view class="period-calendar-legend-dot period-calendar-legend-dot-end"></view>结束</view>
-      <view class="period-calendar-legend-item"><view class="period-calendar-legend-dot period-calendar-legend-dot-pred"></view>预测</view>
     </view>
   </view>
 
   <!-- 选中日期的操作面板 -->
-  <view wx:if="{{selectedDate}}" class="form-group period-action-card">
+  <view wx:if="{{selectedDate}}" class="period-action-card">
     <view class="period-action-header">
       <view class="period-action-title-block">
-        <view class="period-action-title">{{selectedDateFriendly}} <text class="period-action-week">{{selectedDateWeekCN}}</text></view>
+        <view class="period-action-title">{{selectedDate}} <text class="period-action-week">{{selectedDateWeekCN}}</text></view>
         <view class="period-action-sub">
-          <text wx:if="{{selectedDateInfo.hasRecord && selectedDateInfo.isEnd}}">已标记为结束日 🌙</text>
-          <text wx:elif="{{selectedDateInfo.hasRecord && selectedDateInfo.isPeriod}}">已标记为经期 · 第 {{selectedDateInfo.segmentDay}} 天</text>
-          <text wx:elif="{{selectedDateInfo.segmentStart && !selectedDateInfo.isPeriod}}">该日属于经期段 {{selectedDateInfo.segmentStartFriendly}}（第 {{selectedDateInfo.segmentDay}} 天）</text>
-          <text wx:elif="{{selectedDateInfo.isPredicted}}">预测为经期</text>
+          <text wx:if="{{selectedDateInfo.hasRecord && selectedDateInfo.isEnd}}">已标记为结束日</text>
+          <text wx:elif="{{selectedDateInfo.hasRecord && selectedDateInfo.isPeriod}}">已标记为经期（{{selectedDateInfo.segmentDay > 0 ? '第 ' + selectedDateInfo.segmentDay + ' 天' : ''}}）</text>
           <text wx:else>当天未标记</text>
         </view>
       </view>
@@ -97,70 +74,10 @@
       <button class="period-action-btn period-action-btn-danger" size="mini" bindtap="onCancelMark">🗑 取消当天标记</button>
     </view>
 
-    <!-- 未标记的日期：显示标记按钮 -->
+    <!-- 未标记的日期：显示两个标记按钮 -->
     <view class="period-action-buttons" wx:if="{{!selectedDateInfo.hasRecord}}">
       <button class="period-action-btn period-action-btn-primary" size="mini" bindtap="onMarkPeriod">📌 标记为经期中</button>
       <button class="period-action-btn period-action-btn-end" size="mini" bindtap="onMarkEnd">🌙 标记为结束经期</button>
-    </view>
-  </view>
-
-  <!-- 统计情况 -->
-  <view wx:if="{{periodSummary.hasData}}" class="form-group_label">📊 统计情况</view>
-  <view wx:if="{{periodSummary.hasData}}" class="form-group period-stats">
-    <view class="period-stats-row">
-      <view class="period-stats-cell">
-        <view class="period-stats-num">{{periodSummary.totalCycles}}</view>
-        <view class="period-stats-label">记录次数</view>
-      </view>
-      <view class="period-stats-cell">
-        <view class="period-stats-num">{{periodSummary.avgCycle || '—'}}</view>
-        <view class="period-stats-label">平均周期(天)</view>
-      </view>
-      <view class="period-stats-cell">
-        <view class="period-stats-num">{{periodSummary.avgDuration || '—'}}</view>
-        <view class="period-stats-label">平均经期(天)</view>
-      </view>
-    </view>
-    <view class="period-stats-row">
-      <view class="period-stats-cell">
-        <view class="period-stats-num">{{periodSummary.lastCycle || '—'}}</view>
-        <view class="period-stats-label">最近周期(天)</view>
-      </view>
-      <view class="period-stats-cell">
-        <view class="period-stats-num">{{periodSummary.lastDuration || '—'}}</view>
-        <view class="period-stats-label">最近经期(天)</view>
-      </view>
-      <view class="period-stats-cell">
-        <view class="period-stats-num">{{periodSummary.shortestCycle || '—'}}</view>
-        <view class="period-stats-label">最短周期(天)</view>
-      </view>
-    </view>
-  </view>
-
-  <!-- 历史记录（按段展示） -->
-  <view class="form-group_label">📜 历史记录</view>
-  <view wx:if="{{periodSegments.length === 0}}" class="form-group period-empty-list">
-    <view class="period-empty-list-text">暂无记录</view>
-  </view>
-  <view wx:if="{{periodSegments.length > 0}}" class="form-group period-list">
-    <view class="period-list-row" wx:for="{{periodSegments}}" wx:key="startDate" wx:for-item="seg">
-      <view class="period-list-info">
-        <view class="period-list-title">
-          <text class="period-list-date-main">{{seg.startFriendly}}</text>
-          <text class="period-list-date-arrow" wx:if="{{seg.days > 1}}"> → </text>
-          <text class="period-list-date-main" wx:if="{{seg.days > 1}}">{{seg.endFriendly}}</text>
-        </view>
-        <view class="period-list-date-sub">
-          <text>{{seg.startShortMD}} {{seg.startWeekCN}}</text>
-          <text wx:if="{{seg.days > 1}}"> → {{seg.endShortMD}} {{seg.endWeekCN}}</text>
-        </view>
-        <view class="period-list-meta">
-          <text class="period-list-tag">🩸 {{seg.days}} 天</text>
-          <text class="period-list-tag" wx:if="{{seg.days > 1 && seg.cycleFromPrev !== null && seg.cycleFromPrev !== undefined}}">🔁 周期 {{seg.cycleFromPrev}} 天</text>
-          <text class="period-list-tag period-list-tag-ongoing" wx:if="{{seg.isOngoing}}">⏳ {{seg.statusLabel}}</text>
-          <text class="period-list-tag period-list-tag-ended" wx:elif="{{seg.hasEnd}}">✓ 已结束</text>
-        </view>
-      </view>
     </view>
   </view>
 
