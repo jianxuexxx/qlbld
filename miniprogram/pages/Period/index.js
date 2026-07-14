@@ -181,26 +181,26 @@ Page({
     }
 
     const segments = buildSegments(records);
-    // 当前进行中：未结束（只要未标记 end 就算进行中）
+    // 数据获取规则：
+    // - 本次开始：当前正在进行的经期段（最近的一段且 hasEnd=false）
+    //   若所有段都已结束，则取最新段的 startDate
+    // - 上次结束：当前经期段的 endDate（仅当当前段已标记 end 时才显示）
+    //   若当前段未标记 end，则显示空（"无"）
+    //   若没有进行中段，则取最新段的 endDate（前提是它已结束）
     const ongoing = segments.find(s => !s.hasEnd);
+    // 最新段（已结束或进行中）
+    const latest = segments[0];
 
     let currentStart = '';
     let lastEnd = '';
 
     if (ongoing) {
-      // 当前段存在，取当前段信息
+      // 当前段存在（未结束）
       currentStart = ongoing.startDate;
-      // 如果当前段已结束，endDate 就是该段结束日
-      if (ongoing.hasEnd) {
-        lastEnd = ongoing.endDate;
-      } else {
-        // 当前段未结束，lastEnd 取最近一个已结束段
-        const lastFinished = segments.find(s => s.hasEnd);
-        if (lastFinished) lastEnd = lastFinished.endDate;
-      }
+      // 当前段未结束 → 上次结束为空
+      lastEnd = '';
     } else {
-      // 没有进行中段，说明最新段已结束
-      const latest = segments[0];
+      // 没有进行中段 → 最新段一定是已结束
       if (latest) {
         currentStart = latest.startDate;
         lastEnd = latest.hasEnd ? latest.endDate : '';
