@@ -1,0 +1,70 @@
+<view class="container">
+  <!-- 表单卡片 -->
+  <view class="form-card">
+    <!-- 品牌名 -->
+    <view class="form-row form-row--block">
+      <view class="form-label">🏷️ 品牌名</view>
+      <input
+        class="form-input"
+        placeholder="例如：喜茶"
+        value="{{name}}"
+        bindinput="onNameInput"
+        maxlength="20"
+        placeholder-style="color:#A8B6CD;"
+      />
+    </view>
+
+    <view class="form-divider"></view>
+
+    <!-- 颜色 -->
+    <view class="form-row form-row--block">
+      <view class="form-label">🎨 展示颜色</view>
+      <view class="color-grid">
+        <view
+          wx:for="{{colors}}"
+          wx:key="value"
+          class="color-cell {{!isCustom && color === item.value ? 'active' : ''}}"
+          data-color="{{item.value}}"
+          bindtap="onColorSelect"
+          style="background:{{item.value}};"
+        >
+          <text wx:if="{{!isCustom && color === item.value}}" class="color-check">✓</text>
+        </view>
+      </view>
+      <view class="form-hint">或自定义颜色：</view>
+      <view class="custom-color-row">
+        <view
+          class="color-preview"
+          style="background:{{customColor || '#CCCCCC'}};"
+        ></view>
+        <input
+          class="custom-color-input"
+          placeholder="#RRGGBB"
+          value="{{customColor}}"
+          bindinput="onCustomColorInput"
+          maxlength="7"
+          placeholder-style="color:#A8B6CD;"
+        />
+      </view>
+    </view>
+
+    <!-- 启停用（仅编辑模式） -->
+    <view wx:if="{{isEdit}}" class="form-divider"></view>
+    <view wx:if="{{isEdit}}" class="form-row form-row--block">
+      <view class="form-label-row">
+        <view class="form-label">📌 启用状态</view>
+        <switch checked="{{enabled}}" color="#2196F3" bindchange="onToggleEnabled"/>
+      </view>
+      <view class="form-hint">停用后该品牌不再出现在新增/编辑列表中，历史记录仍会显示</view>
+    </view>
+  </view>
+
+  <!-- 操作按钮 -->
+  <view class="action-bar">
+    <button class="btn-secondary" hover-class="btn-secondary-hover" bindtap="onCancel">取消</button>
+    <button class="btn-primary" hover-class="btn-primary-hover" bindtap="onSave">
+      <text wx:if="{{isEdit}}">保存修改</text>
+      <text wx:else>新增品牌</text>
+    </button>
+  </view>
+</view>
