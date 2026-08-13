@@ -253,16 +253,6 @@
   line-height: 1;
 }
 
-/* ===== 左滑按钮配色（图标模式：保留白色圆形背景 + 彩色图标） ===== */
-/* 编辑按钮：背景浅蓝色 */
-.editBtn .weui-slideview__btn {
-  background-color: #E3F2FD !important;
-}
-/* 删除按钮：背景浅红色 */
-.removeBtn .weui-slideview__btn {
-  background-color: #FFEBEE !important;
-}
-
 /* ===== 底部留白 ===== */
 .bottom-spacer {
   height: 160rpx;

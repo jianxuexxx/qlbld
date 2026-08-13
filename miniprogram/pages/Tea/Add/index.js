@@ -1,4 +1,6 @@
 // pages/Tea/Add/index.js - 奶茶记录：新增 / 编辑
+// 品牌：从 BrandList 动态加载（仅启用）
+// 产品：自由填写（不再用 picker）
 const app = getApp();
 const TeaData = require('../data.js');
 
@@ -14,53 +16,56 @@ Page({
 
     // 表单
     date: '',
-    brandIndex: 0,
+    brandId: '',
     brandName: '',
-    brandNames: [],
-    productIndex: 0,
-    productName: '',
-    products: [],
+    brandIndex: 0,
+    brandNames: [],   // 用于 picker 显示
+    brandColors: {},  // 品牌名 → 颜色
+    product: '',      // 自由填写
     rating: 'good',
     note: '',
 
-    // 展示用
+    // 评分展示
     ratings: TeaData.RATINGS,
-    brandColors: {},
   },
 
   onLoad(options) {
     const today = fmtDate(new Date());
+    this.setData({
+      date: today,
+      rating: 'good',
+      note: '',
+    });
 
-    // 构造品牌名数组 + 颜色映射
-    const brandNames = TeaData.BRANDS.map(b => b.name);
-    const brandColors = {};
-    TeaData.BRANDS.forEach(b => { brandColors[b.name] = b.color; });
+    // 先加载品牌列表
+    this.loadBrands().then(() => {
+      if (options.id) {
+        this.setData({ isEdit: true, recordId: options.id });
+        this.loadRecord(options.id);
+        wx.setNavigationBarTitle({ title: '编辑奶茶' });
+      }
+    });
+  },
 
-    if (options.id) {
-      // 编辑模式：进入后加载原记录
+  async loadBrands() {
+    try {
+      const res = await wx.cloud.callFunction({
+        name: 'tea',
+        data: { action: 'listEnabledBrands' }
+      });
+      const brands = (res && res.result && res.result.data) || [];
+      const brandNames = brands.map(b => b.name);
+      const brandColors = {};
+      brands.forEach(b => { brandColors[b.name] = b.color || '#8E8E93'; });
       this.setData({
-        isEdit: true,
-        recordId: options.id,
-        date: today,
         brandNames,
         brandColors,
-        products: TeaData.BRANDS[0].products,
-      });
-      this.loadRecord(options.id);
-    } else {
-      this.setData({
-        isEdit: false,
-        date: today,
+        brandName: brandNames[0] || '',
         brandIndex: 0,
-        brandName: TeaData.BRANDS[0].name,
-        brandNames,
-        brandColors,
-        products: TeaData.BRANDS[0].products,
-        productIndex: 0,
-        productName: TeaData.BRANDS[0].products[0],
-        rating: 'good',
-        note: '',
       });
+    } catch (err) {
+      console.error(err);
+      wx.showToast({ title: '品牌加载失败', icon: 'none' });
     }
   },
 
@@ -76,21 +81,16 @@ Page({
         wx.showToast({ title: '记录不存在', icon: 'error' });
         return;
       }
-      const brandIdx = TeaData.BRANDS.findIndex(b => b.name === target.brand);
-      const bIdx = brandIdx >= 0 ? brandIdx : 0;
-      const brand = TeaData.BRANDS[bIdx];
-      const productIdx = brand.products.indexOf(target.product);
+      // 找到对应品牌 index（可能已停用，仍允许编辑保留历史）
+      const idx = this.data.brandNames.indexOf(target.brand);
       this.setData({
         date: target.date || this.data.date,
-        brandIndex: bIdx,
-        brandName: brand.name,
-        products: brand.products,
-        productIndex: productIdx >= 0 ? productIdx : 0,
-        productName: brand.products[productIdx >= 0 ? productIdx : 0],
+        brandName: target.brand || this.data.brandName,
+        brandIndex: idx >= 0 ? idx : 0,
+        product: target.product || '',
         rating: target.rating || 'good',
         note: target.note || '',
       });
-      wx.setNavigationBarTitle({ title: '编辑奶茶' });
     } catch (err) {
       console.error(err);
       wx.showToast({ title: '加载失败', icon: 'error' });
@@ -103,22 +103,14 @@ Page({
 
   onBrandChange(e) {
     const idx = Number(e.detail.value) || 0;
-    const brand = TeaData.BRANDS[idx];
     this.setData({
       brandIndex: idx,
-      brandName: brand.name,
-      products: brand.products,
-      productIndex: 0,
-      productName: brand.products[0],
+      brandName: this.data.brandNames[idx],
     });
   },
 
-  onProductChange(e) {
-    const idx = Number(e.detail.value) || 0;
-    this.setData({
-      productIndex: idx,
-      productName: this.data.products[idx],
-    });
+  onProductInput(e) {
+    this.setData({ product: e.detail.value });
   },
 
   onRatingTap(e) {
@@ -131,9 +123,13 @@ Page({
   },
 
   async onSave() {
-    const { isEdit, recordId, date, brandName, productName, rating, note } = this.data;
-    if (!date || !brandName || !productName) {
-      wx.showToast({ title: '请完整填写', icon: 'none' });
+    const { isEdit, recordId, date, brandName, product, rating, note } = this.data;
+    if (!date || !brandName) {
+      wx.showToast({ title: '请选择日期和品牌', icon: 'none' });
+      return;
+    }
+    if (!product || !product.trim()) {
+      wx.showToast({ title: '请填写具体奶茶', icon: 'none' });
       return;
     }
     wx.showLoading({ title: isEdit ? '保存中…' : '记录中…', mask: true });
@@ -144,7 +140,7 @@ Page({
           data: {
             action: 'update',
             _id: recordId,
-            date, brand: brandName, product: productName, rating,
+            date, brand: brandName, product: product.trim(), rating,
             note: (note || '').trim(),
           }
         });
@@ -153,7 +149,7 @@ Page({
           name: 'tea',
           data: {
             action: 'add',
-            date, brand: brandName, product: productName, rating,
+            date, brand: brandName, product: product.trim(), rating,
             note: (note || '').trim(),
           }
         });
@@ -166,6 +162,34 @@ Page({
       console.error(err);
       wx.showToast({ title: isEdit ? '保存失败' : '记录失败', icon: 'error' });
     }
+  },
+
+  // 删除（仅编辑模式）
+  onDelete() {
+    if (!this.data.isEdit || !this.data.recordId) return;
+    wx.showModal({
+      title: '删除记录',
+      content: `确认删除这条奶茶记录？`,
+      confirmColor: '#FA5151',
+      confirmText: '删除',
+      success: async (res) => {
+        if (!res.confirm) return;
+        wx.showLoading({ title: '删除中…', mask: true });
+        try {
+          await wx.cloud.callFunction({
+            name: 'tea',
+            data: { action: 'delete', _id: this.data.recordId }
+          });
+          wx.hideLoading();
+          wx.showToast({ title: '已删除', icon: 'success' });
+          setTimeout(() => wx.navigateBack(), 500);
+        } catch (err) {
+          wx.hideLoading();
+          console.error(err);
+          wx.showToast({ title: '删除失败', icon: 'error' });
+        }
+      }
+    });
   },
 
   onCancel() {

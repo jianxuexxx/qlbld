@@ -97,6 +97,19 @@
   line-height: 1.6;
 }
 
+/* ===== 输入框（具体奶茶） ===== */
+.form-input {
+  width: 100%;
+  height: 80rpx;
+  font-size: var(--font-base);
+  color: var(--color-text-primary);
+  background: var(--color-bg-input);
+  border-radius: var(--radius-md);
+  padding: 0 24rpx;
+  box-sizing: border-box;
+  line-height: 80rpx;
+}
+
 /* ===== 底部按钮 ===== */
 .action-bar {
   position: fixed;
@@ -143,3 +156,31 @@
   justify-content: center;
 }
 .btn-primary-hover { transform: translateY(2rpx); box-shadow: 0 2rpx 8rpx rgba(33,150,243,0.25); }
+
+/* ===== 删除按钮（仅编辑模式显示） ===== */
+.delete-bar {
+  margin: 32rpx 0 0;
+  padding: 0 0 24rpx;
+  display: flex;
+  justify-content: center;
+}
+
+.btn-delete {
+  height: 80rpx;
+  padding: 0 48rpx;
+  border-radius: var(--radius-pill);
+  background: #FFEBEE;
+  color: #FA5151;
+  font-size: var(--font-base);
+  font-weight: 600;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  letter-spacing: 1rpx;
+}
+
+.btn-delete-hover {
+  background: #FFCDD2;
+  transform: scale(0.98);
+}

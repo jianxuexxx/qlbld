@@ -38,30 +38,23 @@
             wx:key="_id"
             class="record-card-wrap"
           >
-            <mp-slideview
-              buttons="{{slideButtons}}"
-              icon="{{true}}"
-              data-index="{{index}}"
-              bindbuttontap="slideButtonTap"
-            >
-              <view class="record-card" data-id="{{item._id}}" bindtap="onTapItem">
-                <view class="record-brand" style="background:{{brandColors[item.brand] || '#8E8E93'}}">
-                  <text class="record-brand-text">{{item.brand}}</text>
-                </view>
-                <view class="record-info">
-                  <view class="record-title">{{item.product}}</view>
-                  <view class="record-meta">
-                    <text class="record-dot">{{item.ratingEmoji}}</text>
-                    <text class="record-rating-label-inline" style="color:{{ratingMap[item.rating].color}};">{{ratingMap[item.rating].label}}</text>
-                    <text wx:if="{{item.note}}" class="record-note-inline">{{item.note}}</text>
-                  </view>
-                </view>
-                <view class="record-rating" style="color:{{ratingMap[item.rating].color}}; background:{{ratingMap[item.rating].color}}1A;">
-                  <text class="record-rating-emoji">{{ratingMap[item.rating].emoji}}</text>
-                  <text class="record-rating-label">{{ratingMap[item.rating].label}}</text>
+            <view class="record-card" data-id="{{item._id}}" bindtap="onTapItem">
+              <view class="record-brand" style="background:{{brandColors[item.brand] || '#8E8E93'}}">
+                <text class="record-brand-text">{{item.brand}}</text>
+              </view>
+              <view class="record-info">
+                <view class="record-title">{{item.product}}</view>
+                <view class="record-meta">
+                  <text class="record-dot">{{item.ratingEmoji}}</text>
+                  <text class="record-rating-label-inline" style="color:{{ratingMap[item.rating].color}};">{{ratingMap[item.rating].label}}</text>
+                  <text wx:if="{{item.note}}" class="record-note-inline">{{item.note}}</text>
                 </view>
               </view>
-            </mp-slideview>
+              <view class="record-rating" style="color:{{ratingMap[item.rating].color}}; background:{{ratingMap[item.rating].color}}1A;">
+                <text class="record-rating-emoji">{{ratingMap[item.rating].emoji}}</text>
+                <text class="record-rating-label">{{ratingMap[item.rating].label}}</text>
+              </view>
+            </view>
           </view>
         </view>
       </view>
@@ -73,34 +66,28 @@
           <view class="section-count">{{allRecords.length}} 杯</view>
         </view>
         <view class="list">
-          <view wx:for="{{allRecords}}"
+          <view
+            wx:for="{{allRecords}}"
             wx:key="_id"
             class="record-card-wrap"
           >
-            <mp-slideview
-              buttons="{{slideButtons}}"
-              icon="{{true}}"
-              data-index="{{index}}"
-              bindbuttontap="slideButtonTapAll"
-            >
-              <view class="record-card" data-id="{{item._id}}" bindtap="onTapItem">
-                <view class="record-brand" style="background:{{brandColors[item.brand] || '#8E8E93'}}">
-                  <text class="record-brand-text">{{item.brand}}</text>
-                </view>
-                <view class="record-info">
-                  <view class="record-title">{{item.product}}</view>
-                  <view class="record-meta">
-                    <text class="record-date-iso">{{item.date}}</text>
-                    <text class="record-date-friendly">{{item.friendlyDate}}</text>
-                  </view>
-                  <view wx:if="{{item.note}}" class="record-note">{{item.note}}</view>
-                </view>
-                <view class="record-rating" style="color:{{ratingMap[item.rating].color}}; background:{{ratingMap[item.rating].color}}1A;">
-                  <text class="record-rating-emoji">{{ratingMap[item.rating].emoji}}</text>
-                  <text class="record-rating-label">{{ratingMap[item.rating].label}}</text>
-                </view>
+            <view class="record-card" data-id="{{item._id}}" bindtap="onTapItem">
+              <view class="record-brand" style="background:{{brandColors[item.brand] || '#8E8E93'}}">
+                <text class="record-brand-text">{{item.brand}}</text>
               </view>
-            </mp-slideview>
+              <view class="record-info">
+                <view class="record-title">{{item.product}}</view>
+                <view class="record-meta">
+                  <text class="record-date-iso">{{item.date}}</text>
+                  <text class="record-date-friendly">{{item.friendlyDate}}</text>
+                </view>
+                <view wx:if="{{item.note}}" class="record-note">{{item.note}}</view>
+              </view>
+              <view class="record-rating" style="color:{{ratingMap[item.rating].color}}; background:{{ratingMap[item.rating].color}}1A;">
+                <text class="record-rating-emoji">{{ratingMap[item.rating].emoji}}</text>
+                <text class="record-rating-label">{{ratingMap[item.rating].label}}</text>
+              </view>
+            </view>
           </view>
         </view>
       </view>

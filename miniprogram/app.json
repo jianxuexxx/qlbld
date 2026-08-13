@@ -7,6 +7,8 @@
     "pages/Settings/index",
     "pages/Settings/menu-manage/index",
     "pages/Settings/menu-edit/index",
+    "pages/Settings/brand-manage/index",
+    "pages/Settings/brand-edit/index",
     "pages/Menu/index",
     "pages/MenuAdd/index",
     "pages/MenuDetail/index",

@@ -30,6 +30,17 @@
         <text class="cell-arrow">›</text>
       </view>
 
+      <view class="cell" hover-class="cell-hover" bindtap="onTapBrandManage">
+        <view class="cell-left">
+          <view class="cell-icon cell-icon-blue">🧋</view>
+          <view class="cell-text">
+            <view class="cell-title">维护奶茶品牌</view>
+            <view class="cell-subtitle">新增、编辑、停用奶茶品牌</view>
+          </view>
+        </view>
+        <text class="cell-arrow">›</text>
+      </view>
+
       <!-- 占位：后续扩展用 -->
       <view class="cell cell-disabled">
         <view class="cell-left">

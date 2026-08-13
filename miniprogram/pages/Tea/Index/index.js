@@ -29,12 +29,6 @@ Page({
     ratingMap: {},
     brandColors: {},
 
-    // 左滑按钮（图标模式：彩色 SVG + 白色圆形背景）
-    slideButtons: [
-      { extClass: 'editBtn', src: 'Images/icon_edit.svg' },
-      { extClass: 'removeBtn', src: 'Images/icon_del.svg' },
-    ],
-
     // 统计
     statsPeriod: 'month',
     statsPeriodLabel: '当月',
@@ -61,12 +55,27 @@ Page({
   onShow() {
     this.setData({
       ratingMap: TeaData.RATINGS.reduce((acc, r) => { acc[r.key] = r; return acc; }, {}),
-      brandColors: TeaData.BRANDS.reduce((acc, b) => { acc[b.name] = b.color; return acc; }, {}),
       currentUser: app.globalData.userA || app.globalData.userB || '我',
     });
     const today = fmtDate(new Date());
     this.setData({ todayStr: today });
-    this.loadRecords(today);
+    this.loadBrandColors().then(() => this.loadRecords(today));
+  },
+
+  async loadBrandColors() {
+    try {
+      const res = await wx.cloud.callFunction({
+        name: 'tea',
+        data: { action: 'listBrands' }
+      });
+      const brands = (res && res.result && res.result.data) || [];
+      // 含 enabled=false 的历史品牌，用于历史记录正确显示颜色
+      const colors = {};
+      brands.forEach(b => { colors[b.name] = b.color || '#8E8E93'; });
+      this.setData({ brandColors: colors });
+    } catch (err) {
+      console.error('loadBrandColors', err);
+    }
   },
 
   async loadRecords(today) {
@@ -295,50 +304,6 @@ Page({
   onTapItem(e) {
     const id = e.currentTarget.dataset.id;
     wx.navigateTo({ url: '../Add/index?id=' + id });
-  },
-
-  // 今日列表的左滑
-  async slideButtonTap(e) {
-    const idx = e.detail.index;
-    const record = this.data.todayRecords[e.currentTarget.dataset.index];
-    if (!record) return;
-    this.handleSlideAction(idx, record);
-  },
-
-  // 全部列表的左滑
-  async slideButtonTapAll(e) {
-    const idx = e.detail.index;
-    const record = this.data.allRecords[e.currentTarget.dataset.index];
-    if (!record) return;
-    this.handleSlideAction(idx, record);
-  },
-
-  handleSlideAction(btnIdx, record) {
-    if (btnIdx === 0) {
-      wx.navigateTo({ url: '../Add/index?id=' + record._id });
-      return;
-    }
-    if (btnIdx === 1) {
-      wx.showModal({
-        title: '删除记录',
-        content: `确认删除「${record.brand} · ${record.product}」？`,
-        confirmColor: '#FA5151',
-        success: async (res) => {
-          if (!res.confirm) return;
-          try {
-            await wx.cloud.callFunction({
-              name: 'tea',
-              data: { action: 'delete', _id: record._id }
-            });
-            wx.showToast({ title: '已删除', icon: 'success' });
-            await this.loadRecords(this.data.todayStr);
-          } catch (err) {
-            console.error(err);
-            wx.showToast({ title: '删除失败', icon: 'error' });
-          }
-        }
-      });
-    }
   },
 
   // ===== 兼容：旧入口跳转（MainPage 仍可能调到 Stats） =====

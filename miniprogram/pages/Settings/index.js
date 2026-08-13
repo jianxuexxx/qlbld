@@ -69,5 +69,10 @@ Page({
   // 点击：维护菜单
   onTapMenuManage() {
     wx.navigateTo({ url: '/pages/Settings/menu-manage/index' });
-  }
+  },
+
+  // 点击：维护奶茶品牌
+  onTapBrandManage() {
+    wx.navigateTo({ url: '/pages/Settings/brand-manage/index' });
+  },
 });

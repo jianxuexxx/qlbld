@@ -16,6 +16,7 @@ App({
       collectionUserList: 'UserList',
       collectionPeriodList: 'PeriodList',
       collectionTeaList: 'TeaList',
+      collectionBrandList: 'BrandList',
 
       // ===== 订阅消息（统一模板） =====
       subscribeTemplateId: 'fipB8zzrCo5upD3L7jvYB1wEeTQ3ohXaMCJyQcjYQS8',
