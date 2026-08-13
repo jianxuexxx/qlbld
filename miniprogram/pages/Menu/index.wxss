@@ -327,7 +327,7 @@
 .menu-card-row--top {
   min-height: 88rpx;
 }
-/* 底部行：积分区上方的留白 + stepper 独占一行，绝不和 meta 同行 */
+/* 底部行：stepper 独占一行，绝不和 meta 同行 */
 .menu-card-row--bottom {
   justify-content: flex-end;
   margin-top: 12rpx;
@@ -421,17 +421,6 @@
   background-color: #F2F5FB;
   color: #5A6B85;
   font-size: 20rpx;
-}
-.menu-card-credit {
-  display: inline-flex;
-  align-items: center;
-  height: 30rpx;
-  padding: 0 10rpx;
-  border-radius: 8rpx;
-  background: linear-gradient(135deg, rgba(33,150,243,0.12) 0%, rgba(21,101,192,0.16) 100%);
-  color: #1565C0;
-  font-size: 20rpx;
-  font-weight: 700;
 }
 .menu-card-star {
   position: absolute;
@@ -654,12 +643,6 @@
   font-size: 28rpx;
   margin: 0 4rpx;
 }
-.cart-bar-credit {
-  color: #1565C0;
-  font-weight: 700;
-  font-size: 28rpx;
-  margin: 0 4rpx;
-}
 .cart-bar-hint {
   font-size: 22rpx;
   color: #B0BAC9;
@@ -807,11 +790,6 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.cart-item-credit {
-  font-size: 24rpx;
-  color: #1565C0;
-  font-weight: 600;
-}
 .cart-item-remove {
   width: 48rpx;
   height: 48rpx;
@@ -838,20 +816,6 @@
   align-items: center;
   justify-content: space-between;
   background-color: #FAFBFD;
-}
-.cart-panel-total {
-  display: flex;
-  flex-direction: column;
-}
-.cart-panel-total-label {
-  font-size: 24rpx;
-  color: #8E8E93;
-}
-.cart-panel-total-value {
-  font-size: 36rpx;
-  font-weight: 700;
-  color: #1565C0;
-  margin-top: 4rpx;
 }
 .cart-panel-confirm-btn {
   background: linear-gradient(135deg, #2196F3 0%, #1565C0 100%);

@@ -132,12 +132,11 @@
                     <view class="menu-card-desc" wx:if="{{menu.desc}}">{{menu.desc}}</view>
                     <view class="menu-card-meta">
                       <view class="menu-card-tag" wx:if="{{menu.category}}">🏷️ {{menu.category}}</view>
-                      <view class="menu-card-credit">💰 {{menu.credit}} 积分</view>
                     </view>
                   </view>
                 </view>
 
-                <!-- 底部行：积分左、stepper 右（独占一行，绝不和 meta 同行） -->
+                <!-- 底部行：stepper 右（独占一行，绝不和 meta 同行） -->
                 <view class="menu-card-row menu-card-row--bottom">
                   <view class="menu-card-row-spacer"></view>
                   <view class="stepper {{cart[menu._id] ? 'stepper-active' : ''}}">
@@ -188,7 +187,6 @@
       <view class="cart-item-emoji">🍴</view>
       <view class="cart-item-info">
         <view class="cart-item-title">{{ci.title}}</view>
-        <view class="cart-item-credit">💰 {{ci.credit}} × {{ci._count}} = {{ci.credit * ci._count}} 积分</view>
       </view>
       <view class="stepper stepper-mini">
         <view class="stepper-btn stepper-minus"
@@ -204,10 +202,6 @@
     </view>
   </scroll-view>
   <view class="cart-panel-footer" wx:if="{{cartCount > 0}}">
-    <view class="cart-panel-total">
-      <text class="cart-panel-total-label">合计</text>
-      <text class="cart-panel-total-value">{{cartTotalCredit}} 积分</text>
-    </view>
     <button class="cart-panel-confirm-btn" size="mini" bindtap="submitOrder">去下单</button>
   </view>
 </view>
@@ -221,7 +215,7 @@
   <view class="cart-bar-info" bindtap="toggleCart">
     <text class="cart-bar-text {{cartCount === 0 ? 'cart-bar-text-empty' : ''}}"
           wx:if="{{cartCount > 0}}">
-      已选 <text class="cart-bar-count">{{cartCount}}</text> 道菜　共 <text class="cart-bar-credit">{{cartTotalCredit}}</text> 积分
+      已选 <text class="cart-bar-count">{{cartCount}}</text> 道菜
     </text>
     <text class="cart-bar-text cart-bar-text-empty" wx:else>购物车空空如也～</text>
   </view>

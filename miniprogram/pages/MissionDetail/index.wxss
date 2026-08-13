@@ -14,13 +14,6 @@
   word-break: break-all;
 }
 
-.mission-info_credit {
-  font-size: var(--font-base);
-  color: var(--color-primary);
-  margin-left: 16rpx;
-  font-weight: 600;
-}
-
 /* === 订单视图样式 === */
 .status-completed {
   display: inline-flex;
@@ -79,13 +72,6 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-
-.dish-credit {
-  font-size: var(--font-base);
-  color: var(--color-primary);
-  font-weight: 700;
-  flex-shrink: 0;
 }
 
 .dish-meta {

@@ -33,7 +33,6 @@ Page({
     cart: {},                    // { [menuId]: count } 数量
     cartList: [],                // 购物车菜品列表（含 _count 字段）
     cartCount: 0,                // 总数量（所有菜数量累加）
-    cartTotalCredit: 0,          // 总积分（credit * count）
     cartExpanded: false,         // 购物车展开/收起
 
     slideButtons: [
@@ -437,7 +436,7 @@ Page({
       confirmColor: '#2196F3',
       success: (res) => {
         if (res.confirm) {
-          this.setData({ cart: {}, cartList: [], cartCount: 0, cartTotalCredit: 0 });
+          this.setData({ cart: {}, cartList: [], cartCount: 0 });
           this.refreshCart();
         }
       }
@@ -508,9 +507,7 @@ Page({
       .filter(Boolean);
     // 总数量（累加 count）
     const cartCount = cartList.reduce((sum, m) => sum + (m._count || 0), 0);
-    // 总积分（credit * count）
-    const cartTotalCredit = cartList.reduce((sum, m) => sum + (Number(m.credit) || 0) * (m._count || 0), 0);
-    this.setData({ cartList, cartCount, cartTotalCredit });
+    this.setData({ cartList, cartCount });
     this.buildDisplayedMenus(); // 重建 displayedMenus
   },
 
@@ -536,7 +533,6 @@ Page({
           title: m.title,
           category: m.category || '',
           desc: m.desc || '',
-          credit: Number(m.credit) || 0,
           _openid: m._openid
         });
       }
@@ -546,7 +542,6 @@ Page({
       }
     });
 
-    const totalCredit = dishes.reduce((sum, d) => sum + d.credit, 0);
     const now = new Date();
     const dateLabel = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
     const title = `点菜单 - ${dateLabel}`;
@@ -562,7 +557,6 @@ Page({
           list: 'MissionList',
           title,
           desc: '',
-          credit: totalCredit,
           dishes,
           cookerNames,
           ordererName
@@ -571,30 +565,11 @@ Page({
 
       const orderId = orderRes.result && orderRes.result._id;
 
-      // 2. 按厨师分账
-      const deltasMap = {};
-      dishes.forEach(d => {
-        if (!d._openid) return;
-        deltasMap[d._openid] = (deltasMap[d._openid] || 0) + d.credit;
-      });
-      const deltas = Object.keys(deltasMap).map(openid => ({
-        openid,
-        delta: deltasMap[openid]
-      }));
-
-      if (deltas.length > 0) {
-        await wx.cloud.callFunction({
-          name: 'distributeCredit',
-          data: { list: 'UserList', deltas }
-        });
-      }
-
-      // 3. 清空购物车 + 收起面板
+      // 2. 清空购物车 + 收起面板
       this.setData({
         cart: {},
         cartList: [],
         cartCount: 0,
-        cartTotalCredit: 0,
         cartExpanded: false
       });
 
@@ -612,7 +587,7 @@ Page({
           app.sendNotification({
             action: 'mission_accepted',
             me,
-            name: title + '（' + totalCredit + ' 积分）',
+            name: title,
             page: 'pages/MissionDetail/index?id=' + orderId,
             targetOpenid: openid
           }).catch(() => {});

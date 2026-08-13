@@ -41,21 +41,31 @@
       <view style="width:100%; background: none;">
 
         <view class="form-group_label">👋 你好，{{currentUser}}</view>
-        <view class="form-group" style="box-shadow: 0 4px 8px 0 rgba(33,150,243,0.06), 0 6px 20px 0 rgba(33,150,243,0.08);">
-          <view class="form-cell">
-            <view class="slide">
-              <view class="title">{{userA}}的积分：{{creditA}}</view>
-            </view>
+
+        <!-- 待办任务（缩为提示行） -->
+        <view class="mission-hint" bindtap="goToMissionTab">
+          <view class="mission-hint-left">
+            <text class="mission-hint-icon">📋</text>
+            <text class="mission-hint-text">{{pendingMissionCount > 0 ? '你有 ' + pendingMissionCount + ' 个待办任务' : '当前没有待办任务'}}</text>
           </view>
-          <view class="form-cell">
-            <view class="slide">
-              <view class="title">{{userB}}的积分：{{creditB}}</view>
+          <text class="mission-hint-arrow">›</text>
+        </view>
+
+        <!-- 工具宫格（3 列） -->
+        <view class="tools-section">
+          <view class="tools-title">🛠️ 便捷工具</view>
+          <view class="tools-grid">
+            <view class="tool-cell" bindtap="onTapTool" data-tool="tea">
+              <view class="tool-icon tool-icon-tea">🧋</view>
+              <view class="tool-label">奶茶记录</view>
             </view>
-          </view>
-          <view class="form-cell">
-            <view class="slide slide--mission" bindtap="goToMissionTab">
-              <view class="title">📋 {{currentUser}}待办任务</view>
-              <view class="slide-mission-badge">{{pendingMissionCount || 0}}</view>
+            <view class="tool-cell tool-cell-disabled">
+              <view class="tool-icon tool-icon-grey">⏰</view>
+              <view class="tool-label">敬请期待</view>
+            </view>
+            <view class="tool-cell tool-cell-disabled">
+              <view class="tool-icon tool-icon-grey">📝</view>
+              <view class="tool-label">敬请期待</view>
             </view>
           </view>
         </view>
@@ -82,7 +92,7 @@
       <view wx:if="{{allMissions.length === 0}}" class="empty-hero">
         <view class="empty-hero-emoji">📋</view>
         <view class="empty-hero-title">暂无任务</view>
-        <view class="empty-hero-sub">发布一个任务，开始攒积分之旅～</view>
+        <view class="empty-hero-sub">发布一个任务，开始行动吧～</view>
       </view>
 
       <view wx:if="{{allMissions.length > 0}}">
@@ -101,7 +111,6 @@
               <view class="slide" data-index="{{index}}" bindtap="toDetailPageUpper">
                 <view class="mission-info">
                   <view class="mission-info_title">{{util.filterStr(item.title, 10)}}</view>
-                  <view class="mission-info_award">💰 {{util.filterStr(item.credit, 10)}} 积分</view>
                   <view class="mission-info_date">📅 {{util.cutStr(item.date, 10)}} 创建</view>
                   <view class="mission-info_waiting">⏳ 等待对方完成</view>
                 </view>
@@ -118,7 +127,6 @@
                 <view class="slide" data-index="{{index}}" bindtap="toDetailPageUpper">
                   <view class="mission-info">
                     <view class="mission-info_title">{{util.filterStr(item.title, 10)}}</view>
-                    <view class="mission-info_award">💰 {{util.filterStr(item.credit, 10)}} 积分</view>
                     <view class="mission-info_date">📅 {{util.cutStr(item.date, 10)}} 创建</view>
                   </view>
                   <view class="mission-info_author">
@@ -141,7 +149,6 @@
               <view class="slide" data-index="{{index}}" bindtap="toDetailPageLower">
                 <view class="mission-info">
                   <view class="mission-info_title">{{util.filterStr(item.title, 10)}}</view>
-                  <view class="mission-info_award">💰 {{util.filterStr(item.credit, 10)}} 积分</view>
                   <view class="mission-info_date">📅 {{util.cutStr(item.date, 10)}} 创建</view>
                 </view>
                 <view class="mission-info_author">

@@ -13,11 +13,6 @@
     </view>
 
     <view class="detail-section">
-      <view class="detail-label">积分奖励</view>
-      <view class="detail-content">💰 {{menuDetail.credit}} 积分</view>
-    </view>
-
-    <view class="detail-section">
       <view class="detail-label">创建日期</view>
       <view class="detail-content">📅 {{menuDetail.date}}</view>
     </view>

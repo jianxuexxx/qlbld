@@ -7,7 +7,6 @@ Page({
       name: '我',
       avatar: ''
     },
-    credit: 0,
     todayLabel: '',
     version: '1.0.0'
   },
@@ -23,7 +22,6 @@ Page({
     this.refreshUser();
   },
 
-  // 拉自己的积分与名称（兼容旧逻辑：credit 在 UserList）
   async refreshUser() {
     try {
       // 同步刷新一次全局用户名（数据库优先）
@@ -37,7 +35,7 @@ Page({
         'userInfo.name': name || '我'
       });
 
-      // 加载积分（优先用 UserList.name 字段）
+      // 加载用户名（优先用 UserList.name 字段）
       const creditRes = await wx.cloud.callFunction({
         name: 'getUserList',
         data: { list: 'UserList' }
@@ -53,7 +51,6 @@ Page({
       const me = (Array.isArray(list) ? list : []).find(u => u._openid === openid);
       const pickName = (u) => u && (u.name || u.username || u.nickname || '');
       if (me) {
-        this.setData({ credit: Number(me.credit) || 0 });
         // 用数据库的 name 同步到顶部 userInfo
         const dbName = pickName(me);
         if (dbName) this.setData({ 'userInfo.name': dbName });

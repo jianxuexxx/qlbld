@@ -199,24 +199,13 @@ Page({
       return;
     }
 
-    // 查询点菜者 openid：单菜流程下点菜者记录在 ordererOpenid
-    const ordererOpenid = menu.ordererOpenid || menu.orderedByOpenid;
-    const rewardOpenid = ordererOpenid || menu._openid; // 兜底：若没记录则不分账
-
-    // 完成订单：将积分奖励给点菜者
+    // 完成订单
     wx.cloud.callFunction({
       name: 'editMenuAvailable',
       data: { _id: menu._id, value: false, list: 'MenuList' }
     }).then(async () => {
-      if (ordererOpenid) {
-        await wx.cloud.callFunction({
-          name: 'editCredit',
-          data: { _openid: rewardOpenid, value: menu.credit, list: getApp().globalData.collectionUserList }
-        });
-      }
-
       wx.showToast({
-        title: '订单完成，积分已奖励',
+        title: '订单完成',
         icon: 'success'
       });
 

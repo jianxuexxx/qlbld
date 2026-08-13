@@ -209,10 +209,6 @@
   padding: 2rpx 12rpx;
   border-radius: 12rpx;
 }
-.meta-credit {
-  color: #FF9800;
-  font-weight: 600;
-}
 .meta-author {
   color: #8E8E93;
 }

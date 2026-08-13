@@ -7,9 +7,9 @@
       <text wx:else>👤</text>
     </view>
     <view class="user-info">
-      <view class="user-name">{{userInfo.name}}</view>
-      <view class="user-meta">💰 {{credit}} 积分 · {{todayLabel}}</view>
-    </view>
+    <view class="user-name">{{userInfo.name}}</view>
+    <view class="user-meta">{{todayLabel}}</view>
+  </view>
   </view>
 
   <!-- 维护组 -->

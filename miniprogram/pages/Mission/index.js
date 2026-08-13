@@ -189,9 +189,8 @@ Page({
 
     await wx.cloud.callFunction({name: 'getOpenId'}).then(async openid => {
       if(mission._openid != openid.result){
-        //完成对方任务，奖金打入对方账号
+        //完成对方任务
         await wx.cloud.callFunction({name: 'editAvailable', data: {_id: mission._id, value: false, list: getApp().globalData.collectionMissionList}})
-        await wx.cloud.callFunction({name: 'editCredit', data: {_openid: mission._openid, value: mission.credit, list: getApp().globalData.collectionUserList}})
         // 新规则：记录完成人 + 完成时间
         await wx.cloud.callFunction({
           name: 'editAvailable',

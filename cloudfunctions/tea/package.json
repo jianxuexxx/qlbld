@@ -1,0 +1,9 @@
+{
+  "name": "tea",
+  "version": "1.0.0",
+  "description": "奶茶记录云函数（add/update/delete/list）",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}

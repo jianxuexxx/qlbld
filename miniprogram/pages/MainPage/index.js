@@ -3,8 +3,6 @@ const app = getApp();
 
 Page({
   data: {
-    creditA: 0,
-    creditB: 0,
     userA: '',
     userB: '',
     currentOpenid: '',
@@ -50,8 +48,6 @@ Page({
       currentUser,
       subscribed: Object.keys(subs).length > 0
     });
-    this.getCreditA();
-    this.getCreditB();
     this.loadMissions();
   },
 
@@ -75,20 +71,6 @@ Page({
     }
   },
 
-  getCreditA() {
-    wx.cloud.callFunction({ name: 'getElementByOpenId', data: { list: app.globalData.collectionUserList, _openid: app.globalData._openidA } })
-      .then(res => {
-        this.setData({ creditA: (res.result.data && res.result.data[0] && res.result.data[0].credit) || 0 });
-      }).catch(() => {});
-  },
-
-  getCreditB() {
-    wx.cloud.callFunction({ name: 'getElementByOpenId', data: { list: app.globalData.collectionUserList, _openid: app.globalData._openidB } })
-      .then(res => {
-        this.setData({ creditB: (res.result.data && res.result.data[0] && res.result.data[0].credit) || 0 });
-      }).catch(() => {});
-  },
-
   // ===== Tab 切换 =====
   switchTab(e) {
     const idx = Number(e.currentTarget.dataset.index) || 0;
@@ -99,6 +81,18 @@ Page({
   },
   goToMissionTab() {
     this.setData({ activeTab: 1 });
+  },
+
+  // ===== 工具入口 =====
+  onTapTool(e) {
+    const tool = e.currentTarget.dataset.tool;
+    switch (tool) {
+      case 'tea':
+        wx.navigateTo({ url: '../Tea/Index/index' });
+        break;
+      default:
+        wx.showToast({ title: '敬请期待', icon: 'none' });
+    }
   },
 
   // ===== 任务数据 =====
@@ -222,7 +216,6 @@ Page({
     }
     try {
       await wx.cloud.callFunction({ name: 'editAvailable', data: { _id: mission._id, value: false, list: app.globalData.collectionMissionList } });
-      await wx.cloud.callFunction({ name: 'editCredit', data: { _openid: mission._openid, value: mission.credit, list: app.globalData.collectionUserList } });
       await wx.cloud.callFunction({
         name: 'editAvailable',
         data: { _id: mission._id, list: app.globalData.collectionMissionList, field: 'completedByOpenid', value: openid }
@@ -234,8 +227,6 @@ Page({
 
       // 本地重算
       await this.loadMissions();
-      this.getCreditA();
-      this.getCreditB();
 
       wx.showToast({ title: '任务完成', icon: 'success', duration: 2000 });
 

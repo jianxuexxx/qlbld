@@ -7,13 +7,12 @@
     "pages/Settings/index",
     "pages/Settings/menu-manage/index",
     "pages/Settings/menu-edit/index",
-    "pages/Account/index",
-    "pages/ItemDetail/index",
     "pages/Menu/index",
     "pages/MenuAdd/index",
     "pages/MenuDetail/index",
-    "pages/Market/index",
-    "pages/Period/index"
+    "pages/Period/index",
+    "pages/Tea/Index/index",
+    "pages/Tea/Add/index"
   ],
   "window": {
     "backgroundColor": "#F0F4FA",
@@ -45,11 +44,6 @@
       "selectedIconPath": "images/TabBar/MarketIconColor.jpg",
       "iconPath": "images/TabBar/MarketIconGrey.jpg",
       "text": "设置"
-    }, {
-      "pagePath": "pages/Account/index",
-      "selectedIconPath": "images/TabBar/AccountIconColor.jpg",
-      "iconPath": "images/TabBar/AccountIconGrey.jpg",
-      "text": "仓库"
     }]
   },
   "lazyCodeLoading": "requiredComponents",

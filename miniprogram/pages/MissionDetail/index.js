@@ -5,10 +5,8 @@ Page({
     mission: null,
     dateStr: '',
     timeStr: '',
-    creditPercent: 0,
     from: '',
     to: '',
-    maxCredit: getApp().globalData.maxCredit,
     list: getApp().globalData.collectionMissionList,
 
     // === 订单型任务 ===
@@ -70,7 +68,6 @@ Page({
           mission,
           dateStr: this.getDate(mission.date).toDateString(),
           timeStr: this.getDate(mission.date).toTimeString(),
-          creditPercent: (mission.credit / getApp().globalData.maxCredit) * 100,
           from,
           to,
           isOrder,

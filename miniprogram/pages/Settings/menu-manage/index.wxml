@@ -61,7 +61,6 @@
             </view>
             <view class="card-meta">
               <text class="meta-tag" wx:if="{{item.category}}">🏷️ {{item.category}}</text>
-              <text class="meta-credit">💰 {{item.credit}} 积分</text>
               <text class="meta-author">👤 {{item._openid === _openidA ? userA : (item._openid === _openidB ? userB : '未知')}}</text>
             </view>
             <view class="card-desc" wx:if="{{item.desc}}">{{item.desc}}</view>

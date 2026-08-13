@@ -56,34 +56,6 @@
       </view>
     </view>
 
-    <!-- 积分 -->
-    <view class="card">
-      <view class="field field--block">
-        <view class="field-label field-label--row">
-          <text>积分奖励</text>
-          <text class="field-label-tag">{{formData.credit}} 分</text>
-        </view>
-        <view class="slider-wrap">
-          <slider
-            name="credit"
-            min="1"
-            max="{{maxCredit}}"
-            value="{{formData.credit}}"
-            show-value="{{false}}"
-            activeColor="#1565C0"
-            backgroundColor="#E4ECF6"
-            block-size="22"
-            block-color="#FFFFFF"
-            bindchange="onSliderChange"
-          />
-        </view>
-        <view class="slider-scale">
-          <text>1</text>
-          <text>{{maxCredit}}</text>
-        </view>
-      </view>
-    </view>
-
     <button class="btn-submit" form-type="submit" hover-class="btn-submit--hover">添加菜品</button>
 
   </form>

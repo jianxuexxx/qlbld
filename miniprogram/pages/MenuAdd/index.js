@@ -3,10 +3,8 @@ Page({
     formData: {
       title: '',
       category: '',
-      desc: '',
-      credit: 10
-    },
-    maxCredit: getApp().globalData.maxCredit || 500
+      desc: ''
+    }
   },
 
   onLoad(options) {
@@ -19,12 +17,6 @@ Page({
 
     this.setData({
       [`formData.${field}`]: value
-    });
-  },
-
-  onSliderChange(event) {
-    this.setData({
-      'formData.credit': event.detail.value
     });
   },
 
@@ -68,7 +60,6 @@ Page({
           title: formData.title,
           category: formData.category,
           desc: formData.desc,
-          credit: parseInt(formData.credit),
           _openid: openid,
           date: new Date().toISOString().split('T')[0],
           available: true,  // 初始为可用状态

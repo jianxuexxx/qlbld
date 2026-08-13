@@ -4,7 +4,7 @@
   <view class="empty-hero">
     <view class="empty-hero-emoji">📋</view>
     <view class="empty-hero-title">暂无任务</view>
-    <view class="empty-hero-sub">发布一个任务，开始攒积分之旅～</view>
+    <view class="empty-hero-sub">发布一个任务，开始行动吧～</view>
   </view>
 </view>
 
@@ -43,7 +43,6 @@
         <view class="slide" data-index="{{index}}" bindtap="toDetailPageUpper">
           <view class="mission-info">
             <view class="mission-info_title">{{util.filterStr(item.title, 10)}}</view>
-            <view class="mission-info_award">💰 {{util.filterStr(item.credit, 10)}} 积分</view>
             <view class="mission-info_date">📅 {{util.cutStr(item.date, 10)}} 创建</view>
             <view class="mission-info_waiting">⏳ 等待对方完成</view>
           </view>
@@ -60,7 +59,6 @@
           <view class="slide" data-index="{{index}}" bindtap="toDetailPageUpper">
             <view class="mission-info">
               <view class="mission-info_title">{{util.filterStr(item.title, 10)}}</view>
-              <view class="mission-info_award">💰 {{util.filterStr(item.credit, 10)}} 积分</view>
               <view class="mission-info_date">📅 {{util.cutStr(item.date, 10)}} 创建</view>
             </view>
             <view class="mission-info_author">
@@ -83,7 +81,6 @@
         <view class="slide" data-index="{{index}}" bindtap="toDetailPageLower">
           <view class="mission-info">
             <view class="mission-info_title">{{util.filterStr(item.title, 10)}}</view>
-            <view class="mission-info_award">💰 {{util.filterStr(item.credit, 10)}} 积分</view>
             <view class="mission-info_date">📅 {{util.cutStr(item.date, 10)}} 创建</view>
           </view>
           <view class="mission-info_author">

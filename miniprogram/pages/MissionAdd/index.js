@@ -3,9 +3,7 @@ Page({
   data: {
     title: '',
     desc: '',
-    
-    credit: 0,
-    maxCredit: getApp().globalData.maxCredit,
+
     presetIndex: 0,
     presets: [{
       name:"无预设",
@@ -62,11 +60,6 @@ Page({
       desc: e.detail.value
     })
   },
-  onCreditInput(e) {
-    this.setData({
-      credit: e.detail.value
-    })
-  },
   onPresetChange(e){
     this.setData({
       presetIndex: e.detail.value,
@@ -102,14 +95,6 @@ Page({
       })
       return
     }
-    if (this.data.credit <= 0) {
-      wx.showToast({
-        title: '一定要有积分',
-        icon: 'error',
-        duration: 2000
-      })
-      return
-    }
     // ===== 保存 =====
     try {
       await wx.cloud.callFunction({ name: 'addElement', data: this.data });
@@ -135,7 +120,6 @@ Page({
     this.setData({
       title: '',
       desc: '',
-      credit: 0,
       presetIndex: 0,
       list: getApp().globalData.collectionMissionList,
     })

@@ -13,13 +13,9 @@ App({
 
       //用于存储待办记录的集合名称
       collectionMissionList: 'MissionList',
-      collectionMarketList: 'MarketList',
-      collectionStorageList: 'StorageList',
       collectionUserList: 'UserList',
       collectionPeriodList: 'PeriodList',
-
-      //最多单次交易积分
-      maxCredit: 500,
+      collectionTeaList: 'TeaList',
 
       // ===== 订阅消息（统一模板） =====
       subscribeTemplateId: 'fipB8zzrCo5upD3L7jvYB1wEeTQ3ohXaMCJyQcjYQS8',

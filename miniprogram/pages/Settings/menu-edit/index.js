@@ -7,7 +7,6 @@ Page({
     menu: {
       title: '',
       category: '',
-      credit: '',
       desc: '',
       disabled: false,
       star: false
@@ -42,7 +41,6 @@ Page({
         menu: {
           title: target.title || '',
           category: target.category || '',
-          credit: String(target.credit || ''),
           desc: target.desc || '',
           disabled: !!target.disabled,
           star: !!target.star
@@ -59,9 +57,6 @@ Page({
   },
   onInputCategory(e) {
     this.setData({ 'menu.category': e.detail.value });
-  },
-  onInputCredit(e) {
-    this.setData({ 'menu.credit': e.detail.value });
   },
   onInputDesc(e) {
     this.setData({ 'menu.desc': e.detail.value });
@@ -80,10 +75,6 @@ Page({
       wx.showToast({ title: '请填写菜品名称', icon: 'none' });
       return;
     }
-    if (menu.credit === '' || isNaN(Number(menu.credit))) {
-      wx.showToast({ title: '请填写有效积分', icon: 'none' });
-      return;
-    }
 
     wx.showLoading({ title: '保存中...', mask: true });
     try {
@@ -96,7 +87,6 @@ Page({
           updates: {
             title: menu.title.trim(),
             category: menu.category.trim(),
-            credit: Number(menu.credit),
             desc: menu.desc.trim()
           }
         }

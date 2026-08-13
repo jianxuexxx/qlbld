@@ -10,8 +10,8 @@ page {
   --color-primary-lighter: #F0F7FF;  /* 极浅蓝（提示条底）*/
   --color-accent: #7B68EE;           /* 紫色（外星质感强调）*/
   --color-accent-light: #EDE7F6;     /* 浅紫（紫色标签底）*/
-  --color-star: #FFC107;             /* 黄色（星星/积分亮点）*/
-  --color-star-light: #FFF8E1;       /* 浅黄（积分徽章底）*/
+  --color-star: #FFC107;             /* 黄色（星星）*/
+  --color-star-light: #FFF8E1;       /* 浅黄（徽章底）*/
   --color-success: #07C160;
   --color-success-light: #D4F8D4;
   --color-success-dark: #2D8A2D;

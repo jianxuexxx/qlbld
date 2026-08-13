@@ -1,0 +1,71 @@
+<view class="container">
+  <!-- 表单卡片 -->
+  <view class="form-card">
+    <view class="form-row">
+      <view class="form-label">📅 喝奶茶的日期</view>
+      <picker mode="date" value="{{date}}" bindchange="onDateChange" class="form-picker">
+        <view class="form-picker-value">{{date}}</view>
+      </picker>
+    </view>
+
+    <view class="form-divider"></view>
+
+    <view class="form-row">
+      <view class="form-label">🏷️ 品牌</view>
+      <picker mode="selector" range="{{brandNames}}" value="{{brandIndex}}" bindchange="onBrandChange" class="form-picker">
+        <view class="form-picker-value" style="color:{{brandColors[brandName]}};">{{brandName}}</view>
+      </picker>
+    </view>
+
+    <view class="form-divider"></view>
+
+    <view class="form-row">
+      <view class="form-label">🧋 具体奶茶</view>
+      <picker mode="selector" range="{{products}}" value="{{productIndex}}" bindchange="onProductChange" class="form-picker">
+        <view class="form-picker-value">{{productName}}</view>
+      </picker>
+    </view>
+
+    <view class="form-divider"></view>
+
+    <view class="form-row">
+      <view class="form-label">⭐ 评价</view>
+      <view class="rating-row">
+        <view
+          wx:for="{{ratings}}"
+          wx:key="key"
+          class="rating-chip {{rating === item.key ? 'active' : ''}}"
+          data-r="{{item.key}}"
+          bindtap="onRatingTap"
+          style="color:{{rating === item.key ? '#FFFFFF' : item.color}}; background:{{rating === item.key ? item.color : '#F5F8FD'}}; border-color:{{item.color}};"
+        >
+          <text class="rating-emoji">{{item.emoji}}</text>
+          <text class="rating-label">{{item.label}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="form-divider"></view>
+
+    <view class="form-row form-row--block">
+      <view class="form-label">📝 备注（可选）</view>
+      <textarea
+        class="form-textarea"
+        placeholder="加点小心得吧，比如甜度、温度…"
+        value="{{note}}"
+        bindinput="onNoteInput"
+        maxlength="200"
+        auto-height
+      />
+    </view>
+  </view>
+
+  <!-- 操作按钮 -->
+  <view class="action-bar">
+    <button class="btn-secondary" hover-class="btn-secondary-hover" bindtap="onCancel">取消</button>
+    <button class="btn-primary" hover-class="btn-primary-hover" bindtap="onSave">
+      <text wx:if="{{isEdit}}">保存修改</text>
+      <text wx:else>>记录</text>
+    </button>
+  </view>
+</view>
